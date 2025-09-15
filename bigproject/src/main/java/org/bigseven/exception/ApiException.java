@@ -1,4 +1,4 @@
-package org.bigseven.Exception;
+package org.bigseven.exception;
 
 import lombok.Getter;
 import org.bigseven.constant.ExceptionEnum;
