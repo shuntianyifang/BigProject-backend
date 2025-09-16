@@ -15,11 +15,11 @@ spring:
     problemdetails:
       enabled: true # 启用RFC 7807问题详细信息
 
-jwt:
-  secret: your-jwt-secret-key-at-least-256-bits-long
-
-file:
-  upload-dir: ./uploads
+#jwt:
+#  secret: your-jwt-secret-key-at-least-256-bits-long
+#
+#file:
+#  upload-dir: ./uploads
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml

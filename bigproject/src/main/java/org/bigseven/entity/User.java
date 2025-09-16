@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * @TableName user
+ * &#064;TableName  user
  */
 @TableName(value ="user")
 @Data
