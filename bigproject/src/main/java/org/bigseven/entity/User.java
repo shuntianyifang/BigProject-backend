@@ -34,9 +34,7 @@ public class User {
     @JsonProperty("user_type")
     private UserTypeEnum userType;
 
-    private String realName;
-
-    private String userPhone;
+    private String nickName;
 
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;

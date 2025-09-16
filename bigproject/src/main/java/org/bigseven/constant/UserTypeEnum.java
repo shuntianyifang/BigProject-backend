@@ -1,7 +1,9 @@
 package org.bigseven.constant;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public enum UserTypeEnum {
     STUDENT("学生"),
@@ -10,8 +12,5 @@ public enum UserTypeEnum {
 
     private final String displayName;
 
-    UserTypeEnum(String displayName) {
-        this.displayName = displayName;
-    }
 
 }
