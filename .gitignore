@@ -25,3 +25,4 @@ replay_pid*
 
 #忽略开发者的application-local.yml
 /bigproject/src/main/resources/application-local.yml
+/bigproject/target/classes/application-local.yml
