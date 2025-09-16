@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * &#064;TableName  user
+ * 
+ * @TableName user
  */
 @TableName(value ="user")
 @Data
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
     @TableId(type = IdType.AUTO)
+
     private Integer id;
     private String username;
     private String password;
