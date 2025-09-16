@@ -4,6 +4,7 @@ package org.bigseven.controller;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.bigseven.dto.UserLoginRequest;
+import org.bigseven.dto.UserLoginResponse;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.service.UserService;
 import org.springframework.web.bind.annotation.*;
