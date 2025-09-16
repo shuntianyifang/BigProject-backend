@@ -30,6 +30,6 @@ public class UserServiceImpl implements UserService {
                 return -1;
             }
         }
-        return user.getId();
+        return user.getUserId();
     }
 }
