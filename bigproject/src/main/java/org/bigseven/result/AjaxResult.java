@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 @Data
 @AllArgsConstructor
 public class AjaxResult<T> {
-    public static final String SUCCESS_MSG = "OK";
+
+    public static final String SUCCESS_MSG = "success";
+
     private Integer code;
     private String msg;
     private T data;
