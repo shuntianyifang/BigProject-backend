@@ -1,4 +1,4 @@
-package org.bigseven.controller;
+package org.bigseven.dto;
 
 
 import lombok.AllArgsConstructor;
