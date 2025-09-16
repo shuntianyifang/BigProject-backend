@@ -15,7 +15,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * @Description:这个方法才是用户登录,需要重写
-     * @Author: BigSeven
      */
     @Override
     public Integer login(String username, String password, String email) {
@@ -39,7 +38,6 @@ public class UserServiceImpl implements UserService {
     }
     /**
     * @Description:这个方法才是用户注册,login方法未来要改成登录用
-    * @Author: BigSeven
     */
     @Override
     public Integer register(String username, String password, String email, UserTypeEnum userType) {
