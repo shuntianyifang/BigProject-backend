@@ -1,8 +1,7 @@
 package org.bigseven.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,14 +20,34 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
     @TableId(type = IdType.AUTO)
+    @TableField("user_id")
+    @JsonProperty("user_id")
+    private Integer userId;
 
-    private Integer id;
     private String username;
+
     private String password;
+
     private String email;
-    private String role;
+    @TableField("user_type")
+    @JsonProperty("user_type")
+    private UserTypeEnum userType;
+
     private String realName;
-    private String phone;
+
+    private String userPhone;
+
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
+
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    public UserTypeEnum getUserType(){
+        return userType;
+    }
+
+    public void setUserType(UserTypeEnum userType){
+        this.userType = userType;
+    }
 }
