@@ -3,6 +3,7 @@ package org.bigseven.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bigseven.constant.ExceptionEnum;
+import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.entity.Feedback;
@@ -34,15 +35,14 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public void markFeedback(Integer userId,Integer feedbackId,Integer acceptedByUserId, Boolean isAccepted, Boolean isResolved) {
+    public void markFeedback(Integer userId,Integer feedbackId,Integer acceptedByUserId, FeedbackStatusEnum feedbackStatus) {
         Feedback feedback = feedbackMapper.selectById(feedbackId);
         //一个简单的鉴权
         //警告:这并不是一个安全的鉴权方式，因为它信任了前端传的userId
         //后期应该改为在Controller 或 Service 方法上使用 @PreAuthorize 注解
         User operatorUser = userMapper.selectById(acceptedByUserId);
         if (feedback != null &&operatorUser != null && operatorUser.getUserType()!= UserTypeEnum.STUDENT) {
-           feedback.setIsAccepted(isAccepted);
-           feedback.setIsResolved(isResolved);
+           feedback.setFeedbackStatus(feedbackStatus);
            feedbackMapper.updateById(feedback);
         }
         else {
