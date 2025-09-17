@@ -4,6 +4,7 @@ package org.bigseven.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 
 import java.time.LocalDateTime;
@@ -32,17 +33,11 @@ public class PublishFeedbackRequest {
     //发布帖子的用户的id
     private Integer userId;
 
-    //是否已经由管理员接单
-    private Boolean isAccepted;
-
     //接单的管理员id
     private Integer acceptedByUserId;
 
-    //是否已经反馈完成
-    private Boolean isResolved;
-
-    //是否为垃圾信息
-    private Boolean isTrash;
+    //帖子状态
+    private FeedbackStatusEnum feedbackStatus;
 
     private Integer viewCount;
 

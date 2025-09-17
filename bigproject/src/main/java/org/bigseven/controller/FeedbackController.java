@@ -29,7 +29,7 @@ public class FeedbackController {
     @PostMapping("/mark")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER_ADMIN')")
     public AjaxResult<Void> markFeedback(@Valid @RequestBody PublishFeedbackRequest request){
-        feedbackService.markFeedback(request.getUserId(), request.getFeedbackId(), request.getAcceptedByUserId(), request.getIsAccepted(), request.getIsResolved());
+        feedbackService.markFeedback(request.getUserId(), request.getFeedbackId(), request.getAcceptedByUserId(), request.getFeedbackStatus());
         return AjaxResult.success();
     }
 }

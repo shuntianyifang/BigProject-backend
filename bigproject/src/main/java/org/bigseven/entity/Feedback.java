@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 
 import java.time.LocalDateTime;
@@ -50,17 +51,9 @@ public class Feedback {
     @TableField("is_argent")
     private Boolean isArgent;
 
-    //是否已经由管理员接单
-    @TableField("is_accepted")
-    private Boolean isAccepted;
-
-    //是否已经反馈完成
-    @TableField("is_resolved")
-    private Boolean isResolved;
-
-    //是否为垃圾信息
-    @TableField("is_trash")
-    private Boolean isTrash;
+    //帖子状态
+    @TableField("feedback_status")
+    private FeedbackStatusEnum feedbackStatus;
 
     @TableLogic
     private Boolean deleted;
