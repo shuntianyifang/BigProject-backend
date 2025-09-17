@@ -34,12 +34,13 @@ public class User {
     @JsonProperty("user_type")
     private UserTypeEnum userType;
 
-    private String nickName;
+    // 直接用"nickname"，现代英语中"nickname"常以单独一个词使用
+    private String nickname;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
+    @TableField(value = "created_at", fill = FieldFill.INSERT)
+    private LocalDateTime createdAt;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
+    @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updatedAt;
 
 }
