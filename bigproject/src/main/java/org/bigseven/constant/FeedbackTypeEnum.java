@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum PostTypeEnum {
+public enum FeedbackTypeEnum {
     // --- 设施保修 ---
     DORMITORY_REPAIR("宿舍设施报修"),
     ACADEMIC_FACILITIES("教学设施报修"),

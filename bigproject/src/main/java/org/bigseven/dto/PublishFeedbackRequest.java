@@ -4,7 +4,7 @@ package org.bigseven.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.bigseven.constant.PostTypeEnum;
+import org.bigseven.constant.FeedbackTypeEnum;
 
 import java.time.LocalDateTime;
 
@@ -12,16 +12,16 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @Builder
-public class PublishPostRequest {
+public class PublishFeedbackRequest {
 
-    private Integer postId;
+    private Integer feedbackId;
 
     private String title;
 
     private String content;
 
     //帖子类型
-    private PostTypeEnum postType;
+    private FeedbackTypeEnum feedbackType;
 
     //是否匿名
     private Boolean isNicked;
