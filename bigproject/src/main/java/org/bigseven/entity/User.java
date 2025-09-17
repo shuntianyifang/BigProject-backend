@@ -42,11 +42,4 @@ public class User {
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
-    public UserTypeEnum getUserType(){
-        return userType;
-    }
-
-    public void setUserType(UserTypeEnum userType){
-        this.userType = userType;
-    }
 }
