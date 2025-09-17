@@ -8,16 +8,20 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@TableName(value = "rating")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Rating {
     @TableId(type = IdType.AUTO)
+    @TableField("rating_id")
     private Integer ratingId;
 
+    @TableField("user_id")
     private Integer userId;
 
+    @TableField("target_reply_id")
     private Integer targetReplyId;
 
     private String content;
@@ -27,9 +31,9 @@ public class Rating {
     @TableLogic
     private Boolean deleted;
 
-    @TableField(fill = FieldFill.INSERT)
+    @TableField(value = "created_at", fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 
-    @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 }
