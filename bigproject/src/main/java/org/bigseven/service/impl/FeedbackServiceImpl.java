@@ -27,6 +27,17 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final UserMapper userMapper;
     private final FeedbackImageMapper feedbackImageMapper;
 
+    /**
+     * 发布用户反馈信息
+     *
+     * @param userId 用户ID
+     * @param isNicked 是否匿名发布
+     * @param isArgent 是否紧急反馈
+     * @param feedbackType 反馈类型枚举
+     * @param title 反馈标题
+     * @param content 反馈内容
+     * @param imageUrls 反馈图片URL列表，最多保存前9张图片
+     */
     @Override
     public void publishFeedback(Integer userId, Boolean isNicked, Boolean isArgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls) {
         Feedback post = Feedback.builder()
@@ -39,7 +50,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .build();
         feedbackMapper.insert(post);
 
-        // 保存图片信息
+        /// 保存图片信息
         if (imageUrls != null && !imageUrls.isEmpty()) {
             for (int i = 0; i < Math.min(imageUrls.size(), 9); i++) {
                 FeedbackImage image = FeedbackImage.builder()
@@ -52,6 +63,13 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
     }
 
+    /**
+     * 管理员标记反馈状态
+     * @param userId 用户ID
+     * @param feedbackId 反馈ID
+     * @param acceptedByUserId 处理人员ID
+     * @param feedbackStatus 反馈状态枚举值
+     */
     @Override
     public void markFeedback(Integer userId,Integer feedbackId,Integer acceptedByUserId, FeedbackStatusEnum feedbackStatus) {
         Feedback feedback = feedbackMapper.selectById(feedbackId);
@@ -69,19 +87,33 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
     }
 
+    /**
+     * 删除反馈信息
+     * @param userId 用户ID
+     * @param feedbackId 反馈ID
+     */
     @Override
     public void deleteFeedback(Integer userId,Integer feedbackId) {
         Feedback feedback = feedbackMapper.selectById(feedbackId);
         if (feedback != null) {
+            /// 验证用户权限，不能删除其他用户的反馈
             if (feedback.getUserId().equals(userId)) {
                 throw new ApiException(ExceptionEnum.INVALID_PARAMETER);
             }
+            /// 执行删除操作
             feedbackMapper.deleteById(feedbackId);
         } else {
             throw new ApiException(ExceptionEnum.RESOURCE_NOT_FOUND);
         }
     }
 
+    /**
+     * 普通User更新反馈信息
+     * @param feedbackId 反馈ID
+     * @param feedbackType 反馈类型
+     * @param title 反馈标题
+     * @param content 反馈内容
+     */
     @Override
     public void updateFeedback(Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content) {
         Feedback feedback = feedbackMapper.selectById(feedbackId);

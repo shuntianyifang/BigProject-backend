@@ -26,6 +26,13 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         this.userMapper = userMapper;
     }
 
+    /**
+     * 根据用户名加载用户详情
+     *
+     * @param username 用户名
+     * @return UserDetails 用户详细信息对象
+     * @throws ApiException 当用户不存在时抛出异常
+     */
     @Override
     public UserDetails loadUserByUsername(String username) {
 
@@ -34,7 +41,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
         }
-
+        ///获取用户权限集合
         Collection<? extends GrantedAuthority> authorities = getAuthorities(user.getUserType());
 
         return org.springframework.security.core.userdetails.User
@@ -49,9 +56,16 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
     }
 
     /// 为对应的角色授予不同的权限
+    /**
+     * 根据用户类型获取对应的权限集合
+     *
+     * @param userType 用户类型枚举值，用于确定用户的角色和权限
+     * @return 返回该用户类型对应的所有权限集合，包括角色权限和具体操作权限
+     */
     private Collection<? extends GrantedAuthority> getAuthorities(UserTypeEnum userType) {
         Set<GrantedAuthority> authorities = new HashSet<>();
 
+        /// 根据不同的用户类型分配相应的角色和权限
         switch (userType) {
             case SUPER_ADMIN:
                 authorities.add(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN"));

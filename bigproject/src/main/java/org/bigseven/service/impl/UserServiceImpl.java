@@ -41,14 +41,23 @@ public class UserServiceImpl implements UserService {
         return user.getUserId();
     }
 
+    /**
+     * 用户注册功能
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param email 邮箱
+     * @param userType 用户类型
+     * @return 注册成功返回用户ID，用户名已存在返回-1
+     */
     @Override
     public Integer register(String username, String password, String email, UserTypeEnum userType) {
         LambdaQueryWrapper<User> userQueryWrapper = new LambdaQueryWrapper<>();
         userQueryWrapper.eq(User::getUsername, username);
         User user = userMapper.selectOne(userQueryWrapper);
-        // 如果用户不存在，则创建并保存新用户
+        /// 如果用户不存在，则创建并保存新用户
         if (user == null) {
-            // 创建新用户对象
+            /// 创建新用户对象
             user = User.builder()
                     .username(username)
                     .password(passwordEncoder.encode(password))
@@ -58,7 +67,7 @@ public class UserServiceImpl implements UserService {
                     .updatedAt(LocalDateTime.now())
                     .build();
 
-            // 插入新用户到数据库
+            /// 插入新用户到数据库
             userMapper.insert(user);
 
 
