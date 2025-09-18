@@ -18,11 +18,11 @@ import java.util.Set;
 
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserMapper userMapper;
 
-    public UserDetailsServiceImpl(UserMapper userMapper) {
+    public JwtUserDetailsServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
 
@@ -48,6 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .build();
     }
 
+    /// 为对应的角色授予不同的权限
     private Collection<? extends GrantedAuthority> getAuthorities(UserTypeEnum userType) {
         Set<GrantedAuthority> authorities = new HashSet<>();
 

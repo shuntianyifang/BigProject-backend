@@ -17,13 +17,14 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    /// 关闭spring security方便测试
-    @Bean
+    /// 关闭spring security方便测试,注释掉就是不关闭
+    /*@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authz -> authz
                 .anyRequest().permitAll()
         ).csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
+    */
 
 }

@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Builder
 public class Rating {
     @TableId(type = IdType.AUTO)
-    @TableField("rating_id")
     private Integer ratingId;
 
     @TableField("user_id")

@@ -31,6 +31,10 @@ spring:
      baseline-on-migrate: true
         # 版本控制日志表，默认flyway_schema_history,不同系统建议修改数据
         # table: flyway_schema_history
+jwt:
+  secret: bigseven-bigproject-bigbig-woca-dazuoye-zenmenan
+  expiration: 86400  # 24小时，单位秒
+  header: Authorization
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
