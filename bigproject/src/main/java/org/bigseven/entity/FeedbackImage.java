@@ -1,4 +1,3 @@
-// File: src/main/java/org/bigseven/entity/FeedbackImage.java
 package org.bigseven.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
