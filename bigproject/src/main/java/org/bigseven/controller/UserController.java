@@ -18,6 +18,12 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    /**
+     * 用户注册接口
+     *
+     * @param request 用户注册请求参数，包含用户名、密码、邮箱和用户类型
+     * @return 返回注册结果，包含生成的用户ID
+     */
     @PostMapping("/register")
     public AjaxResult<UserRegisterResponse> register(@RequestBody @Valid UserRegisterRequest request) {
         Integer userId =  userService.register(request.getUsername(), request.getPassword(), request.getEmail(), request.getUserType());

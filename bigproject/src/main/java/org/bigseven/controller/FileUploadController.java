@@ -27,17 +27,18 @@ public class FileUploadController {
     private String uploadPath;
 
     /**
-     * 文件上传
-     * @Description: 文件上传,还没做统一错误处理
+     * 文件上传接口,还没做统一错误处理
+     * @param files 要上传的文件数组
+     * @return 包含上传文件访问URL列表的Ajax结果对象
      */
     @PostMapping("/upload")
     public AjaxResult<List<String>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
         List<String> fileUrls = new ArrayList<>();
 
-        // 确保上传目录存在
+        /// 确保上传目录存在
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
-            //创建文件上传目录
+            /// 创建文件上传目录
             uploadDir.mkdirs();
         }
 
@@ -47,7 +48,7 @@ public class FileUploadController {
             }
 
             try {
-                // 生成唯一文件名
+                //// 生成唯一文件名
                 String originalFilename = file.getOriginalFilename();
                 String fileExtension = "";
                 if (originalFilename != null && originalFilename.contains(".")) {
@@ -55,11 +56,11 @@ public class FileUploadController {
                 }
                 String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
 
-                // 保存文件
+                /// 保存文件
                 Path filePath = Paths.get(uploadPath, uniqueFilename);
                 Files.write(filePath, file.getBytes());
 
-                // 保存相对路径URL
+                /// 保存相对路径URL
                 String fileUrl = "/uploads/" + uniqueFilename;
                 fileUrls.add(fileUrl);
 

@@ -36,7 +36,13 @@ public class SecurityConfig {
     public SecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter) {
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
     }
-
+    /**
+     * 配置Spring Security的安全过滤器链
+     *
+     * @param http HttpSecurity对象，用于配置安全策略
+     * @return SecurityFilterChain 安全过滤器链配置
+     * @throws Exception 配置过程中可能抛出的异常
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -59,6 +65,15 @@ public class SecurityConfig {
     }
 
     /// 认证失败处理
+    /**
+     * 创建并配置认证入口点Bean
+     * <p>
+     * 该方法定义了当未认证用户尝试访问受保护资源时的处理逻辑。
+     * 当认证失败时，会返回401状态码和JSON格式的错误信息。
+     * </p>
+     *
+     * @return AuthenticationEntryPoint 认证入口点实例
+     */
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) -> {
@@ -69,6 +84,13 @@ public class SecurityConfig {
     }
 
     /// 授权失败处理
+    /**
+     * 创建并配置访问拒绝处理器Bean
+     *
+     * @return AccessDeniedHandler 访问拒绝处理器实例
+     *
+     * 该处理器用于处理用户访问被拒绝的情况，返回403状态码和JSON格式的错误信息
+     */
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return (request, response, accessDeniedException) -> {
@@ -88,6 +110,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 配置跨域资源共享(CORS)策略
+     *
+     * 该方法创建并配置CORS配置源，允许前端应用跨域访问后端API资源。
+     * 配置包括允许的来源、HTTP方法、请求头和暴露的响应头等信息。
+     *
+     * @return CorsConfigurationSource CORS配置源对象，用于处理跨域请求
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
