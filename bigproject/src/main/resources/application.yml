@@ -11,6 +11,9 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  file:
+    upload:
+      path: uploads/
   mvc:
     problemdetails:
       enabled: true # 启用RFC 7807问题详细信息

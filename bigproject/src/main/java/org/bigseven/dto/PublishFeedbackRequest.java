@@ -8,6 +8,7 @@ import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
@@ -20,6 +21,9 @@ public class PublishFeedbackRequest {
     private String title;
 
     private String content;
+
+    // 新增图片URL列表
+    private List<String> imageUrls;
 
     //帖子类型
     private FeedbackTypeEnum feedbackType;
