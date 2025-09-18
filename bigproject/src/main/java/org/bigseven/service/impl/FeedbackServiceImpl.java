@@ -7,12 +7,16 @@ import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.entity.Feedback;
+import org.bigseven.entity.FeedbackImage;
 import org.bigseven.entity.User;
 import org.bigseven.exception.ApiException;
+import org.bigseven.mapper.FeedbackImageMapper;
 import org.bigseven.mapper.FeedbackMapper;
 import org.bigseven.mapper.UserMapper;
 import org.bigseven.service.FeedbackService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +25,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     private final FeedbackMapper feedbackMapper;
     private final UserMapper userMapper;
+    private final FeedbackImageMapper feedbackImageMapper;
+
     @Override
-    public void publishFeedback(Integer userId, Boolean isNicked, Boolean isArgent, FeedbackTypeEnum feedbackType, String title, String content) {
+    public void publishFeedback(Integer userId, Boolean isNicked, Boolean isArgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls) {
         Feedback post = Feedback.builder()
                 .userId(userId)
                 .isNicked(isNicked)
@@ -32,6 +38,18 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .content(content)
                 .build();
         feedbackMapper.insert(post);
+
+        // 保存图片信息
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            for (int i = 0; i < Math.min(imageUrls.size(), 9); i++) {
+                FeedbackImage image = FeedbackImage.builder()
+                        .feedbackId(post.getFeedbackId())
+                        .imageUrl(imageUrls.get(i))
+                        .imageOrder(i)
+                        .build();
+                feedbackImageMapper.insert(image);
+            }
+        }
     }
 
     @Override

@@ -19,7 +19,14 @@ public class FeedbackController {
     private FeedbackService feedbackService;
     @PostMapping("/publish")
     public AjaxResult<Void> publishFeedback(@Valid @RequestBody PublishFeedbackRequest request){
-        feedbackService.publishFeedback(request.getUserId(), request.getIsNicked(), request.getIsArgent(), request.getFeedbackType(), request.getTitle(), request.getContent());
+        feedbackService.publishFeedback(request.getUserId(),
+                                        request.getIsNicked(),
+                                        request.getIsArgent(),
+                                        request.getFeedbackType(),
+                                        request.getTitle(),
+                                        request.getContent(),
+                                        request.getImageUrls()
+                                        );
         return AjaxResult.success();
     }
     /**
@@ -29,7 +36,11 @@ public class FeedbackController {
     @PostMapping("/mark")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER_ADMIN')")
     public AjaxResult<Void> markFeedback(@Valid @RequestBody PublishFeedbackRequest request){
-        feedbackService.markFeedback(request.getUserId(), request.getFeedbackId(), request.getAcceptedByUserId(), request.getFeedbackStatus());
+        feedbackService.markFeedback(request.getUserId(),
+                                    request.getFeedbackId(),
+                                    request.getAcceptedByUserId(),
+                                    request.getFeedbackStatus()
+                                    );
         return AjaxResult.success();
     }
 }
