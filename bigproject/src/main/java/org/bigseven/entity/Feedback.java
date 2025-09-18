@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 @Builder
 public class Feedback {
     @TableId(type = IdType.AUTO)
-    @TableField("feedback_id")
     private Integer feedbackId;
 
     private String title;

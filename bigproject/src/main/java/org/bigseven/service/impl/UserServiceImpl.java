@@ -6,12 +6,16 @@ import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.entity.User;
 import org.bigseven.mapper.UserMapper;
 import org.bigseven.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * @Description:这个方法才是用户登录,需要重写
@@ -36,9 +40,7 @@ public class UserServiceImpl implements UserService {
         }
         return user.getUserId();
     }
-    /**
-    * @Description:这个方法才是用户注册,login方法未来要改成登录用
-    */
+
     @Override
     public Integer register(String username, String password, String email, UserTypeEnum userType) {
         LambdaQueryWrapper<User> userQueryWrapper = new LambdaQueryWrapper<>();
@@ -49,9 +51,11 @@ public class UserServiceImpl implements UserService {
             // 创建新用户对象
             user = User.builder()
                     .username(username)
-                    .password(password)
+                    .password(passwordEncoder.encode(password))
                     .email(email)
                     .userType(userType)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
                     .build();
 
             // 插入新用户到数据库

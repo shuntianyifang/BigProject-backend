@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 @Builder
 public class User {
     @TableId(type = IdType.AUTO)
-    @TableField("user_id")
     @JsonProperty("user_id")
     private Integer userId;
 

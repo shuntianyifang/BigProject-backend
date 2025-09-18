@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 public class AdminReply {
 
     @TableId(type = IdType.AUTO)
-    @TableField("admin_reply_id")
     private Integer AdminReplyId;
 
     //反馈的目标帖子id
