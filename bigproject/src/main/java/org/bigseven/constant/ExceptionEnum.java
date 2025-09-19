@@ -19,7 +19,8 @@ public enum ExceptionEnum {
     SERVER_ERROR(10000,"系统错误"),
     /// 公共
     INVALID_PARAMETER(20000,"参数错误"),
-    RESOURCE_NOT_FOUND(20001,"资源不存在"),
+    PERMISSION_DENIED(20001,"权限不足"),
+    RESOURCE_NOT_FOUND(20002,"资源不存在"),
     NOT_FOUND_ERROR(20404, HttpStatus.NOT_FOUND.getReasonPhrase()),
     /// 用户
     USER_NOT_EXIST(30000,"用户不存在"),

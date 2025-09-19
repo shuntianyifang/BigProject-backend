@@ -13,5 +13,5 @@ public interface FeedbackService {
     //需要鉴权
     public void deleteFeedback(Integer userId,Integer feedbackId);
 
-    public void updateFeedback(Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content);
+    public void updateFeedback(Integer userID,Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content);
 }
