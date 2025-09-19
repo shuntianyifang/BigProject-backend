@@ -2,6 +2,9 @@ server:
   port: 8080
 
 spring:
+  output:
+    ansi:
+      enabled: ALWAYS
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/feedback_platform?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME:root}
@@ -41,3 +44,13 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+    level: "%clr(%5p){ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=cyan}"
+  file:
+    name: application.log
+  logback:
+    rolling policy:
+      max-file-size: 10MB

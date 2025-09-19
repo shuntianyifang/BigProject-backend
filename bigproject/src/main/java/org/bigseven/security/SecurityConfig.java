@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -32,9 +31,15 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final AuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public SecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter) {
+    public SecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
+                          CustomAccessDeniedHandler customAccessDeniedHandler,
+                          AuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
     /**
      * 配置Spring Security的安全过滤器链
@@ -59,6 +64,10 @@ public class SecurityConfig {
                                 "/webjars/**").permitAll() /// 允许未经认证访问"/url"
                         .anyRequest().authenticated() /// 其他请求需要认证
                 )
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(customAuthenticationEntryPoint) /// 使用自定义认证入口点
+                        .accessDeniedHandler(customAccessDeniedHandler) /// 使用自定义的访问拒绝处理器
+                )
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class); /// 添加JWT过滤器
 
         return http.build();
@@ -74,14 +83,8 @@ public class SecurityConfig {
      *
      * @return AuthenticationEntryPoint 认证入口点实例
      */
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return (request, response, authException) -> {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Authentication failed\"}");
-        };
-    }
+
+    //用了自定义的authenticationEntryPoint，原来的直接删了
 
     /// 授权失败处理
     /**
@@ -91,14 +94,8 @@ public class SecurityConfig {
      *
      * 该处理器用于处理用户访问被拒绝的情况，返回403状态码和JSON格式的错误信息
      */
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return (request, response, accessDeniedException) -> {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.getWriter().write("{\"error\": \"Forbidden\", \"message\": \"Access denied\"}");
-        };
-    }
+
+    //用了自定义的AccessDeniedHandler，原来的直接删了
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
