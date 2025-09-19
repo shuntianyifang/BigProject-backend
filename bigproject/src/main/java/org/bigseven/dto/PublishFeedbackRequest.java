@@ -1,6 +1,7 @@
 package org.bigseven.dto;
 
 
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class PublishFeedbackRequest {
 
     private Integer feedbackId;
 
+    @Size(min=1, max=40,message = "标题长度必须在1-40之间")
     private String title;
 
     private String content;
