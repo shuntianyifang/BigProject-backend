@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,7 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationTokenFilter.class);
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -61,6 +64,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 }
             } catch (Exception e) {
                 /// 记录日志，并返回401错误
+                logger.error("JWT token验证失败: {}", e.getMessage(), e);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 httpServletResponse.getWriter().write("Invalid or expired token");
                 return;
