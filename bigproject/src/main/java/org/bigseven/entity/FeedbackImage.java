@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Builder
 public class FeedbackImage {
     @TableId(type = IdType.AUTO)
-    @TableField("image_id")
     private Integer imageId;
 
     @TableField("feedback_id")
