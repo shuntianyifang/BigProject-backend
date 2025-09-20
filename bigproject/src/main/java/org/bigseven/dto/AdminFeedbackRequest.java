@@ -10,6 +10,6 @@ import org.bigseven.constant.FeedbackStatusEnum;
 @Builder
 public class AdminFeedbackRequest {
     Integer feedbackId;
-    Integer acceptedByUserID;
+    Integer acceptedByUserId;
     FeedbackStatusEnum feedbackStatus;
 }

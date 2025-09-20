@@ -38,7 +38,6 @@ public class User {
     @JsonProperty("user_type")
     private UserTypeEnum userType;
 
-    // 直接用"nickname"，现代英语中"nickname"常以单独一个词使用
     private String nickname;
 
     @TableField("real_name")
