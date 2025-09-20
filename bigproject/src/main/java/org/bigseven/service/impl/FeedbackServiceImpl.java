@@ -65,13 +65,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     /**
      * 管理员标记反馈状态
-     * @param userId 用户ID
      * @param feedbackId 反馈ID
      * @param acceptedByUserId 处理人员ID
      * @param feedbackStatus 反馈状态枚举值
      */
     @Override
-    public void markFeedback(Integer userId,Integer feedbackId,Integer acceptedByUserId, FeedbackStatusEnum feedbackStatus) {
+    public Integer markFeedback(Integer feedbackId,Integer acceptedByUserId, FeedbackStatusEnum feedbackStatus) {
         Feedback feedback = feedbackMapper.selectById(feedbackId);
         //一个简单的鉴权
         //警告:这并不是一个安全的鉴权方式，因为它信任了前端传的userId
@@ -83,8 +82,9 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
         else {
             //需要做错误处理
-            return;
+            return -1;
         }
+        return operatorUser.getUserId();
     }
 
     /**
@@ -98,7 +98,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (feedback != null) {
             /// 验证用户权限，不能删除其他用户的反馈
             if (feedback.getUserId().equals(userId)) {
-                throw new ApiException(ExceptionEnum.INVALID_PARAMETER);
+                throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
             }
             /// 执行删除操作
             feedbackMapper.deleteById(feedbackId);
@@ -115,13 +115,18 @@ public class FeedbackServiceImpl implements FeedbackService {
      * @param content 反馈内容
      */
     @Override
-    public void updateFeedback(Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content) {
+    public void updateFeedback(Integer userId,Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content) {
         Feedback feedback = feedbackMapper.selectById(feedbackId);
         if (feedback != null) {
-            feedback.setFeedbackType(feedbackType);
-            feedback.setTitle(title);
-            feedback.setContent(content);
-            feedbackMapper.updateById(feedback);
+            if(feedback.getUserId().equals(userId)){
+                feedback.setFeedbackType(feedbackType);
+                feedback.setTitle(title);
+                feedback.setContent(content);
+                feedbackMapper.updateById(feedback);
+            }
+            else {
+                throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
+            }
         }
         else {
             //需要做错误处理

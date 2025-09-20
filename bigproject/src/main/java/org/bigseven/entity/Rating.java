@@ -1,6 +1,7 @@
 package org.bigseven.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +19,11 @@ public class Rating {
     private Integer ratingId;
 
     @TableField("user_id")
+    @JsonProperty("user_id")
     private Integer userId;
 
     @TableField("target_reply_id")
+    @JsonProperty("target_reply_id")
     private Integer targetReplyId;
 
     private String content;
