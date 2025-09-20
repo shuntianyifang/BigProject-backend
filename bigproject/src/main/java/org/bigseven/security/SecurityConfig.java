@@ -74,13 +74,13 @@ public class SecurityConfig {
     }
 
     /// 认证失败处理
-    /**
+    /**<p>
      * 创建并配置认证入口点Bean
      * <p>
      * 该方法定义了当未认证用户尝试访问受保护资源时的处理逻辑。
      * 当认证失败时，会返回401状态码和JSON格式的错误信息。
      * </p>
-     *
+     *<p>
      * @return AuthenticationEntryPoint 认证入口点实例
      */
 
@@ -107,12 +107,12 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /**
+    /**<p>
      * 配置跨域资源共享(CORS)策略
-     *
+     *<p>
      * 该方法创建并配置CORS配置源，允许前端应用跨域访问后端API资源。
      * 配置包括允许的来源、HTTP方法、请求头和暴露的响应头等信息。
-     *
+     *<p>
      * @return CorsConfigurationSource CORS配置源对象，用于处理跨域请求
      */
     @Bean

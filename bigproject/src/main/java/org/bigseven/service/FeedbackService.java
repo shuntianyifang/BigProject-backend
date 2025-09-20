@@ -9,7 +9,7 @@ public interface FeedbackService {
 
     public void publishFeedback(Integer userId, Boolean isNicked, Boolean isArgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
     //需要鉴权
-    public void markFeedback(Integer userId, Integer feedbackId, Integer acceptedByUserID, FeedbackStatusEnum feedbackStatus);
+    public void markFeedback(Integer userId, Integer feedbackId, Integer acceptedByUserId, FeedbackStatusEnum feedbackStatus);
     //需要鉴权
     public void deleteFeedback(Integer userId,Integer feedbackId);
 

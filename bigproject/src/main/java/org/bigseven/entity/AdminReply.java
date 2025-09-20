@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class AdminReply {
 
     @TableId(type = IdType.AUTO)
-    private Integer AdminReplyId;
+    private Integer adminReplyId;
 
     //反馈的目标帖子id
     @TableField("target_feedback_id")

@@ -2,5 +2,6 @@
 <project version="4">
   <component name="DiffGenerationConfig">
     <option name="snapshotDbValue" value="fe142480-8cb7-4d7e-8f04-6e0e3f768526" />
+    <option name="targetDbValue" value="fe142480-8cb7-4d7e-8f04-6e0e3f768526" />
   </component>
 </project>

@@ -23,7 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         /// 收集请求信息
         String requestUrl = request.getRequestURI();
         String method = request.getMethod();
-        String remoteAddr = getClientIP(request);
+        String remoteAddr = getClientIp(request);
         String userAgent = request.getHeader("User-Agent");
         String authHeader = request.getHeader("Authorization");
 
@@ -38,7 +38,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     }
 
     /// 获取客户端真实IP（考虑代理情况）
-    private String getClientIP(HttpServletRequest request) {
+    private String getClientIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
