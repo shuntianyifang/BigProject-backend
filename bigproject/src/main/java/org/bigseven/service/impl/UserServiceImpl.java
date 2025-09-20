@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * @Description:这个方法才是用户登录,需要重写
+     * &#064;Description:这个方法才是用户登录,需要重写
      */
     @Override
     public Integer login(String username, String password, String email) {

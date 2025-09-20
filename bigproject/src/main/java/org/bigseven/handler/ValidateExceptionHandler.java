@@ -17,11 +17,11 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice
 @Order(10)
-/**
+/**<p>
  * 异常处理器类，用于处理各种验证和资源未找到异常
  */
 public class ValidateExceptionHandler {
-    /**
+    /**<p>
      * 处理参数验证相关的异常，包括方法参数验证失败、JSON映射异常、HTTP消息不可读异常和Servlet请求绑定异常
      * @param e 异常对象，可以是MethodArgumentNotValidException、JsonMappingException、
      *          HttpMessageNotReadableException或ServletRequestBindingException类型

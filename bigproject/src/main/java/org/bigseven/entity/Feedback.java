@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 /**
  * Description:这是学生问题帖子实体类,与管理员反馈不是同一个实体类
- * @TableName feedback
+ * &#064;TableName  feedback
  */
 @TableName(value = "feedback")
 @Data
