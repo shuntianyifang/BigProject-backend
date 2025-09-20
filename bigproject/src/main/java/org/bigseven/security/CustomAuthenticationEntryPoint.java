@@ -14,6 +14,11 @@ import java.io.IOException;
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+    private static final String UNKNOWN = "unknown";
+    private static final String X_FORWARDED_FOR_HEADER = "X-Forwarded-For";
+    private static final String PROXY_CLIENT_IP_HEADER = "Proxy-Client-IP";
+    private static final String WL_PROXY_CLIENT_IP_HEADER = "WL-Proxy-Client-IP";
+
     private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationEntryPoint.class);
 
     @Override
@@ -39,14 +44,14 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     /// 获取客户端真实IP（考虑代理情况）
     private String getClientIp(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
+        String ip = request.getHeader(X_FORWARDED_FOR_HEADER);
+        if (ip == null || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getHeader(PROXY_CLIENT_IP_HEADER);
         }
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
+        if (ip == null || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getHeader(WL_PROXY_CLIENT_IP_HEADER);
         }
-        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
         return ip;

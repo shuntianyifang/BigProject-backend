@@ -2,6 +2,7 @@ package org.bigseven.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bigseven.config.FeedbackConfig;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
@@ -26,6 +27,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final FeedbackMapper feedbackMapper;
     private final UserMapper userMapper;
     private final FeedbackImageMapper feedbackImageMapper;
+    private final FeedbackConfig feedbackConfig;
 
     /**
      * 发布用户反馈信息
@@ -52,7 +54,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         /// 保存图片信息
         if (imageUrls != null && !imageUrls.isEmpty()) {
-            for (int i = 0; i < Math.min(imageUrls.size(), 9); i++) {
+            for (int i = 0; i < Math.min(imageUrls.size(), feedbackConfig.getMaxImages()); i++) {
                 FeedbackImage image = FeedbackImage.builder()
                         .feedbackId(post.getFeedbackId())
                         .imageUrl(imageUrls.get(i))

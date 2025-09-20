@@ -54,7 +54,7 @@ public class FileUploadController {
                 if (originalFilename != null && originalFilename.contains(".")) {
                     fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
                 }
-                String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
+                String uniqueFilename = UUID.randomUUID() + fileExtension;
 
                 /// 保存文件
                 Path filePath = Paths.get(uploadPath, uniqueFilename);

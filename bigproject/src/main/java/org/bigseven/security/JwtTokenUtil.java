@@ -84,7 +84,7 @@ public class JwtTokenUtil implements Serializable {
      * @return 生成的JWT令牌字符串
      */
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>(4);
         claims.put("sub", userDetails.getUsername());
         claims.put("authorities", userDetails.getAuthorities());
         claims.put("created", new Date());
