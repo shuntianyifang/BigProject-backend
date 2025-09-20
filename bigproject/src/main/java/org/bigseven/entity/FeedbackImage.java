@@ -1,6 +1,7 @@
 package org.bigseven.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class FeedbackImage {
     private Integer imageId;
 
     @TableField("feedback_id")
+    @JsonProperty("feedback_id")
     private Integer feedbackId;
 
     // 存储图片的URL或文件路径
@@ -27,5 +29,6 @@ public class FeedbackImage {
     private Integer imageOrder;
 
     @TableField(value = "created_at", fill = FieldFill.INSERT)
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 }
