@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface FeedbackService {
 
-    public void publishFeedback(Integer userId, Boolean isNicked, Boolean isArgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
+    void publishFeedback(Integer userId, Boolean isNicked, Boolean isArgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
 
-    public Integer markFeedback(Integer feedbackId, Integer acceptedByUserId, FeedbackStatusEnum feedbackStatus);
+    Integer markFeedback(Integer feedbackId, Integer acceptedByUserId, FeedbackStatusEnum feedbackStatus);
 
-    public void deleteFeedback(Integer userId,Integer feedbackId);
+    void deleteFeedback(Integer userId, Integer feedbackId);
 
-    public void updateFeedback(Integer userId,Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content);
+    void updateFeedback(Integer userId, Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content);
 }
