@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
+/**
+ * @author shuntianyifang
+ * &#064;date 2025/9/16
+ */
 @Data
 @AllArgsConstructor
 public class AjaxResult<T> {

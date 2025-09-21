@@ -17,6 +17,10 @@ import java.util.Set;
 
 
 
+/**
+ * @author shuntianyifang
+ * &#064;date 2025/9/17
+ */
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 

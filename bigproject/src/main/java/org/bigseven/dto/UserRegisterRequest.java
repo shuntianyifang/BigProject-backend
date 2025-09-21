@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import org.bigseven.constant.UserTypeEnum;
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/17
+ */
 @Data
 @AllArgsConstructor
 @Builder

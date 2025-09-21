@@ -5,6 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/18
+ */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 

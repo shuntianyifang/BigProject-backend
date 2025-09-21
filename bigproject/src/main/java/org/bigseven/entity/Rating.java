@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/17
+ */
 @TableName(value = "rating")
 @Data
 @NoArgsConstructor

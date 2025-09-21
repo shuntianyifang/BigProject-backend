@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 /**
  * 
  * &#064;TableName  user
+ * @author v185v
+ * &#064;date 2025/9/16
  */
 @TableName(value ="user")
 @Data

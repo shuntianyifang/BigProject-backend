@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
  * 20XXX:公共业务异常
  * 30XXX:用户相关
  * 40XXX:反馈相关
+ *
+ * @author shuntianyifang
+ * &#064;date 2025/9/15
  */
 
 @Getter

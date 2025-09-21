@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * @author shuntianyifang
+ * &#064;date  2025/9/16
+ */
 @Slf4j
 @Component
 public class AccessLogFilter implements Filter {
@@ -19,7 +23,9 @@ public class AccessLogFilter implements Filter {
         AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS);
     }
 
-    /// HTTP状态码颜色
+    /**
+     * HTTP状态码颜色
+     */
     private static AnsiColor getStatusColor(int status){
         return switch (status / 100)  {
             case 2 -> AnsiColor.GREEN;
@@ -29,7 +35,9 @@ public class AccessLogFilter implements Filter {
         };
     }
 
-    /// HTTP方法颜色
+    /**
+     * HTTP方法颜色
+     */
     private static AnsiColor getMethodColor(String method){
         return switch (method){
             case "GET" -> AnsiColor.GREEN;

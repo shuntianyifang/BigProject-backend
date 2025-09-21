@@ -5,13 +5,56 @@ import org.bigseven.constant.FeedbackTypeEnum;
 
 import java.util.List;
 
+/**
+ * @author v185v
+ * &#064;date  2025/9/17
+ */
+
 public interface FeedbackService {
 
+    /**
+     * 发布新的用户反馈
+     * 创建带有指定类型、标题和内容的反馈，支持图片附件和匿名/加急选项
+     *
+     * @param userId 提交反馈的用户ID
+     * @param isNicked 是否匿名发布
+     * @param isArgent 是否为加急反馈
+     * @param feedbackType 反馈类型枚举
+     * @param title 反馈标题
+     * @param content 反馈详细内容
+     * @param imageUrls 反馈相关的图片URL列表
+     */
     void publishFeedback(Integer userId, Boolean isNicked, Boolean isArgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
 
+    /**
+     * 标记反馈状态（如受理/解决等）
+     * 更新反馈的处理状态并由指定用户标记为已受理
+     *
+     * @param feedbackId 需要更新的反馈ID
+     * @param acceptedByUserId 受理该反馈的用户ID
+     * @param feedbackStatus 要更新的状态枚举
+     * @return 受影响的行数或操作状态码
+     */
     Integer markFeedback(Integer feedbackId, Integer acceptedByUserId, FeedbackStatusEnum feedbackStatus);
 
+    /**
+     * 删除指定用户的反馈
+     * 根据用户ID和反馈ID验证权限后执行物理/逻辑删除
+     *
+     * @param userId 执行删除操作的用户ID
+     * @param feedbackId 要删除的反馈ID
+     */
     void deleteFeedback(Integer userId, Integer feedbackId);
 
+    /**
+     * 更新反馈内容信息
+     * 修改已发布反馈的类型、标题和文本内容
+     *
+     * @param userId 执行更新的用户ID
+     * @param feedbackId 要更新的反馈ID
+     * @param feedbackType 新的反馈类型枚举
+     * @param title 新的反馈标题
+     * @param content 新的反馈详细内容
+     */
     void updateFeedback(Integer userId, Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content);
 }

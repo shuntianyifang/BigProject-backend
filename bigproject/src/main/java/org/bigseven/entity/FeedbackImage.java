@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/18
+ */
 @TableName(value = "feedback_image")
 @Data
 @NoArgsConstructor
@@ -21,11 +25,13 @@ public class FeedbackImage {
     @TableField("feedback_id")
     @JsonProperty("feedback_id")
     private Integer feedbackId;
-
-    // 存储图片的URL或文件路径
+    /**
+     * 存储图片的URL或文件路径
+     */
     private String imageUrl;
-
-    // 图片顺序
+    /**
+     * 图片顺序
+     */
     private Integer imageOrder;
 
     @TableField(value = "created_at", fill = FieldFill.INSERT)

@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * @author shuntianyifang
+ * &#064;date 2025/9/19
+ */
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 

@@ -22,7 +22,9 @@ import java.util.List;
 
 /**
  * 不懂怎么配置的可以将对应的代码拿出喂AI
+ *
  * @author shuntianyifang
+ * &#064;date 2025/9/18
  */
 @Configuration
 @EnableMethodSecurity
@@ -50,9 +52,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) /// 启用CORS配置
-                .csrf(AbstractHttpConfigurer::disable) /// 禁用CSRF
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) /// 无状态会话
+                // 启用CORS配置
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // 禁用CSRF
+                .csrf(AbstractHttpConfigurer::disable)
+                // 无状态会话
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers(
                                 "/auth/**",
@@ -64,10 +69,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated() /// 其他请求需要认证
                 )
                 .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint(customAuthenticationEntryPoint) /// 使用自定义认证入口点
-                        .accessDeniedHandler(customAccessDeniedHandler) /// 使用自定义的访问拒绝处理器
+                        // 使用自定义认证入口点
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        // 使用自定义的访问拒绝处理器
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
-                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class); /// 添加JWT过滤器
+                // 添加JWT过滤器
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -17,6 +17,10 @@ import java.util.Map;
 
 import static io.jsonwebtoken.Jwts.builder;
 
+/**
+ * @author shuntianyifang
+ * &#064;date 2025/9/18
+ */
 @Component
 public class JwtTokenUtil implements Serializable {
     @Getter
