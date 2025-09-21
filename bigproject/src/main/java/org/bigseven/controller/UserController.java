@@ -11,6 +11,10 @@ import org.bigseven.result.AjaxResult;
 import org.bigseven.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/16
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {

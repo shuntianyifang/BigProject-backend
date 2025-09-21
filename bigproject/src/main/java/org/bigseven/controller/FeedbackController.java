@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/17
+ */
 @RestController
 @RequestMapping("/api/feedback")
 public class FeedbackController {

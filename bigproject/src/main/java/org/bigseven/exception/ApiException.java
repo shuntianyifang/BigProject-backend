@@ -3,8 +3,10 @@ package org.bigseven.exception;
 import lombok.Getter;
 import org.bigseven.constant.ExceptionEnum;
 
-/// 虽然这里面有东西长的很像但别删，它们都有用
-
+/**
+ * @author shuntianyifang
+ * &#064;date 2025/9/15
+ */
 @Getter
 public class ApiException extends RuntimeException {
     private final Integer errorCode;
@@ -16,7 +18,6 @@ public class ApiException extends RuntimeException {
         this.errorMsg = errorMsg;
     }
 
-    /// 这玩意相比上一个能保留原始异常信息
     public ApiException(Integer errorCode, String errorMsg, Throwable cause) {
         super(errorMsg, cause);
         this.errorCode = errorCode;

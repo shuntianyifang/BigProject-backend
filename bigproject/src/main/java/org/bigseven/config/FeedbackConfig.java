@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author shuntianyifang
+ * &#064;date 2025/9/20
  */
 @Setter
 @Getter

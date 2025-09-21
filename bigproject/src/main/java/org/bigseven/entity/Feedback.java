@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 /**
  * Description:这是学生问题帖子实体类,与管理员反馈不是同一个实体类
  * &#064;TableName  feedback
+ *
+ * @author v185v
+ * &#064;date 2025/9/17
  */
 @TableName(value = "feedback")
 @Data
@@ -37,28 +40,33 @@ public class Feedback {
     @TableField("view_count")
     @JsonProperty("view_count")
     private Integer viewCount;
-
-    //接单的管理员id
+    /**
+     * 接单的管理员id
+     */
     @TableField("accepted_by_user_id")
     @JsonProperty("accepted_by_user_id")
     private Integer acceptedByUserId;
-
-    //帖子类型
+    /**
+     * 帖子类型
+     */
     @TableField("feedback_type")
     @JsonProperty("feedback_type")
     private FeedbackTypeEnum feedbackType;
-
-    //是否匿名
+    /**
+     * 是否匿名
+     */
     @TableField("is_nicked")
     @JsonProperty("is_nicked")
     private Boolean isNicked;
-
-    //是否紧急
+    /**
+     * 是否紧急
+     */
     @TableField("is_argent")
     @JsonProperty("is_argent")
     private Boolean isArgent;
-
-    //帖子状态
+    /**
+     * 帖子状态
+     */
     @TableField("feedback_status")
     @JsonProperty("feedback_status")
     private FeedbackStatusEnum feedbackStatus;

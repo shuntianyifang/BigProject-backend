@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * @author shuntianyifang
+ * &#064;date 2025/9/19
+ */
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -42,7 +46,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Authentication failed\"}");
     }
 
-    /// 获取客户端真实IP（考虑代理情况）
+    /**
+     * 获取客户端真实IP（考虑代理情况）
+     */
     private String getClientIp(HttpServletRequest request) {
         String ip = request.getHeader(X_FORWARDED_FOR_HEADER);
         if (ip == null || ip.isEmpty() || UNKNOWN.equalsIgnoreCase(ip)) {

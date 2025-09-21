@@ -6,7 +6,9 @@ import lombok.Getter;
 /**
  * 用户类型枚举
  * 定义系统中不同类型的用户及其权限级别
+ *
  * @author v185v
+ * &#064;date 2025/9/16
  */
 
 @AllArgsConstructor

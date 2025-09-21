@@ -4,6 +4,11 @@ package org.bigseven.constant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/17
+ */
+
 @AllArgsConstructor
 @Getter
 public enum FeedbackTypeEnum {

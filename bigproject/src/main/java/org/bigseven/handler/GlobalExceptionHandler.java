@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * @author shuntianyifang
+ * &#064;date 2025/9/16
+ */
 @ControllerAdvice
 @Order(1000)
 public class GlobalExceptionHandler {

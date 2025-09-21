@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/17
+ */
 @TableName(value = "admin_reply")
 @Data
 @NoArgsConstructor
@@ -18,16 +22,18 @@ public class AdminReply {
 
     @TableId(type = IdType.AUTO)
     private Integer adminReplyId;
-
-    //反馈的目标帖子id
+    /**
+     * 反馈的目标帖子id
+     */
     @TableField("target_feedback_id")
     private Integer targetFeedbackId;
 
     private String title;
 
     private String content;
-
-    //用userId判断userType来鉴权,非管理员不能发送反馈
+    /**
+     * 用userId判断userType来鉴权,非管理员不能发送反馈
+     */
     @TableField("user_id")
     private Integer userId;
 

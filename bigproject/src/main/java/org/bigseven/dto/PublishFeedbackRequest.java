@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/17
+ */
 @Data
 @AllArgsConstructor
 @Builder
@@ -24,25 +28,33 @@ public class PublishFeedbackRequest {
 
     private String content;
 
-    // 新增图片URL列表
+    /**
+     * 新增图片URL列表
+     */
     private List<String> imageUrls;
-
-    //帖子类型
+    /**
+     * 帖子类型
+     */
     private FeedbackTypeEnum feedbackType;
-
-    //是否匿名
+    /**
+     * 是否匿名
+     */
     private Boolean isNicked;
-
-    //是否紧急
+    /**
+     * 是否紧急
+     */
     private Boolean isArgent;
-
-    //发布帖子的用户的id
+    /**
+     * 发布帖子的用户的id
+     */
     private Integer userId;
-
-    //接单的管理员id
+    /**
+     * 接单的管理员id
+     */
     private Integer acceptedByUserId;
-
-    //帖子状态
+    /**
+     * 帖子状态
+     */
     private FeedbackStatusEnum feedbackStatus;
 
     private Integer viewCount;

@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
- * @author shuntianyifang
  * 异常处理器类，用于处理各种验证和资源未找到异常
+ *
+ * @author shuntianyifang
+ * &#064;date 2025/9/16
  */
 @ControllerAdvice
 @Order(10)
