@@ -2,6 +2,7 @@ package org.bigseven.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.bigseven.util.HttpLogColorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -31,8 +32,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         /// 收集请求信息
         String requestUrl = request.getRequestURI();
-        String method = request.getMethod();
-        String remoteAddr = getClientIp(request);
+        String method = HttpLogColorUtils.colorizeMethod(request.getMethod());
+        String remoteAddr = HttpLogColorUtils.colorizeIp(getClientIp(request));
         String userAgent = request.getHeader("User-Agent");
         String authHeader = request.getHeader("Authorization");
 

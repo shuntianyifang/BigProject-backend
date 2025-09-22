@@ -2,6 +2,7 @@ package org.bigseven.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.bigseven.util.HttpLogColorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -26,7 +27,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         /// 记录访问被拒绝的详细信息
         String requestUrl = request.getRequestURI();
-        String method = request.getMethod();
+        String method = HttpLogColorUtils.colorizeMethod(request.getMethod());
         String remoteAddr = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
 
