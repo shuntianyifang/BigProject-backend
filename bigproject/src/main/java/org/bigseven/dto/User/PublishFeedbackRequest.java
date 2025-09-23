@@ -1,4 +1,4 @@
-package org.bigseven.dto;
+package org.bigseven.dto.User;
 
 
 import jakarta.validation.constraints.Size;

@@ -3,10 +3,10 @@ package org.bigseven.controller;
 
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.bigseven.dto.UserLoginRequest;
-import org.bigseven.dto.UserLoginResponse;
-import org.bigseven.dto.UserRegisterRequest;
-import org.bigseven.dto.UserRegisterResponse;
+import org.bigseven.dto.User.UserLoginRequest;
+import org.bigseven.dto.User.UserLoginResponse;
+import org.bigseven.dto.User.UserRegisterRequest;
+import org.bigseven.dto.User.UserRegisterResponse;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.service.UserService;
 import org.springframework.web.bind.annotation.*;

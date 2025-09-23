@@ -1,4 +1,5 @@
-package org.bigseven.dto;
+package org.bigseven.dto.User;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,11 +7,11 @@ import lombok.Setter;
 
 /**
  * @author v185v
- * &#064;date 2025/9/20
+ * &#064;date 2025/9/17
  */
 @Getter
 @Setter
 @AllArgsConstructor
-public class AdminFeedbackResponse {
+public class UserRegisterResponse {
     private Integer id;
 }
