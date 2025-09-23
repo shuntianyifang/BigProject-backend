@@ -1,4 +1,4 @@
-package org.bigseven.dto.Admin;
+package org.bigseven.dto.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

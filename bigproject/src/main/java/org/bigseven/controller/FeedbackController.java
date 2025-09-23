@@ -3,7 +3,7 @@ package org.bigseven.controller;
 
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.bigseven.dto.User.PublishFeedbackRequest;
+import org.bigseven.dto.user.PublishFeedbackRequest;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.service.FeedbackService;
 import org.springframework.security.access.prepost.PreAuthorize;
