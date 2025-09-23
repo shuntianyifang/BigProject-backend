@@ -1,7 +1,10 @@
 package org.bigseven.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
+import org.bigseven.dto.admin.AdminFeedbackRequest;
+import org.bigseven.dto.admin.AdminFeedbackResponse;
 import org.bigseven.entity.Feedback;
 
 import java.util.List;
@@ -25,7 +28,7 @@ public interface FeedbackService {
      * @param content 反馈详细内容
      * @param imageUrls 反馈相关的图片URL列表
      */
-    void publishFeedback(Integer userId, Boolean isNicked, Boolean isArgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
+    void publishFeedback(Integer userId, Boolean isNicked, Boolean isUrgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
 
     /**
      * 标记反馈状态（如受理/解决等）
@@ -59,8 +62,14 @@ public interface FeedbackService {
      */
     void updateFeedback(Integer userId, Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content);
 
-    void getAllFeedback();
+    /**
+     * 管理员查看所有反馈（分页+条件查询）
+     */
+    Page<AdminFeedbackResponse> getAllFeedbacks(AdminFeedbackRequest request);
 
-    void getAllFeedbackByType(FeedbackTypeEnum feedbackType);
+    /**
+     * 根据ID获取反馈详情
+     */
+    AdminFeedbackResponse getFeedbackDetail(Integer id);
 
 }

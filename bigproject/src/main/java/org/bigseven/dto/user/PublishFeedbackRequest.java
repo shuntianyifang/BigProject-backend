@@ -43,7 +43,7 @@ public class PublishFeedbackRequest {
     /**
      * 是否紧急
      */
-    private Boolean isArgent;
+    private Boolean isUrgent;
     /**
      * 发布帖子的用户的id
      */
