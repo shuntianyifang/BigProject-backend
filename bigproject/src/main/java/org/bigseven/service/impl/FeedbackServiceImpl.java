@@ -15,6 +15,7 @@ import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.FeedbackImageMapper;
 import org.bigseven.mapper.FeedbackMapper;
 import org.bigseven.mapper.UserMapper;
+import org.bigseven.result.AjaxResult;
 import org.bigseven.service.FeedbackService;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final UserMapper userMapper;
     private final FeedbackImageMapper feedbackImageMapper;
     private final FeedbackConfig feedbackConfig;
+    private final FeedbackService feedbackService;
 
     /**
      * 发布用户反馈信息
@@ -143,20 +145,24 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<Feedback> getAllFeedback(){
+
+    public void getAllFeedback(){
         LambdaQueryWrapper<Feedback> feedbackQueryWrapper = new LambdaQueryWrapper<>();
         feedbackQueryWrapper.orderByDesc(Feedback::getFeedbackId);
         feedbackMapper.selectList(feedbackQueryWrapper);
+        List<Feedback> feedbackList = feedbackMapper.selectList(feedbackQueryWrapper);
 
-        return feedbackMapper.selectList(feedbackQueryWrapper);
     }
 
     @Override
-    public List<Feedback> getAllFeedbackByType(FeedbackTypeEnum feedbackType){
+    public void getAllFeedbackByType(FeedbackTypeEnum feedbackType){
+
         LambdaQueryWrapper<Feedback> feedbackQueryWrapper = new LambdaQueryWrapper<>();
         feedbackQueryWrapper.eq(Feedback::getFeedbackType, feedbackType);
         feedbackQueryWrapper.orderByDesc(Feedback::getFeedbackId);
         feedbackMapper.selectList(feedbackQueryWrapper);
-        return feedbackMapper.selectList(feedbackQueryWrapper);
+
+        List<Feedback> feedbackListByType = feedbackMapper.selectList(feedbackQueryWrapper);
+
     }
 }

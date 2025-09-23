@@ -59,7 +59,8 @@ public interface FeedbackService {
      */
     void updateFeedback(Integer userId, Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content);
 
-    List<Feedback> getAllFeedback();
+    void getAllFeedback();
 
-    List<Feedback> getAllFeedbackByType(FeedbackTypeEnum feedbackType);
+    void getAllFeedbackByType(FeedbackTypeEnum feedbackType);
+
 }

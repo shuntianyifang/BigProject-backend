@@ -2,12 +2,10 @@ package org.bigseven.controller;
 
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.bigseven.constant.ExceptionEnum;
-import org.bigseven.constant.JwtConstants;
-import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.dto.user.UserLoginRequest;
+import org.bigseven.dto.user.UserLoginResponse;
 import org.bigseven.dto.user.UserRegisterRequest;
+import org.bigseven.dto.user.UserRegisterResponse;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.service.UserService;
