@@ -1,4 +1,4 @@
-package org.bigseven.dto.User;
+package org.bigseven.dto.user;
 
 
 import lombok.AllArgsConstructor;
@@ -13,5 +13,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UserLoginResponse {
-    private Integer id;
+    private Integer userId;
 }

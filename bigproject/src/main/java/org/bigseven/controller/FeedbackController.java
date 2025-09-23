@@ -3,7 +3,7 @@ package org.bigseven.controller;
 
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.bigseven.dto.User.PublishFeedbackRequest;
+import org.bigseven.dto.user.PublishFeedbackRequest;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.service.FeedbackService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,8 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/feedback")
 public class FeedbackController {
-    @Resource
-    private FeedbackService feedbackService;
+
+    private final FeedbackService feedbackService;
+
+    public FeedbackController(FeedbackService feedbackService) {
+        this.feedbackService = feedbackService;
+    }
 
     /**
      * 发布用户反馈信息
