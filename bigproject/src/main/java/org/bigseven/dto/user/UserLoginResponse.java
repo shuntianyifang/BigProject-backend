@@ -13,5 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UserLoginResponse {
+
     private Integer userId;
+
 }

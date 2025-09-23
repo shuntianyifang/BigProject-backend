@@ -72,5 +72,4 @@ public interface FeedbackService {
      */
     AdminFeedbackResponse getFeedbackDetail(Integer id);
 
-    List<Feedback> getAllFeedbackByType(FeedbackTypeEnum feedbackType);
 }

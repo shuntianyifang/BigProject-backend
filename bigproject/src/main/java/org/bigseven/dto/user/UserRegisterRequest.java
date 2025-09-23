@@ -25,4 +25,6 @@ public class UserRegisterRequest {
     @Email(message = "邮箱格式错误")
     private String email;
 
+    private UserTypeEnum userType;
+
 }
