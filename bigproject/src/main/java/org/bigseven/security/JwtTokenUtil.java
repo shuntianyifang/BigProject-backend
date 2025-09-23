@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import org.bigseven.constant.JwtConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.secret}")
     private String secret;
 
+    @Getter
     @Value("${jwt.expiration}")
     private Long expiration;
 
@@ -89,9 +91,9 @@ public class JwtTokenUtil implements Serializable {
      */
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>(4);
-        claims.put("sub", userDetails.getUsername());
-        claims.put("authorities", userDetails.getAuthorities());
-        claims.put("created", new Date());
+        claims.put(JwtConstants.CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(JwtConstants.CLAIM_KEY_AUTHORITIES, userDetails.getAuthorities());
+        claims.put(JwtConstants.CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
     }
 
@@ -149,7 +151,7 @@ public class JwtTokenUtil implements Serializable {
         try {
             /// 解析原始令牌获取声明信息，并更新创建时间后生成新的令牌
             Claims claims = getClaimsFromToken(token);
-            claims.put("created", new Date());
+            claims.put(JwtConstants.CLAIM_KEY_CREATED, new Date());
             refreshedToken = generateToken(claims);
 
         } catch (Exception e) {
@@ -172,6 +174,16 @@ public class JwtTokenUtil implements Serializable {
         return (username != null &&
                 username.equals(userDetails.getUsername()) &&
                 !isTokenExpired(token));
+    }
+
+    /**
+     * 从认证头中提取Token（去掉Bearer前缀）
+     */
+    public String extractTokenFromHeader(String authHeader) {
+        if (authHeader != null && authHeader.startsWith(JwtConstants.TOKEN_PREFIX)) {
+            return authHeader.substring(JwtConstants.TOKEN_PREFIX.length());
+        }
+        return authHeader;
     }
 
 }

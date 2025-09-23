@@ -1,4 +1,4 @@
-package org.bigseven.dto.User;
+package org.bigseven.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

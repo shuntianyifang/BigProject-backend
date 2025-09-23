@@ -1,15 +1,21 @@
 package org.bigseven.controller;
 
 
-import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.bigseven.dto.User.UserLoginRequest;
-import org.bigseven.dto.User.UserLoginResponse;
-import org.bigseven.dto.User.UserRegisterRequest;
-import org.bigseven.dto.User.UserRegisterResponse;
+import lombok.RequiredArgsConstructor;
+import org.bigseven.constant.ExceptionEnum;
+import org.bigseven.constant.JwtConstants;
+import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.user.UserLoginRequest;
+import org.bigseven.dto.user.UserRegisterRequest;
 import org.bigseven.result.AjaxResult;
+import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author v185v
@@ -17,27 +23,75 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
+    private final JwtTokenUtil jwtTokenUtil;
 
     /**
-     * 用户注册接口
+     * 用户登录
      *
-     * @param request 用户注册请求参数，包含用户名、密码、邮箱和用户类型
-     * @return 返回注册结果，包含生成的用户ID
+     * @param request 登录请求参数
+     * @return 登录结果，包含token和用户信息
      */
-    @PostMapping("/register")
-    public AjaxResult<UserRegisterResponse> register(@RequestBody @Valid UserRegisterRequest request) {
-        Integer userId =  userService.register(request.getUsername(), request.getPassword(), request.getEmail(), request.getUserType());
-        return AjaxResult.success(new UserRegisterResponse(userId));
+    @PostMapping("/login")
+    public ResponseEntity<AjaxResult<Map<String, Object>>> login(@Valid @RequestBody UserLoginRequest request) {
+        try {
+            Map<String, Object> result = userService.login(request.getUsername(), request.getPassword());
+            return ResponseEntity.ok(AjaxResult.success(result));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(AjaxResult.fail(ExceptionEnum.UNAUTHORIZED.getErrorCode(), e.getMessage()));
+        }
     }
 
-    @PostMapping("/login")
-    public AjaxResult<UserLoginResponse> login(@RequestBody @Valid UserLoginRequest request) {
-        Integer id = userService.login(request.getUsername(), request.getPassword(), request.getEmail());
-        return AjaxResult.success(new UserLoginResponse(id));
+    /**
+     * 用户注册
+     *
+     * @param request 注册请求参数
+     * @return 注册结果，包含token和用户信息
+     */
+    @PostMapping("/register")
+    public ResponseEntity<AjaxResult<Map<String, Object>>> register(@Valid @RequestBody UserRegisterRequest request) {
+        try {
+            Map<String, Object> result = userService.register(
+                    request.getUsername(),
+                    request.getPassword(),
+                    request.getEmail(),
+                    UserTypeEnum.STUDENT
+            );
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(AjaxResult.success(result));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(AjaxResult.fail(ExceptionEnum.BAD_REQUEST.getErrorCode(), e.getMessage()));
+        }
+    }
+
+    /**
+     * 刷新token
+     *
+     * @param authorizationHeader 包含Bearer token的Authorization头
+     * @return 新的token信息
+     */
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AjaxResult<Map<String, Object>>> refreshToken(
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith(JwtConstants.TOKEN_PREFIX)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(AjaxResult.fail(ExceptionEnum.BAD_REQUEST.getErrorCode(), "缺少有效的token"));
+        }
+
+        try {
+            String token = jwtTokenUtil.extractTokenFromHeader(authorizationHeader);
+            Map<String, Object> result = userService.refreshToken(token);
+            return ResponseEntity.ok(AjaxResult.success(result));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(AjaxResult.fail(ExceptionEnum.UNAUTHORIZED.getErrorCode(), e.getMessage()));
+        }
     }
 
 }

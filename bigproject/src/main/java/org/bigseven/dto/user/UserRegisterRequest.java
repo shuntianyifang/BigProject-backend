@@ -1,4 +1,4 @@
-package org.bigseven.dto.User;
+package org.bigseven.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,5 +25,4 @@ public class UserRegisterRequest {
     @Email(message = "邮箱格式错误")
     private String email;
 
-    private UserTypeEnum userType;
 }

@@ -60,8 +60,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers(
-                                "/auth/**",
-                                "/login",
+                                "/api/auth/**",
+                                "/api/feedback/**",
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",

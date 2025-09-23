@@ -1,4 +1,4 @@
-package org.bigseven.dto.Admin;
+package org.bigseven.dto.admin;
 
 public class AdminGetAllFeedbackResponse {
 }
