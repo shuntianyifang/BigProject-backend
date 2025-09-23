@@ -1,6 +1,7 @@
 package org.bigseven.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.bigseven.entity.User;
 
@@ -18,7 +19,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 对应的用户实体对象，如果不存在则返回null
      */
     @Select("SELECT * FROM user WHERE user_id = #{user_id}")
-    User selectByUserId(Integer userId);
+    User selectByUserId(@Param("user_id") Integer userId);
 
     /**
      * 根据用户名查询用户信息
@@ -28,5 +29,5 @@ public interface UserMapper extends BaseMapper<User> {
      * @return 对应的用户实体对象，如果不存在则返回null
      */
     @Select("SELECT * FROM user WHERE username = #{username}")
-    User selectByUsername(String username);
+    User selectByUsername(@Param("username") String username);
 }

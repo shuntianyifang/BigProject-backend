@@ -57,4 +57,8 @@ public interface FeedbackService {
      * @param content 新的反馈详细内容
      */
     void updateFeedback(Integer userId, Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content);
+
+    void getAllFeedback();
+
+    void getAllFeedbackByType(FeedbackTypeEnum feedbackType);
 }
