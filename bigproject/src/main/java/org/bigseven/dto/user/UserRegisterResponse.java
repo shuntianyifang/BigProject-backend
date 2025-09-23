@@ -13,5 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class UserRegisterResponse {
-    private Integer id;
+
+    private Integer userId;
+
 }

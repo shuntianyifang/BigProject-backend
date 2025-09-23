@@ -4,14 +4,17 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ansi.AnsiColor;
+import org.bigseven.util.HttpLogColorUtils;
 import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 
 /**
+ * 访问日志过滤器，记录HTTP请求的处理时间、状态码、请求方法等信息并输出彩色日志
+ *
  * @author shuntianyifang
  * &#064;date  2025/9/16
  */
@@ -19,94 +22,88 @@ import java.time.Instant;
 @Component
 public class AccessLogFilter implements Filter {
 
+    private static final int METHOD_NAME_MAX_LENGTH = 6;
+    private static final String UNKNOWN_IP = "unknown";
+
     static {
         AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS);
     }
 
-    /**
-     * HTTP状态码颜色
-     */
-    private static AnsiColor getStatusColor(int status){
-        return switch (status / 100)  {
-            case 2 -> AnsiColor.GREEN;
-            case 4 -> AnsiColor.YELLOW;
-            case 5 -> AnsiColor.RED;
-            default -> AnsiColor.DEFAULT;
-        };
-    }
-
-    /**
-     * HTTP方法颜色
-     */
-    private static AnsiColor getMethodColor(String method){
-        return switch (method){
-            case "GET" -> AnsiColor.GREEN;
-            case "POST" -> AnsiColor.YELLOW;
-            case "PUT" -> AnsiColor.BLUE;
-            case "DELETE" -> AnsiColor.RED;
-            default -> AnsiColor.DEFAULT;
-        };
-    }
-
-    private static String getRemoteAddr(HttpServletRequest request){
-        String ip = request.getHeader("X-Forwarded-For");
-        return ip == null ? request.getRemoteAddr() : ip;
-    }
-
-    /**
-     * 执行过滤器逻辑，记录请求的处理时间、状态码、请求方法等信息并输出到日志
-     *
-     * @param request  Servlet请求对象，用于获取请求相关信息
-     * @param response Servlet响应对象，用于获取响应状态码等信息
-     * @param chain    过滤器链，用于继续执行后续过滤器或目标资源
-     * @throws IOException      IO异常
-     * @throws ServletException Servlet异常
-     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        // 检查请求和响应对象是否为HTTP类型，如果不是则直接放行
-        if (!(request instanceof HttpServletRequest req) || !(response instanceof HttpServletResponse res)) {
+
+        if (!(request instanceof HttpServletRequest httpRequest) || !(response instanceof HttpServletResponse httpResponse)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // 记录请求开始时间
-        Instant start = Instant.now();
-        chain.doFilter(request, response);
-        // 记录请求结束时间
-        Instant end = Instant.now();
-        // 计算请求处理耗时(毫秒)
-        long durationMs = Duration.between(start, end).toMillis();
+        Instant startTime = Instant.now();
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            Instant endTime = Instant.now();
+            logRequestDetails(httpRequest, httpResponse, startTime, endTime);
+        }
+    }
 
-        // 获取响应状态码
-        int status = res.getStatus();
+    /**
+     * 记录请求详细信息到日志
+     */
+    private void logRequestDetails(HttpServletRequest request, HttpServletResponse response,
+                                   Instant startTime, Instant endTime) {
+        long durationMs = Duration.between(startTime, endTime).toMillis();
+        int statusCode = response.getStatus();
+        String method = request.getMethod();
+        String requestUri = getRequestUriWithQuery(request);
+        String clientIp = getClientIpAddress(request);
 
-        String method = req.getMethod();
-        String uri = req.getRequestURI();
-        String query = req.getQueryString();
-        String ip = getRemoteAddr(req);
-
-        /// 彩色状态码
-        String colorStatus = AnsiOutput.toString(
-                getStatusColor(status),
-                status,
-                AnsiColor.DEFAULT
-        );
-
-        /// 彩色方法
-        String colorMethod = AnsiOutput.toString(
-                getMethodColor(method),
-                method,
-                AnsiColor.DEFAULT
-        );
+        String coloredStatusCode = HttpLogColorUtils.colorizeStatus(statusCode);
+        String coloredMethod = HttpLogColorUtils.colorizeMethod(method);
+        String coloredDuration = HttpLogColorUtils.colorizeDuration(durationMs);
+        String coloredIp = HttpLogColorUtils.colorizeIp(clientIp);
 
         log.info("{} | {}ms | {} {} | IP: {}",
-                colorStatus,
-                durationMs,
-                String.format("%-6s", colorMethod),
-                uri + (query != null ? "?" + query : ""),
-                ip
-        );
+                coloredStatusCode,
+                coloredDuration,
+                formatMethod(coloredMethod),
+                requestUri,
+                coloredIp);
+    }
+
+    /**
+     * 获取带查询参数的请求URI
+     */
+    private String getRequestUriWithQuery(HttpServletRequest request) {
+        String queryString = request.getQueryString();
+        String requestUri = request.getRequestURI();
+        return queryString != null ? requestUri + "?" + queryString : requestUri;
+    }
+
+    /**
+     * 获取客户端IP地址，支持X-Forwarded-For头
+     */
+    private String getClientIpAddress(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isEmpty() || UNKNOWN_IP.equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.isEmpty() || UNKNOWN_IP.equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.isEmpty() || UNKNOWN_IP.equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip.contains(",") ? ip.split(",")[0].trim() : ip;
+    }
+
+    /**
+     * 格式化方法名称，确保固定宽度
+     */
+    private String formatMethod(String method) {
+        // 去除ANSI颜色代码来计算实际长度
+        String plainMethod = method.replaceAll("\u001B\\[[;\\d]*m", "");
+        int padding = METHOD_NAME_MAX_LENGTH - plainMethod.length();
+        return padding > 0 ? method + " ".repeat(padding) : method;
     }
 }

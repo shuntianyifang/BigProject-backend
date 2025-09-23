@@ -145,6 +145,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+
     public void getAllFeedback(){
         LambdaQueryWrapper<Feedback> feedbackQueryWrapper = new LambdaQueryWrapper<>();
         feedbackQueryWrapper.orderByDesc(Feedback::getFeedbackId);
@@ -155,10 +156,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public void getAllFeedbackByType(FeedbackTypeEnum feedbackType){
+
         LambdaQueryWrapper<Feedback> feedbackQueryWrapper = new LambdaQueryWrapper<>();
         feedbackQueryWrapper.eq(Feedback::getFeedbackType, feedbackType);
         feedbackQueryWrapper.orderByDesc(Feedback::getFeedbackId);
         feedbackMapper.selectList(feedbackQueryWrapper);
+
         List<Feedback> feedbackListByType = feedbackMapper.selectList(feedbackQueryWrapper);
+
     }
 }

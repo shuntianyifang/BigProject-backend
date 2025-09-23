@@ -19,8 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/feedback")
 public class FeedbackController {
-    @Resource
-    private FeedbackService feedbackService;
+
+    private final FeedbackService feedbackService;
+
+    public FeedbackController(FeedbackService feedbackService) {
+        this.feedbackService = feedbackService;
+    }
 
     /**
      * 发布用户反馈信息

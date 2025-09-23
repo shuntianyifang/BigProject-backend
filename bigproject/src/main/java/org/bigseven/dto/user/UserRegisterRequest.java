@@ -26,4 +26,5 @@ public class UserRegisterRequest {
     private String email;
 
     private UserTypeEnum userType;
+
 }

@@ -2,6 +2,7 @@ package org.bigseven.service;
 
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
+import org.bigseven.entity.Feedback;
 
 import java.util.List;
 
@@ -61,4 +62,5 @@ public interface FeedbackService {
     void getAllFeedback();
 
     void getAllFeedbackByType(FeedbackTypeEnum feedbackType);
+
 }
