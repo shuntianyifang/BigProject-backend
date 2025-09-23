@@ -43,7 +43,7 @@ public class FeedbackController {
     public AjaxResult<Void> publishFeedback(@Valid @RequestBody PublishFeedbackRequest request){
         feedbackService.publishFeedback(request.getUserId(),
                                         request.getIsNicked(),
-                                        request.getIsArgent(),
+                                        request.getIsUrgent(),
                                         request.getFeedbackType(),
                                         request.getTitle(),
                                         request.getContent(),

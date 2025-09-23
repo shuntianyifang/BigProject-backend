@@ -61,9 +61,9 @@ public class Feedback {
     /**
      * 是否紧急
      */
-    @TableField("is_argent")
-    @JsonProperty("is_argent")
-    private Boolean isArgent;
+    @TableField("is_urgent")
+    @JsonProperty("is_urgent")
+    private Boolean isUrgent;
     /**
      * 帖子状态
      */

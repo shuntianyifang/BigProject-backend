@@ -1,6 +1,9 @@
 package org.bigseven.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bigseven.config.FeedbackConfig;
@@ -8,6 +11,9 @@ import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.admin.AdminFeedbackRequest;
+import org.bigseven.dto.admin.AdminFeedbackResponse;
+import org.bigseven.dto.user.UserSimpleVO;
 import org.bigseven.entity.Feedback;
 import org.bigseven.entity.FeedbackImage;
 import org.bigseven.entity.User;
@@ -16,9 +22,11 @@ import org.bigseven.mapper.FeedbackImageMapper;
 import org.bigseven.mapper.FeedbackMapper;
 import org.bigseven.mapper.UserMapper;
 import org.bigseven.service.FeedbackService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author v185v
@@ -50,7 +58,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         Feedback post = Feedback.builder()
                 .userId(userId)
                 .isNicked(isNicked)
-                .isArgent(isArgent)
+                .isUrgent(isArgent)
                 .feedbackType(feedbackType)
                 .title(title)
                 .content(content)
@@ -142,14 +150,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     }
 
-    @Override
-    public List<Feedback> getAllFeedback(){
-        LambdaQueryWrapper<Feedback> feedbackQueryWrapper = new LambdaQueryWrapper<>();
-        feedbackQueryWrapper.orderByDesc(Feedback::getFeedbackId);
-        feedbackMapper.selectList(feedbackQueryWrapper);
 
-        return feedbackMapper.selectList(feedbackQueryWrapper);
-    }
 
     @Override
     public List<Feedback> getAllFeedbackByType(FeedbackTypeEnum feedbackType){
@@ -158,5 +159,146 @@ public class FeedbackServiceImpl implements FeedbackService {
         feedbackQueryWrapper.orderByDesc(Feedback::getFeedbackId);
         feedbackMapper.selectList(feedbackQueryWrapper);
         return feedbackMapper.selectList(feedbackQueryWrapper);
+    }
+
+    /**
+     * 根据条件查询所有反馈信息并分页返回
+     * @param request 包含查询条件和分页参数的请求对象
+     * @return 分页的反馈响应对象列表
+     */
+    @Override
+    public Page<AdminFeedbackResponse> getAllFeedbacks(AdminFeedbackRequest request) {
+        // 创建分页对象
+        Page<Feedback> page = new Page<>(request.getPage(), request.getSize());
+
+        // 构建查询条件
+        QueryWrapper<Feedback> queryWrapper = new QueryWrapper<>();
+
+        // 条件筛选
+        if (request.getTitle() != null && !request.getTitle().isEmpty()) {
+            //like 方法用于模糊查询
+            queryWrapper.like("title", request.getTitle());
+        }
+        if (request.getFeedbackType() != null) {
+            queryWrapper.eq("feedback_type", request.getFeedbackType());
+        }
+        if (request.getFeedbackType() != null) {
+            queryWrapper.eq("feedback_status", request.getFeedbackType());
+        }
+        if (request.getIsUrgent() != null) {
+            queryWrapper.eq("is_urgent", request.getIsUrgent());
+        }
+        if (request.getStudentId() != null) {
+            queryWrapper.eq("student_id", request.getStudentId());
+        }
+        if (request.getAdminId() != null) {
+            queryWrapper.eq("admin_id", request.getAdminId());
+        }
+
+        if (request.getStartTime() != null && !request.getStartTime().isEmpty()) {
+            //ge方法是用来查询"大于等于"的
+            queryWrapper.ge("created_at", request.getStartTime());
+        }
+        if (request.getEndTime() != null && !request.getEndTime().isEmpty()) {
+            //le方法用来查询"小于等于"
+            queryWrapper.le("created_at", request.getEndTime());
+        }
+
+        // 排序
+        if ("asc".equalsIgnoreCase(request.getSortOrder())) {
+            queryWrapper.orderByAsc(request.getSortField());
+        } else {
+            queryWrapper.orderByDesc(request.getSortField());
+        }
+
+        // 执行查询
+        IPage<Feedback> feedbackPage = feedbackMapper.selectPage(page, queryWrapper);
+
+        // 转换为响应对象
+        Page<AdminFeedbackResponse> responsePage = new Page<>();
+        BeanUtils.copyProperties(feedbackPage, responsePage);
+
+        List<AdminFeedbackResponse> feedbackResponses = feedbackPage.getRecords().stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+
+        responsePage.setRecords(feedbackResponses);
+        return responsePage;
+    }
+
+    /**
+     * 根据ID获取反馈详情
+     * @param id 反馈ID
+     * @return 反馈详情响应对象
+     * @throws ApiException 当反馈不存在时抛出异常
+     */
+    @Override
+    public AdminFeedbackResponse getFeedbackDetail(Integer id) {
+        Feedback feedback = feedbackMapper.selectById(id);
+        if (feedback == null) {
+            throw new ApiException(ExceptionEnum.NOT_FOUND_ERROR);
+        }
+        return convertToResponse(feedback);
+    }
+
+    /**
+     * 将Feedback对象转换为AdminFeedbackResponse对象
+     * @param feedback Feedback实体对象
+     * @return 转换后的AdminFeedbackResponse对象
+     */
+    private AdminFeedbackResponse convertToResponse(Feedback feedback) {
+        AdminFeedbackResponse response = new AdminFeedbackResponse();
+        BeanUtils.copyProperties(feedback, response);
+
+        // 设置学生信息
+        User student = userMapper.selectById(feedback.getUserId());
+        if (student != null) {
+            UserSimpleVO studentVO = new UserSimpleVO();
+            BeanUtils.copyProperties(student, studentVO);
+            response.setStudent(studentVO);
+        }
+
+        // 设置管理员信息（如果已分配）
+        if (feedback.getUserId() != null) {
+            User admin = userMapper.selectById(feedback.getUserId());
+            if (admin != null) {
+                UserSimpleVO adminVO = new UserSimpleVO();
+                BeanUtils.copyProperties(admin, adminVO);
+                response.setAdmin(adminVO);
+            }
+        }
+
+        // 设置图片URL列表
+        List<String> imageUrls = getFeedbackImageUrls(feedback.getFeedbackId());
+        response.setImageUrls(imageUrls);
+
+        return response;
+    }
+
+    /**
+     * 获取反馈的图片URL列表
+     * @param feedbackId 反馈ID
+     * @return 图片URL列表
+     */
+    private List<String> getFeedbackImageUrls(Integer feedbackId) {
+        QueryWrapper<FeedbackImage> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("feedback_id", feedbackId);
+        List<FeedbackImage> images = feedbackImageMapper.selectList(queryWrapper);
+
+        return images.stream()
+                .map(FeedbackImage::getImageUrl)
+                .map(this::buildImageUrl)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 构建完整的图片URL
+     * @param imagePath 图片路径
+     * @return 完整的图片URL
+     */
+    private String buildImageUrl(String imagePath) {
+        // 这里需要根据实际的文件访问路径来构建URL
+        // 例如：http://your-domain.com/api/file/images/filename.jpg
+        return "/api/file/images/" + imagePath;
     }
 }
