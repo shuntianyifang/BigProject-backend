@@ -42,7 +42,6 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final UserMapper userMapper;
     private final FeedbackImageMapper feedbackImageMapper;
     private final FeedbackConfig feedbackConfig;
-    private final FeedbackService feedbackService;
 
     /**
      * 发布用户反馈信息

@@ -1,5 +1,6 @@
 package org.bigseven.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,15 +32,22 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
-    private final AuthenticationEntryPoint customAuthenticationEntryPoint;
+    private  JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    private  CustomAccessDeniedHandler customAccessDeniedHandler;
+    private  AuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public SecurityConfig(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter,
-                          CustomAccessDeniedHandler customAccessDeniedHandler,
-                          AuthenticationEntryPoint customAuthenticationEntryPoint) {
+    @Autowired
+    public void setJwtAuthenticationTokenFilter(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter) {
         this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
+    }
+
+    @Autowired
+    public void setCustomAccessDeniedHandler(CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.customAccessDeniedHandler = customAccessDeniedHandler;
+    }
+
+    @Autowired
+    public void setCustomAuthenticationEntryPoint(AuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
     /**

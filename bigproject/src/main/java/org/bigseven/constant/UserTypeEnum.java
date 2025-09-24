@@ -1,5 +1,6 @@
 package org.bigseven.constant;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -31,7 +32,8 @@ public enum UserTypeEnum {
     /**
      * 用户类型编码，用于数据库存储和程序逻辑判断
      */
-    private final Integer userType;
+    @EnumValue
+    private final Integer userTypeCode;
     /**
      * 用户类型显示名称，用于界面展示
      */
