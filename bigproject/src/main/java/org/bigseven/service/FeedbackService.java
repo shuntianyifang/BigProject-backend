@@ -22,7 +22,7 @@ public interface FeedbackService {
      *
      * @param userId 提交反馈的用户ID
      * @param isNicked 是否匿名发布
-     * @param isArgent 是否为加急反馈
+     * @param isUrgent 是否为加急反馈
      * @param feedbackType 反馈类型枚举
      * @param title 反馈标题
      * @param content 反馈详细内容

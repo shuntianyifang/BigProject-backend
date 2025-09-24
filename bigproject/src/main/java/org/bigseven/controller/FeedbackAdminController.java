@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.bigseven.constant.FeedbackStatusEnum;
+import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.dto.admin.AdminFeedbackRequest;
 import org.bigseven.dto.admin.AdminFeedbackResponse;
 import org.bigseven.result.AjaxResult;
@@ -12,6 +13,7 @@ import org.bigseven.service.FeedbackService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -96,8 +98,10 @@ public class FeedbackAdminController {
      */
     @GetMapping("/types")
     public AjaxResult<List<String>> getFeedbackTypes() {
-        // 这里可以从数据库或配置文件中获取反馈类型
-        List<String> types = List.of("设施报修", "环境卫生", "学习资源", "生活服务", "其他");
+        //从枚举中获取所有反馈类型
+        List<String> types = Arrays.stream(FeedbackTypeEnum.values())
+                .map(FeedbackTypeEnum::getDisplayName)
+                .toList();
         return AjaxResult.success(types);
     }
 
@@ -107,7 +111,9 @@ public class FeedbackAdminController {
      */
     @GetMapping("/statuses")
     public AjaxResult<List<String>> getFeedbackStatuses() {
-        List<String> statuses = List.of("PENDING", "ACCEPTED", "PROCESSING", "COMPLETED", "REJECTED");
+        List<String> statuses =  Arrays.stream(FeedbackStatusEnum.values())
+                .map(Enum::name)
+                .toList();
         return AjaxResult.success(statuses);
     }
 }
