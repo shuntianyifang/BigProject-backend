@@ -152,17 +152,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     }
 
-    @Override
-    public void getAllFeedbackByType(FeedbackTypeEnum feedbackType){
-
-        LambdaQueryWrapper<Feedback> feedbackQueryWrapper = new LambdaQueryWrapper<>();
-        feedbackQueryWrapper.eq(Feedback::getFeedbackType, feedbackType);
-        feedbackQueryWrapper.orderByDesc(Feedback::getFeedbackId);
-        feedbackMapper.selectList(feedbackQueryWrapper);
-
-        List<Feedback> feedbackListByType = feedbackMapper.selectList(feedbackQueryWrapper);
-
-    }
+//    @Override
+//    public void getAllFeedbackByType(FeedbackTypeEnum feedbackType){
+//
+//        LambdaQueryWrapper<Feedback> feedbackQueryWrapper = new LambdaQueryWrapper<>();
+//        feedbackQueryWrapper.eq(Feedback::getFeedbackType, feedbackType);
+//        feedbackQueryWrapper.orderByDesc(Feedback::getFeedbackId);
+//        feedbackMapper.selectList(feedbackQueryWrapper);
+//
+//        List<Feedback> feedbackListByType = feedbackMapper.selectList(feedbackQueryWrapper);
+//
+//    }
 
     /**
      * 根据条件查询所有反馈信息并分页返回

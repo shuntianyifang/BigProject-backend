@@ -1,6 +1,8 @@
 package org.bigseven.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.bigseven.constant.ExceptionEnum;
+import org.bigseven.exception.ApiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,7 +24,7 @@ public class FileController {
     private String uploadDir;
 
     /**
-     * 获取图片文件
+     * 通过文件名获取图片资源并返回HTTP响应
      * @param filename 图片文件名
      * @return 包含图片资源的ResponseEntity对象，如果文件不存在或不可读则返回404
      */
@@ -47,7 +49,7 @@ public class FileController {
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new ApiException(ExceptionEnum.RESOURCE_NOT_FOUND, e);
         }
     }
 }

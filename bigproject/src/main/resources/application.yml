@@ -5,6 +5,7 @@ server:
 file:
   upload:
     path: uploads/
+  access-base-url: http://localhost:8080/api/file/images/
 
 feedback:
   max-images: 9
