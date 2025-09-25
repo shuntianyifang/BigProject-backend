@@ -25,6 +25,7 @@ import org.bigseven.result.AjaxResult;
 import org.bigseven.service.FeedbackService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -177,34 +178,13 @@ public class FeedbackServiceImpl implements FeedbackService {
         QueryWrapper<Feedback> queryWrapper = new QueryWrapper<>();
 
         // 条件筛选
-        if (request.getTitle() != null && !request.getTitle().isEmpty()) {
-            //like 方法用于模糊查询
-            queryWrapper.like("title", request.getTitle());
-        }
-        if (request.getFeedbackType() != null) {
-            queryWrapper.eq("feedback_type", request.getFeedbackType());
-        }
-        if (request.getFeedbackType() != null) {
-            queryWrapper.eq("feedback_status", request.getFeedbackType());
-        }
-        if (request.getIsUrgent() != null) {
-            queryWrapper.eq("is_urgent", request.getIsUrgent());
-        }
-        if (request.getStudentId() != null) {
-            queryWrapper.eq("student_id", request.getStudentId());
-        }
-        if (request.getAdminId() != null) {
-            queryWrapper.eq("admin_id", request.getAdminId());
-        }
-
-        if (request.getStartTime() != null && !request.getStartTime().isEmpty()) {
-            //ge方法是用来查询"大于等于"的
-            queryWrapper.ge("created_at", request.getStartTime());
-        }
-        if (request.getEndTime() != null && !request.getEndTime().isEmpty()) {
-            //le方法用来查询"小于等于"
-            queryWrapper.le("created_at", request.getEndTime());
-        }
+        applyLikeCondition(queryWrapper, "title", request.getTitle());
+        applyEqualCondition(queryWrapper, "feedback_type", request.getFeedbackType());
+        applyEqualCondition(queryWrapper, "feedback_status", request.getFeedbackStatus());
+        applyEqualCondition(queryWrapper, "is_urgent", request.getIsUrgent());
+        applyEqualCondition(queryWrapper, "student_id", request.getStudentId());
+        applyEqualCondition(queryWrapper, "admin_id", request.getAdminId());
+        applyDateCondition(queryWrapper, "created_at", request.getStartTime(), request.getEndTime());
 
         // 排序
         if ("asc".equalsIgnoreCase(request.getSortOrder())) {
@@ -228,6 +208,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         return responsePage;
     }
 
+
     /**
      * 根据ID获取反馈详情
      * @param id 反馈ID
@@ -241,6 +222,28 @@ public class FeedbackServiceImpl implements FeedbackService {
             throw new ApiException(ExceptionEnum.NOT_FOUND_ERROR);
         }
         return convertToResponse(feedback);
+    }
+
+
+    private void applyLikeCondition(QueryWrapper<Feedback> wrapper, String field, String value) {
+        if (StringUtils.hasText(value)) {
+            wrapper.like(field, value);
+        }
+    }
+
+    private void applyEqualCondition(QueryWrapper<Feedback> wrapper, String field, Object value) {
+        if (value != null) {
+            wrapper.eq(field, value);
+        }
+    }
+
+    private void applyDateCondition(QueryWrapper<Feedback> wrapper, String field, String start, String end) {
+        if (StringUtils.hasText(start)) {
+            wrapper.ge(field, start);
+        }
+        if (StringUtils.hasText(end)) {
+            wrapper.le(field, end);
+        }
     }
 
     /**

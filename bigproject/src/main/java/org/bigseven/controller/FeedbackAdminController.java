@@ -49,8 +49,8 @@ public class FeedbackAdminController {
      * @param request 包含反馈ID和处理人员ID的请求对象
      * @return 包含处理结果的AjaxResult对象
      */
-    @PostMapping("/{id}/mark-spam")
-    public AjaxResult<AdminFeedbackResponse> markAsSpam(@RequestBody @Valid AdminFeedbackRequest request) {
+    @PostMapping("/{id}/mark-spam-pending")
+    public AjaxResult<AdminFeedbackResponse> markAsSpamPeding(@RequestBody @Valid AdminFeedbackRequest request) {
         Integer id = feedbackService.markFeedback(request.getFeedbackId(), request.getAcceptedByUserId(), FeedbackStatusEnum.SPAM_PENDING);
         AdminFeedbackResponse response = new AdminFeedbackResponse();
         response.setId(id);
