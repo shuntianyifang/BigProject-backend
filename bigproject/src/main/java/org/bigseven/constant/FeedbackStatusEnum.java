@@ -1,5 +1,6 @@
 package org.bigseven.constant;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -40,6 +41,7 @@ public enum FeedbackStatusEnum {
      * 状态编码，用于数据库存储和程序逻辑处理
      * 采用数字类型便于扩展和比较
      */
+    @EnumValue
     private final Integer statusCode;
     /**
      * 状态描述，用于界面展示和日志记录
