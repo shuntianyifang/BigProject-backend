@@ -45,14 +45,6 @@ public class PublishFeedbackRequest {
      */
     private Boolean isUrgent;
     /**
-     * 发布帖子的用户的id
-     */
-    private Integer userId;
-    /**
-     * 接单的管理员id
-     */
-    private Integer acceptedByUserId;
-    /**
      * 帖子状态
      */
     private FeedbackStatusEnum feedbackStatus;
