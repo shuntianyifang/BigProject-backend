@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             userMapper.updateById(user);
 
             // 返回结果
-            Map<String, Object> result = new HashMap<>(4);
+            Map<String, Object> result = new HashMap<>(8);
             result.put("token", token);
             result.put("user", user);
             result.put("expiration", jwtTokenUtil.getExpiration());
@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
         String token = jwtTokenUtil.generateToken(userDetails);
 
         // 返回结果
-        Map<String, Object> result = new HashMap<>(4);
+        Map<String, Object> result = new HashMap<>(8);
         result.put("token", token);
         result.put("user", user);
         result.put("message", "注册成功");
@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
         if (jwtTokenUtil.validateToken(oldToken, userDetails)) {
             String newToken = jwtTokenUtil.refreshToken(oldToken);
 
-            Map<String, Object> result = new HashMap<>(4);
+            Map<String, Object> result = new HashMap<>(8);
             result.put("token", newToken);
             result.put("username", username);
             return result;
