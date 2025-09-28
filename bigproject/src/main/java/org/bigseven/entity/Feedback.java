@@ -80,4 +80,7 @@ public class Feedback {
 
     @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
+
+    @TableField(value = "processed_at",  fill = FieldFill.INSERT)
+    private LocalDateTime processedAt;
 }
