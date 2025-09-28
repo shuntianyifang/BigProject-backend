@@ -30,7 +30,7 @@ public class FeedbackSuperAdminController {
      */
     @PostMapping("/{id}/mark-spam")
     public AjaxResult<AdminFeedbackResponse> markAsSpam(@RequestBody @Valid AdminFeedbackRequest request) {
-        Integer id = feedbackService.markFeedback(request.getFeedbackId(), request.getAcceptedByUserId(), FeedbackStatusEnum.SPAM_APPROVED);
+        Integer id = feedbackService.markFeedback(request.getFeedbackId(), FeedbackStatusEnum.SPAM_APPROVED);
         AdminFeedbackResponse response = new AdminFeedbackResponse();
         response.setId(id);
         return AjaxResult.success(response);
