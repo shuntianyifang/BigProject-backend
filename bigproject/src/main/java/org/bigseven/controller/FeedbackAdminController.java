@@ -2,7 +2,6 @@ package org.bigseven.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
@@ -38,7 +37,7 @@ public class FeedbackAdminController {
      */
     @PostMapping("/{id}/accept")
     public AjaxResult<AdminFeedbackResponse> acceptFeedback(@RequestBody @Valid AdminFeedbackRequest request) {
-        Integer id = feedbackService.markFeedback(request.getFeedbackId(), request.getAcceptedByUserId(), FeedbackStatusEnum.PROCESSING);
+        Integer id = feedbackService.markFeedback(request.getFeedbackId(), FeedbackStatusEnum.PROCESSING);
         AdminFeedbackResponse response = new AdminFeedbackResponse();
         response.setId(id);
         return AjaxResult.success(response);
@@ -51,7 +50,7 @@ public class FeedbackAdminController {
      */
     @PostMapping("/{id}/mark-spam-pending")
     public AjaxResult<AdminFeedbackResponse> markAsSpamPeding(@RequestBody @Valid AdminFeedbackRequest request) {
-        Integer id = feedbackService.markFeedback(request.getFeedbackId(), request.getAcceptedByUserId(), FeedbackStatusEnum.SPAM_PENDING);
+        Integer id = feedbackService.markFeedback(request.getFeedbackId(), FeedbackStatusEnum.SPAM_PENDING);
         AdminFeedbackResponse response = new AdminFeedbackResponse();
         response.setId(id);
         return AjaxResult.success(response);
@@ -64,7 +63,7 @@ public class FeedbackAdminController {
      */
     @PostMapping("/{id}/mark-resolved")
     public AjaxResult<AdminFeedbackResponse> markAsResolved(@RequestBody @Valid AdminFeedbackRequest request) {
-        Integer id = feedbackService.markFeedback(request.getFeedbackId(), request.getAcceptedByUserId(), FeedbackStatusEnum.RESOLVED);
+        Integer id = feedbackService.markFeedback(request.getFeedbackId(), FeedbackStatusEnum.RESOLVED);
         AdminFeedbackResponse response = new AdminFeedbackResponse();
         response.setId(id);
         return AjaxResult.success(response);
