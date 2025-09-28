@@ -34,47 +34,56 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    /// 提取令牌，验证令牌，然后设置认证信息
-    /**
-     * 执行JWT认证过滤器的内部逻辑
-     * 该方法用于拦截HTTP请求，验证JWT token的有效性，并设置Spring Security的认证信息
-     *
-     * @param httpServletRequest  HTTP请求对象，包含客户端发送的请求信息
-     * @param httpServletResponse HTTP响应对象，用于向客户端发送响应信息
-     * @param filterChain         过滤器链，用于继续执行后续的过滤器
-     * @throws ServletException 当Servlet处理出现异常时抛出
-     * @throws IOException      当IO操作出现异常时抛出
-     */
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest httpServletRequest,
                                     @NotNull HttpServletResponse httpServletResponse,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
-        ///从请求头中获取认证信息
-        String authHeader = httpServletRequest
-                .getHeader(jwtTokenUtil.getHeader());
-        if (StringUtils.isNotEmpty(authHeader)) {
+
+        String authHeader = httpServletRequest.getHeader(jwtTokenUtil.getHeader());
+        logger.info("JWT Filter: 收到认证头: {}", authHeader);
+
+        if (StringUtils.isNotEmpty(authHeader) && authHeader.startsWith("Bearer ")) {
             try {
-                ///从token中解析用户名
-                String username = jwtTokenUtil.getUsernameFromToken(authHeader);
-                ///如果用户名存在且当前上下文中没有认证信息，则进行认证
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                String token = authHeader.substring(7);
+                logger.info("JWT Filter: 提取的token: {}", token);
+
+                String username = jwtTokenUtil.getUsernameFromToken(token);
+                logger.info("JWT Filter: 从token解析的用户名: {}", username);
+
+                if (username != null) {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                    ///验证token是否有效
-                    if (jwtTokenUtil.validateToken(authHeader, userDetails)) {
+                    logger.info("JWT Filter: 加载的用户详情类型: {}", userDetails.getClass().getName());
+
+                    if (jwtTokenUtil.validateToken(token, userDetails)) {
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                        logger.info("JWT Filter: 成功设置认证信息，用户: {}", username);
+                        logger.info("JWT Filter: Principal类型: {}", authentication.getPrincipal().getClass().getName());
+
+                        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+                            CustomUserDetails customDetails = (CustomUserDetails) authentication.getPrincipal();
+                            logger.info("JWT Filter: 用户ID: {}", customDetails.getUserId());
+                        }
+                    } else {
+                        logger.warn("JWT Filter: Token验证失败: {}", username);
                     }
+                } else {
+                    logger.warn("JWT Filter: 无法从token解析用户名");
                 }
             } catch (Exception e) {
-                /// 记录日志，并返回401错误
-                logger.error("JWT token验证失败: {}", e.getMessage(), e);
-                httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                httpServletResponse.getWriter().write("Invalid or expired token");
-                return;
+                logger.error("JWT Filter: Token处理异常: {}", e.getMessage(), e);
+                // 清除可能存在的认证信息
+                SecurityContextHolder.clearContext();
             }
+        } else {
+            logger.info("JWT Filter: 无有效的认证头");
+            // 清除可能存在的认证信息
+            SecurityContextHolder.clearContext();
         }
+
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

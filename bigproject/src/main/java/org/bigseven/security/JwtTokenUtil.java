@@ -60,7 +60,6 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    /// 从令牌中获取声明
     /**
      * 从JWT token中解析出Claims对象
      *
@@ -82,7 +81,6 @@ public class JwtTokenUtil implements Serializable {
         return claims;
     }
 
-    /// 从UserDetails生成令牌
     /**
      * 根据用户详情生成JWT令牌
      *
@@ -90,14 +88,33 @@ public class JwtTokenUtil implements Serializable {
      * @return 生成的JWT令牌字符串
      */
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>(4);
+        Map<String, Object> claims = new HashMap<>(8);
         claims.put(JwtConstants.CLAIM_KEY_USERNAME, userDetails.getUsername());
         claims.put(JwtConstants.CLAIM_KEY_AUTHORITIES, userDetails.getAuthorities());
         claims.put(JwtConstants.CLAIM_KEY_CREATED, new Date());
+
+        if (userDetails instanceof CustomUserDetails) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+            claims.put(JwtConstants.CLAIM_KEY_USER_ID, customUserDetails.getUserId());
+        }
         return generateToken(claims);
     }
 
-    /// 从令牌获取username
+    /**
+     * 从JWT token中提取用户ID
+     *
+     * @param token JWT token字符串
+     * @return 返回从token中解析出的用户ID，如果解析失败则返回null
+     */
+    public Integer getUserIdFromToken(String token) {
+        try {
+            Claims claims = getClaimsFromToken(token);
+            return claims.get(JwtConstants.CLAIM_KEY_USER_ID, Integer.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /**
      * 从JWT token中提取用户名
      *
@@ -118,7 +135,6 @@ public class JwtTokenUtil implements Serializable {
 
     }
 
-    /// 检查令牌是否过期
     /**
      * 判断JWT token是否已过期
      *
@@ -139,7 +155,6 @@ public class JwtTokenUtil implements Serializable {
         }
     }
 
-    /// 刷新令牌
     /**
      * 刷新JWT令牌
      *
@@ -161,7 +176,6 @@ public class JwtTokenUtil implements Serializable {
         return refreshedToken;
     }
 
-    /// 返回user
     /**
      * 验证JWT令牌的有效性
      *
