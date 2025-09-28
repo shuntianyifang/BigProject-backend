@@ -39,7 +39,7 @@ spring:
         # 版本控制日志表，默认flyway_schema_history,不同系统建议修改数据
         # table: flyway_schema_history
 jwt:
-  secret: bigseven-bigproject-bigbig-woca-dazuoye-zenmenan
+  secret: bigseven-bigproject-bigbig-woca-dazuoye
   expiration: 86400  # 24小时，单位秒
   header: Authorization
 
