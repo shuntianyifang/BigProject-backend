@@ -71,7 +71,8 @@ public class DebugController {
                 if (user != null) {
                     UserDetails userDetails = new CustomUserDetails(
                             user.getUserId(), user.getUsername(), user.getPassword(),
-                            Collections.emptyList() // 简化，实际应该加载权限
+                            // 简化，实际应该加载权限
+                            Collections.emptyList()
                     );
                     boolean isValid = jwtTokenUtil.validateToken(token, userDetails);
                     result.put("tokenValid", isValid);

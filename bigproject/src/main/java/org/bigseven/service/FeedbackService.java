@@ -62,11 +62,17 @@ public interface FeedbackService {
 
     /**
      * 管理员查看所有反馈（分页+条件查询）
+     *
+     * @param request 管理员反馈查询请求，包含分页参数和筛选条件
+     * @return 分页的反馈响应列表，包含反馈详情和分页信息
      */
     Page<AdminFeedbackResponse> getAllFeedbacks(AdminFeedbackRequest request);
 
     /**
      * 根据ID获取反馈详情
+     *
+     * @param id 反馈的唯一标识ID
+     * @return 反馈的详细信息响应对象
      */
     AdminFeedbackResponse getFeedbackDetail(Integer id);
 
