@@ -1,9 +1,10 @@
-package org.bigseven.dto.admin;
+package org.bigseven.dto.feedback;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import lombok.NoArgsConstructor;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 
@@ -14,9 +15,10 @@ import org.bigseven.constant.FeedbackTypeEnum;
  * &#064;date 2025/9/20
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AdminFeedbackRequest {
+public class GetAllFeedbackRequest {
     /**
      * 反馈ID
      */
@@ -77,17 +79,17 @@ public class AdminFeedbackRequest {
     /**
      * 查询时间范围的起始时间
      */
-    private String startTime;
+    private String fromTime;
     
     /**
      * 查询时间范围的结束时间
      */
-    private String endTime;
+    private String toTime;
     
     /**
-     * 排序字段，默认为"createTime"
+     * 排序字段，默认为"createdAt"
      */
-    private String sortField = "createTime";
+    private String sortField = "created_at";
     
     /**
      * 排序顺序，默认为"desc"(降序)

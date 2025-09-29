@@ -2,8 +2,8 @@ package org.bigseven.controller;
 
 import jakarta.validation.Valid;
 import org.bigseven.constant.FeedbackStatusEnum;
-import org.bigseven.dto.admin.AdminFeedbackRequest;
-import org.bigseven.dto.admin.AdminFeedbackResponse;
+import org.bigseven.dto.feedback.GetAllFeedbackRequest;
+import org.bigseven.dto.feedback.GetAllFeedbackResponse;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.service.FeedbackService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,10 +33,10 @@ public class FeedbackSuperAdminController {
      * @return 包含处理结果的AjaxResult对象
      */
     @PostMapping("/{id}/mark-spam")
-    public AjaxResult<AdminFeedbackResponse> markAsSpam(@RequestBody @Valid AdminFeedbackRequest request) {
-        Integer id = feedbackService.markFeedback(request.getFeedbackId(), FeedbackStatusEnum.SPAM_APPROVED);
-        AdminFeedbackResponse response = new AdminFeedbackResponse();
-        response.setId(id);
+    public AjaxResult<GetAllFeedbackResponse> markAsSpam(@RequestBody @Valid GetAllFeedbackRequest request) {
+        Integer feedbackId = feedbackService.markFeedback(request.getFeedbackId(), FeedbackStatusEnum.SPAM_APPROVED);
+        GetAllFeedbackResponse response = new GetAllFeedbackResponse();
+        response.setFeedbackId(feedbackId);
         return AjaxResult.success(response);
     }
 }

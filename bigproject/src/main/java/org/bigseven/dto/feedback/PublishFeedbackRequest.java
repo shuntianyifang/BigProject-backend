@@ -1,4 +1,4 @@
-package org.bigseven.dto.user;
+package org.bigseven.dto.feedback;
 
 
 import jakarta.validation.constraints.Size;
@@ -8,7 +8,6 @@ import lombok.Data;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 

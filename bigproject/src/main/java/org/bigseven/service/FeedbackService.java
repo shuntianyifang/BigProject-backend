@@ -3,8 +3,8 @@ package org.bigseven.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
-import org.bigseven.dto.admin.AdminFeedbackRequest;
-import org.bigseven.dto.admin.AdminFeedbackResponse;
+import org.bigseven.dto.feedback.GetAllFeedbackRequest;
+import org.bigseven.dto.feedback.GetAllFeedbackResponse;
 
 import java.util.List;
 
@@ -66,7 +66,7 @@ public interface FeedbackService {
      * @param request 管理员反馈查询请求，包含分页参数和筛选条件
      * @return 分页的反馈响应列表，包含反馈详情和分页信息
      */
-    Page<AdminFeedbackResponse> getAllFeedbacks(AdminFeedbackRequest request);
+    Page<GetAllFeedbackResponse> getAllFeedbacks(GetAllFeedbackRequest request);
 
     /**
      * 根据ID获取反馈详情
@@ -74,6 +74,6 @@ public interface FeedbackService {
      * @param id 反馈的唯一标识ID
      * @return 反馈的详细信息响应对象
      */
-    AdminFeedbackResponse getFeedbackDetail(Integer id);
+    GetAllFeedbackResponse getFeedbackDetail(Integer id);
 
 }

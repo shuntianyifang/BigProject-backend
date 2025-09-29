@@ -9,8 +9,8 @@ import org.bigseven.config.FeedbackConfig;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
-import org.bigseven.dto.admin.AdminFeedbackRequest;
-import org.bigseven.dto.admin.AdminFeedbackResponse;
+import org.bigseven.dto.feedback.GetAllFeedbackRequest;
+import org.bigseven.dto.feedback.GetAllFeedbackResponse;
 import org.bigseven.dto.user.UserSimpleVO;
 import org.bigseven.entity.Feedback;
 import org.bigseven.entity.FeedbackImage;
@@ -186,9 +186,12 @@ public class FeedbackServiceImpl implements FeedbackService {
      * @return 分页的反馈响应对象列表
      */
     @Override
-    public Page<AdminFeedbackResponse> getAllFeedbacks(AdminFeedbackRequest request) {
-        // 创建分页对象
-        Page<Feedback> page = new Page<>(request.getPage(), request.getSize());
+    public Page<GetAllFeedbackResponse> getAllFeedbacks(GetAllFeedbackRequest request) {
+        // 直接在创建分页对象时处理默认值
+        Page<Feedback> page = new Page<>(
+                request.getPage() != null ? request.getPage() : 1,
+                request.getSize() != null ? request.getSize() : 10
+        );
 
         // 构建查询条件
         QueryWrapper<Feedback> queryWrapper = new QueryWrapper<>();
@@ -200,23 +203,26 @@ public class FeedbackServiceImpl implements FeedbackService {
         applyEqualCondition(queryWrapper, "is_urgent", request.getIsUrgent());
         applyEqualCondition(queryWrapper, "student_id", request.getStudentId());
         applyEqualCondition(queryWrapper, "admin_id", request.getAdminId());
-        applyDateCondition(queryWrapper, "created_at", request.getStartTime(), request.getEndTime());
+        applyDateCondition(queryWrapper, "created_at", request.getFromTime(), request.getToTime());
 
-        // 排序
-        if (ASC_ORDER.equalsIgnoreCase(request.getSortOrder())) {
-            queryWrapper.orderByAsc(request.getSortField());
+        // 设置排序
+        String sortField = request.getSortField() != null ? request.getSortField() : "created_at";
+        String sortOrder = request.getSortOrder() != null ? request.getSortOrder() : "desc";
+
+        if (ASC_ORDER.equalsIgnoreCase(sortOrder)) {
+            queryWrapper.orderByAsc(sortField);
         } else {
-            queryWrapper.orderByDesc(request.getSortField());
+            queryWrapper.orderByDesc(sortField);
         }
 
         // 执行查询
         IPage<Feedback> feedbackPage = feedbackMapper.selectPage(page, queryWrapper);
 
         // 转换为响应对象
-        Page<AdminFeedbackResponse> responsePage = new Page<>();
+        Page<GetAllFeedbackResponse> responsePage = new Page<>();
         BeanUtils.copyProperties(feedbackPage, responsePage);
 
-        List<AdminFeedbackResponse> feedbackResponses = feedbackPage.getRecords().stream()
+        List<GetAllFeedbackResponse> feedbackResponses = feedbackPage.getRecords().stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
 
@@ -232,7 +238,7 @@ public class FeedbackServiceImpl implements FeedbackService {
      * @throws ApiException 当反馈不存在时抛出异常
      */
     @Override
-    public AdminFeedbackResponse getFeedbackDetail(Integer id) {
+    public GetAllFeedbackResponse getFeedbackDetail(Integer id) {
         Feedback feedback = feedbackMapper.selectById(id);
         if (feedback == null) {
             throw new ApiException(ExceptionEnum.NOT_FOUND_ERROR);
@@ -267,31 +273,54 @@ public class FeedbackServiceImpl implements FeedbackService {
      * @param feedback Feedback实体对象
      * @return 转换后的AdminFeedbackResponse对象
      */
-    private AdminFeedbackResponse convertToResponse(Feedback feedback) {
-        AdminFeedbackResponse response = new AdminFeedbackResponse();
+    private GetAllFeedbackResponse convertToResponse(Feedback feedback) {
+        GetAllFeedbackResponse response = new GetAllFeedbackResponse();
         BeanUtils.copyProperties(feedback, response);
 
-        // 设置学生信息
+        // 获取当前登录用户的角色权限（是否为管理员/超级管理员）
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority())
+                        || "ROLE_SUPER_ADMIN".equals(auth.getAuthority()));
+
+        // 获取发布者的匿名设置（isNicked）
+        boolean isPublisherAnonymous = feedback.getIsNicked() != null && feedback.getIsNicked();
+
+        // 处理response中的userId：根据角色和匿名设置决定是否隐藏
+        if (!isAdmin) {
+            // 仅当发布者不匿名（isNicked=false）时，才保留userId；否则隐藏
+            if (isPublisherAnonymous) {
+                response.setUserId(null);
+            }
+            // 发布者不匿名时，保留原始userId
+        }
+        // 管理员/超级管理员：始终保留userId
+
+        // 处理student对象中的userId（与response的userId逻辑一致）
         User student = userMapper.selectById(feedback.getUserId());
         if (student != null) {
             UserSimpleVO studentVO = new UserSimpleVO();
             BeanUtils.copyProperties(student, studentVO);
+            // 如果不是管理员就把数据再null一遍
+            if (!isAdmin) {
+                if (isPublisherAnonymous) {
+                    studentVO.setUserId(null);
+                    studentVO.setUsername(null);
+                    studentVO.setEmail(null);
+                }
+            }
+            // 照理来说匿名了userId为空无需处理，根本不会把发布者的信息发上去，但他妈的居然发了
+
             response.setStudent(studentVO);
         }
 
-        // 设置管理员信息（如果已分配）
-        if (feedback.getUserId() != null) {
-            User admin = userMapper.selectById(feedback.getUserId());
-            if (admin != null) {
-                UserSimpleVO adminVO = new UserSimpleVO();
-                BeanUtils.copyProperties(admin, adminVO);
-                response.setAdmin(adminVO);
-            }
-        }
-
-        // 设置图片URL列表
-        List<String> imageUrls = getFeedbackImageUrls(feedback.getFeedbackId());
-        response.setImageUrls(imageUrls);
+        // 处理图片URL
+        List<FeedbackImage> images = feedbackImageMapper.selectList(
+                new QueryWrapper<FeedbackImage>().eq("feedback_id", feedback.getFeedbackId())
+        );
+        response.setImageUrls(images.stream()
+                .map(FeedbackImage::getImageUrl)
+                .collect(Collectors.toList()));
 
         return response;
     }
