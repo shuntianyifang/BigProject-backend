@@ -37,7 +37,7 @@ public interface FeedbackService {
      * @param feedbackStatus 要更新的状态枚举
      * @return 受影响的行数或操作状态码
      */
-    Integer markFeedback(Integer feedbackId, FeedbackStatusEnum feedbackStatus);
+    Integer processFeedback(Integer feedbackId, FeedbackStatusEnum feedbackStatus);
 
     /**
      * 删除指定用户的反馈

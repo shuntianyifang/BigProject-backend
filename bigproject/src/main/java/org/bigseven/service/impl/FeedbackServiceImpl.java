@@ -96,7 +96,7 @@ public class FeedbackServiceImpl implements FeedbackService {
      */
     @Override
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER_ADMIN')")
-    public Integer markFeedback(Integer feedbackId, FeedbackStatusEnum feedbackStatus) {
+    public Integer processFeedback(Integer feedbackId, FeedbackStatusEnum feedbackStatus) {
         // 从Spring Security上下文中获取当前登录用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
