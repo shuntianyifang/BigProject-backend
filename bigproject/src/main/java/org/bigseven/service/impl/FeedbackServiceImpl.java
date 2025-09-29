@@ -52,21 +52,24 @@ public class FeedbackServiceImpl implements FeedbackService {
      *
      * @param userId 用户ID
      * @param isNicked 是否匿名发布
-     * @param isArgent 是否紧急反馈
+     * @param isUrgent 是否紧急反馈
      * @param feedbackType 反馈类型枚举
      * @param title 反馈标题
      * @param content 反馈内容
      * @param imageUrls 反馈图片URL列表，最多保存前9张图片
      */
     @Override
-    public void publishFeedback(Integer userId, Boolean isNicked, Boolean isArgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls) {
+    public void publishFeedback(Integer userId, Boolean isNicked, Boolean isUrgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls) {
         Feedback feedback = Feedback.builder()
                 .userId(userId)
                 .isNicked(isNicked)
-                .isUrgent(isArgent)
+                .isUrgent(isUrgent)
+                .viewCount(0)
                 .feedbackType(feedbackType)
+                .feedbackStatus(FeedbackStatusEnum.PENDING)
                 .title(title)
                 .content(content)
+                .deleted(false)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

@@ -30,6 +30,8 @@ public enum ExceptionEnum {
     NOT_FOUND_ERROR(20404, HttpStatus.NOT_FOUND.getReasonPhrase()),
     /// 用户
     USER_NOT_EXIST(30000,"用户不存在"),
+    USERNAME_OR_PASSWORD_WRONG(30001,"用户名或密码错误"),
+    USER_DISABLED(30002,"用户已被禁用"),
     /// 反馈
     FEEDBACK_NOT_FOUND(40000,"反馈不存在");
     private final Integer errorCode;

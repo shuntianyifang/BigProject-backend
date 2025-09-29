@@ -46,6 +46,9 @@ public class User {
     @JsonProperty("real_name")
     private String realName;
 
+    @TableLogic
+    private Boolean deleted;
+
     @TableField(value = "created_at", fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 

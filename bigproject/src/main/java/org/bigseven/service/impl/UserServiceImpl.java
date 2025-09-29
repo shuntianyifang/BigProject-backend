@@ -2,8 +2,10 @@ package org.bigseven.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
+import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.entity.User;
+import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.UserMapper;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.security.JwtUserDetailsServiceImpl;
@@ -41,7 +43,19 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Map<String, Object> login(String username, String password) {
+
+        User user = userMapper.selectByUsername(username);
+        if (user == null) {
+            throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
+        }
+
+        // 检查用户是否被删除
+        if (Boolean.TRUE.equals(user.getDeleted())) {
+            throw new ApiException(ExceptionEnum.USER_DISABLED);
+        }
+
         try {
+
             // 使用Spring Security进行认证
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
@@ -52,9 +66,6 @@ public class UserServiceImpl implements UserService {
             // 生成JWT token
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String token = jwtTokenUtil.generateToken(userDetails);
-
-            // 获取用户信息
-            User user = userMapper.selectByUsername(username);
 
             // 更新最后登录时间
             user.setUpdatedAt(LocalDateTime.now());
@@ -69,7 +80,7 @@ public class UserServiceImpl implements UserService {
             return result;
 
         } catch (Exception e) {
-            throw new RuntimeException("用户名或密码错误", e);
+            throw new ApiException(ExceptionEnum.USERNAME_OR_PASSWORD_WRONG);
         }
     }
 
@@ -107,6 +118,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .userType(userType != null ? userType : UserTypeEnum.STUDENT)
+                .deleted(false)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .lastLoginAt(LocalDateTime.now())
