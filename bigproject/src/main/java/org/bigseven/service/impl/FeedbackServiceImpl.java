@@ -28,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,8 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .feedbackType(feedbackType)
                 .title(title)
                 .content(content)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
         feedbackMapper.insert(feedback);
 
