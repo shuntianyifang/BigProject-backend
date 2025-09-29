@@ -46,6 +46,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final UserMapper userMapper;
     private final FeedbackImageMapper feedbackImageMapper;
     private final FeedbackConfig feedbackConfig;
+    private static final String ASC_ORDER = "asc";
 
     /**
      * 发布用户反馈信息
@@ -198,7 +199,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         applyDateCondition(queryWrapper, "created_at", request.getStartTime(), request.getEndTime());
 
         // 排序
-        if ("asc".equalsIgnoreCase(request.getSortOrder())) {
+        if (ASC_ORDER.equalsIgnoreCase(request.getSortOrder())) {
             queryWrapper.orderByAsc(request.getSortField());
         } else {
             queryWrapper.orderByDesc(request.getSortField());

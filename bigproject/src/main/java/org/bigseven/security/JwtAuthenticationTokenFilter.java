@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
+import org.bigseven.constant.JwtConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,7 +43,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String authHeader = httpServletRequest.getHeader(jwtTokenUtil.getHeader());
         logger.info("JWT Filter: 收到认证头: {}", authHeader);
 
-        if (StringUtils.isNotEmpty(authHeader) && authHeader.startsWith("Bearer ")) {
+        if (StringUtils.isNotEmpty(authHeader) && authHeader.startsWith(JwtConstants.TOKEN_PREFIX)) {
             try {
                 String token = authHeader.substring(7);
                 logger.info("JWT Filter: 提取的token: {}", token);
