@@ -2,8 +2,11 @@ package org.bigseven.constant;
 
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.bigseven.exception.ApiException;
 
 /**
  * 反馈类型枚举
@@ -40,9 +43,23 @@ public enum FeedbackTypeEnum {
      * 反馈类型编码，用于数据库存储和程序逻辑判断
      */
     @EnumValue
+    @JsonValue
     private final Integer FeedbackTypeCode;
     /**
      * 反馈类型显示名称，用于界面展示
      */
     private final String displayName;
+
+    @JsonCreator
+    public static FeedbackTypeEnum fromCode(Integer code) {
+        if (code == null) {
+            return null;
+        }
+        for (FeedbackTypeEnum type : FeedbackTypeEnum.values()) {
+            if (type.FeedbackTypeCode.equals(code)) {
+                return type;
+            }
+        }
+        throw new ApiException(ExceptionEnum.ILLEGAL_FEEDBACK_TYPE);
+    }
 }

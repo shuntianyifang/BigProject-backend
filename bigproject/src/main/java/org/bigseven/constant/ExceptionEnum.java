@@ -33,7 +33,8 @@ public enum ExceptionEnum {
     USERNAME_OR_PASSWORD_WRONG(30001,"用户名或密码错误"),
     USER_DISABLED(30002,"用户已被禁用"),
     /// 反馈
-    FEEDBACK_NOT_FOUND(40000,"反馈不存在");
+    FEEDBACK_NOT_FOUND(40000,"反馈不存在"),
+    ILLEGAL_FEEDBACK_TYPE(40001,"未知的反馈类型");
     private final Integer errorCode;
     private final String errorMsg;
 }
