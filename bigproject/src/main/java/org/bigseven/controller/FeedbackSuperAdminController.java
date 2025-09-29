@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+/**
+ * @author v185v
+ * &#064;date 2025/9/25
+ */
 @RestController
 @RequestMapping("/api/superadmin/feedback")
 @PreAuthorize("hasAnyRole('SUPER_ADMIN')")

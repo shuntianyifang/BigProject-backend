@@ -93,26 +93,10 @@ public class JwtTokenUtil implements Serializable {
         claims.put(JwtConstants.CLAIM_KEY_AUTHORITIES, userDetails.getAuthorities());
         claims.put(JwtConstants.CLAIM_KEY_CREATED, new Date());
 
-        if (userDetails instanceof CustomUserDetails) {
-            CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+        if (userDetails instanceof CustomUserDetails customUserDetails) {
             claims.put(JwtConstants.CLAIM_KEY_USER_ID, customUserDetails.getUserId());
         }
         return generateToken(claims);
-    }
-
-    /**
-     * 从JWT token中提取用户ID
-     *
-     * @param token JWT token字符串
-     * @return 返回从token中解析出的用户ID，如果解析失败则返回null
-     */
-    public Integer getUserIdFromToken(String token) {
-        try {
-            Claims claims = getClaimsFromToken(token);
-            return claims.get(JwtConstants.CLAIM_KEY_USER_ID, Integer.class);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     /**

@@ -2,18 +2,12 @@ package org.bigseven.controller;
 
 
 import jakarta.validation.Valid;
-import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.dto.user.PublishFeedbackRequest;
-import org.bigseven.exception.ApiException;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.CustomUserDetails;
 import org.bigseven.service.FeedbackService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedbackController {
 
     private final FeedbackService feedbackService;
-    private static final Logger logger = LoggerFactory.getLogger(FeedbackController.class);
 
     public FeedbackController(FeedbackService feedbackService) {
         this.feedbackService = feedbackService;
@@ -48,40 +41,10 @@ public class FeedbackController {
      * @return AjaxResult<Void> 操作结果
      */
     @PostMapping("/publish")
-    @PreAuthorize("hasAnyAuthority('POST_CREATE')")
-    public AjaxResult<Void> publishFeedback(@Valid @RequestBody PublishFeedbackRequest request) {
-
-        // 手动从SecurityContext获取认证信息
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        logger.debug("Authentication object: {}", authentication);
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            logger.error("用户未认证 - Authentication: {}", authentication);
-            throw new ApiException(ExceptionEnum.UNAUTHORIZED);
-        }
-
-        Integer userId;
-
-        // 检查Principal的类型
-        if (authentication.getPrincipal() instanceof CustomUserDetails) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            userId = userDetails.getUserId();
-            logger.info("从CustomUserDetails获取用户ID: {}", userId);
-        }
-        // 如果是String类型（可能是username）
-        else if (authentication.getPrincipal() instanceof String) {
-            String username = (String) authentication.getPrincipal();
-            logger.warn("Principal是String类型，需要查询数据库获取用户ID: {}", username);
-            throw new ApiException(ExceptionEnum.UNAUTHORIZED);
-        }
-        // 其他情况
-        else {
-            logger.error("意外的Principal类型: {}",
-                    authentication.getPrincipal() != null ?
-                            authentication.getPrincipal().getClass().getName() : "null");
-            throw new ApiException(ExceptionEnum.UNAUTHORIZED);
-        }
-
+    public AjaxResult<Void> publishFeedback(@Valid @RequestBody PublishFeedbackRequest request,
+                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // 从当前登录用户中获取user_id
+        Integer userId = userDetails.getUserId();
         feedbackService.publishFeedback(userId,
                 request.getIsNicked(),
                 request.getIsUrgent(),

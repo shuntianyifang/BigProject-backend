@@ -11,7 +11,7 @@ import org.bigseven.constant.FeedbackTypeEnum;
  * 管理员反馈请求数据传输对象
  * 用于封装管理员对反馈进行查询、处理等操作时的请求参数
  * @author v185v
- * @date 2025/9/20
+ * &#064;date 2025/9/20
  */
 @Data
 @AllArgsConstructor
