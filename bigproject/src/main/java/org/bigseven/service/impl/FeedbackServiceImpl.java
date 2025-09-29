@@ -9,7 +9,6 @@ import org.bigseven.config.FeedbackConfig;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
-import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.dto.admin.AdminFeedbackRequest;
 import org.bigseven.dto.admin.AdminFeedbackResponse;
 import org.bigseven.dto.user.UserSimpleVO;
@@ -29,7 +28,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

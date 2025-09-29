@@ -64,8 +64,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                         logger.info("JWT Filter: 成功设置认证信息，用户: {}", username);
                         logger.info("JWT Filter: Principal类型: {}", authentication.getPrincipal().getClass().getName());
 
-                        if (authentication.getPrincipal() instanceof CustomUserDetails) {
-                            CustomUserDetails customDetails = (CustomUserDetails) authentication.getPrincipal();
+                        if (authentication.getPrincipal() instanceof CustomUserDetails customDetails) {
                             logger.info("JWT Filter: 用户ID: {}", customDetails.getUserId());
                         }
                     } else {

@@ -2,7 +2,7 @@ package org.bigseven.dto.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;import java.util.List;
+import lombok.Data;
 
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
