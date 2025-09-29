@@ -42,7 +42,7 @@ public class DebugController {
     @PostMapping("/token")
     public ResponseEntity<?> debugToken(@RequestHeader("Authorization") String authHeader) {
         try {
-            if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
+            if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith(JwtConstants.TOKEN_PREFIX)) {
                 return ResponseEntity.badRequest().body("Invalid Authorization header");
             }
 
