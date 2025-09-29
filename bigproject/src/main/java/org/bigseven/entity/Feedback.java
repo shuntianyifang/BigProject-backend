@@ -28,8 +28,10 @@ public class Feedback {
     @TableId(type = IdType.AUTO)
     @JsonProperty("feedback_id")
     private Integer feedbackId;
+
     @JsonProperty("title")
     private String title;
+
     @JsonProperty("content")
     private String content;
 

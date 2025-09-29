@@ -48,14 +48,4 @@ public class PublishFeedbackRequest {
      * 帖子状态
      */
     private FeedbackStatusEnum feedbackStatus;
-
-    private Integer viewCount;
-
-    private Boolean deleted;
-
-
-    private LocalDateTime createdAt;
-
-
-    private LocalDateTime updatedAt;
 }
