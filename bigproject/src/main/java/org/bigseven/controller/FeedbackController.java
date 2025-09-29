@@ -1,17 +1,18 @@
 package org.bigseven.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.validation.Valid;
-import org.bigseven.dto.user.PublishFeedbackRequest;
+import org.bigseven.dto.feedback.GetAllFeedbackRequest;
+import org.bigseven.dto.feedback.GetAllFeedbackResponse;
+import org.bigseven.dto.base.BaseListResponse;
+import org.bigseven.dto.feedback.PublishFeedbackRequest;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.CustomUserDetails;
 import org.bigseven.service.FeedbackService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author v185v
@@ -56,6 +57,28 @@ public class FeedbackController {
         return AjaxResult.success();
     }
 
+    @GetMapping
+    public AjaxResult<BaseListResponse<GetAllFeedbackResponse>> getFeedback(GetAllFeedbackRequest request) {
+        // 设置默认分页值（双重保障）
+        if (request.getPage() == null) {
+            request.setPage(1);
+        }
+        if (request.getSize() == null) {
+            request.setSize(10);
+        }
+
+        Page<GetAllFeedbackResponse> pageResult = feedbackService.getAllFeedbacks(request);
+
+        BaseListResponse<GetAllFeedbackResponse> response = BaseListResponse.<GetAllFeedbackResponse>builder()
+                .list(pageResult.getRecords())
+                .total((int) pageResult.getTotal())
+                .currentPage(request.getPage())
+                .pageSize(request.getSize())
+                .totalPages((int) pageResult.getPages())
+                .build();
+
+        return AjaxResult.success(response);
+    }
 
     /**
      * 管理员标记帖子状态
