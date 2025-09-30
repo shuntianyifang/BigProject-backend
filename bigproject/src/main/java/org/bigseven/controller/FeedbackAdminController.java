@@ -34,19 +34,6 @@ public class FeedbackAdminController {
     }
 
     /**
-     * 接受反馈处理请求
-     * @param request 包含反馈ID和处理人员ID的请求对象
-     * @return 包含处理结果的AjaxResult对象
-     */
-    @PostMapping("/{id}/accept")
-    public AjaxResult<GetAllFeedbackResponse> acceptFeedback(@RequestBody @Valid GetAllFeedbackRequest request) {
-        Integer feedbackId = feedbackService.processFeedback(request.getFeedbackId(), FeedbackStatusEnum.PROCESSING);
-        GetAllFeedbackResponse response = new GetAllFeedbackResponse();
-        response.setFeedbackId(feedbackId);
-        return AjaxResult.success(response);
-    }
-
-    /**
      * 管理员处理反馈，标记反馈状态，可能做出回复
      *
      * @param request 包含标记反馈所需信息的请求对象，包括反馈ID和反馈状态
@@ -60,43 +47,6 @@ public class FeedbackAdminController {
         Integer acceptedByUserId = userDetails.getUserId();
         feedbackService.processFeedback(request.getFeedbackId(), request.getFeedbackStatus());
         return AjaxResult.success();
-    }
-
-    /**
-     * 将反馈标记为待确认垃圾信息
-     * @param request 包含反馈ID和处理人员ID的请求对象
-     * @return 包含处理结果的AjaxResult对象
-     */
-    @PostMapping("/{id}/mark-spam-pending")
-    public AjaxResult<GetAllFeedbackResponse> markAsSpamPeding(@RequestBody @Valid GetAllFeedbackRequest request) {
-        Integer feedbackId = feedbackService.processFeedback(request.getFeedbackId(), FeedbackStatusEnum.SPAM_PENDING);
-        GetAllFeedbackResponse response = new GetAllFeedbackResponse();
-        response.setFeedbackId(feedbackId);
-        return AjaxResult.success(response);
-    }
-
-    /**
-     * 将反馈标记为已解决
-     * @param request 包含反馈ID和处理人员ID的请求对象
-     * @return 包含处理结果的AjaxResult对象
-     */
-    @PostMapping("/{id}/mark-resolved")
-    public AjaxResult<GetAllFeedbackResponse> markAsResolved(@RequestBody @Valid GetAllFeedbackRequest request) {
-        Integer feedbackId = feedbackService.processFeedback(request.getFeedbackId(), FeedbackStatusEnum.RESOLVED);
-        GetAllFeedbackResponse response = new GetAllFeedbackResponse();
-        response.setFeedbackId(feedbackId);
-        return AjaxResult.success(response);
-    }
-
-    /**
-     * 查看反馈详情
-     * @param id 反馈ID
-     * @return 包含反馈详情的AjaxResult对象
-     */
-    @GetMapping("/{id}")
-    public AjaxResult<GetAllFeedbackResponse> getFeedbackDetail(@PathVariable Integer id) {
-        GetAllFeedbackResponse feedback = feedbackService.getFeedbackDetail(id);
-        return AjaxResult.success(feedback);
     }
 
     /**
