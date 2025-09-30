@@ -2,12 +2,11 @@ package org.bigseven.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
-import org.bigseven.dto.admin.AdminFeedbackRequest;
-import org.bigseven.dto.admin.AdminFeedbackResponse;
+import org.bigseven.dto.feedback.GetAllFeedbackRequest;
+import org.bigseven.dto.feedback.GetAllFeedbackResponse;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.service.FeedbackService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,10 +36,10 @@ public class FeedbackAdminController {
      * @return 包含处理结果的AjaxResult对象
      */
     @PostMapping("/{id}/accept")
-    public AjaxResult<AdminFeedbackResponse> acceptFeedback(@RequestBody @Valid AdminFeedbackRequest request) {
-        Integer id = feedbackService.markFeedback(request.getFeedbackId(), request.getAcceptedByUserId(), FeedbackStatusEnum.PROCESSING);
-        AdminFeedbackResponse response = new AdminFeedbackResponse();
-        response.setId(id);
+    public AjaxResult<GetAllFeedbackResponse> acceptFeedback(@RequestBody @Valid GetAllFeedbackRequest request) {
+        Integer feedbackId = feedbackService.processFeedback(request.getFeedbackId(), FeedbackStatusEnum.PROCESSING);
+        GetAllFeedbackResponse response = new GetAllFeedbackResponse();
+        response.setFeedbackId(feedbackId);
         return AjaxResult.success(response);
     }
 
@@ -50,10 +49,10 @@ public class FeedbackAdminController {
      * @return 包含处理结果的AjaxResult对象
      */
     @PostMapping("/{id}/mark-spam-pending")
-    public AjaxResult<AdminFeedbackResponse> markAsSpamPeding(@RequestBody @Valid AdminFeedbackRequest request) {
-        Integer id = feedbackService.markFeedback(request.getFeedbackId(), request.getAcceptedByUserId(), FeedbackStatusEnum.SPAM_PENDING);
-        AdminFeedbackResponse response = new AdminFeedbackResponse();
-        response.setId(id);
+    public AjaxResult<GetAllFeedbackResponse> markAsSpamPeding(@RequestBody @Valid GetAllFeedbackRequest request) {
+        Integer feedbackId = feedbackService.processFeedback(request.getFeedbackId(), FeedbackStatusEnum.SPAM_PENDING);
+        GetAllFeedbackResponse response = new GetAllFeedbackResponse();
+        response.setFeedbackId(feedbackId);
         return AjaxResult.success(response);
     }
 
@@ -63,22 +62,11 @@ public class FeedbackAdminController {
      * @return 包含处理结果的AjaxResult对象
      */
     @PostMapping("/{id}/mark-resolved")
-    public AjaxResult<AdminFeedbackResponse> markAsResolved(@RequestBody @Valid AdminFeedbackRequest request) {
-        Integer id = feedbackService.markFeedback(request.getFeedbackId(), request.getAcceptedByUserId(), FeedbackStatusEnum.RESOLVED);
-        AdminFeedbackResponse response = new AdminFeedbackResponse();
-        response.setId(id);
+    public AjaxResult<GetAllFeedbackResponse> markAsResolved(@RequestBody @Valid GetAllFeedbackRequest request) {
+        Integer feedbackId = feedbackService.processFeedback(request.getFeedbackId(), FeedbackStatusEnum.RESOLVED);
+        GetAllFeedbackResponse response = new GetAllFeedbackResponse();
+        response.setFeedbackId(feedbackId);
         return AjaxResult.success(response);
-    }
-
-    /**
-     * 管理员查看所有反馈（分页+条件查询）
-     * @param request 包含分页和查询条件的请求对象
-     * @return 包含分页反馈列表的AjaxResult对象
-     */
-    @GetMapping
-    public AjaxResult<Page<AdminFeedbackResponse>> getAllFeedbacks(@Valid AdminFeedbackRequest request) {
-        Page<AdminFeedbackResponse> feedbacks = feedbackService.getAllFeedbacks(request);
-        return AjaxResult.success(feedbacks);
     }
 
     /**
@@ -87,8 +75,8 @@ public class FeedbackAdminController {
      * @return 包含反馈详情的AjaxResult对象
      */
     @GetMapping("/{id}")
-    public AjaxResult<AdminFeedbackResponse> getFeedbackDetail(@PathVariable Integer id) {
-        AdminFeedbackResponse feedback = feedbackService.getFeedbackDetail(id);
+    public AjaxResult<GetAllFeedbackResponse> getFeedbackDetail(@PathVariable Integer id) {
+        GetAllFeedbackResponse feedback = feedbackService.getFeedbackDetail(id);
         return AjaxResult.success(feedback);
     }
 

@@ -48,15 +48,16 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
         ///获取用户权限集合
         Collection<? extends GrantedAuthority> authorities = getAuthorities(user.getUserType());
 
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPassword())
-                .authorities(authorities)
-                .accountExpired(false)
-                .accountLocked(false)
-                .credentialsExpired(false)
-                .disabled(false)
-                .build();
+        return new CustomUserDetails(
+                user.getUserId(),
+                user.getUsername(),
+                user.getPassword(),
+                true,
+                true,
+                true,
+                true,
+                authorities
+        );
     }
 
     /// 为对应的角色授予不同的权限
@@ -67,7 +68,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
      * @return 返回该用户类型对应的所有权限集合，包括角色权限和具体操作权限
      */
     private Collection<? extends GrantedAuthority> getAuthorities(UserTypeEnum userType) {
-        Set<GrantedAuthority> authorities = new HashSet<>();
+        Set<GrantedAuthority> authorities = new HashSet<>(32);
 
         /// 根据不同的用户类型分配相应的角色和权限
         switch (userType) {

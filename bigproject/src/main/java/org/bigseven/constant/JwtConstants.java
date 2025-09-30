@@ -24,6 +24,7 @@ public class JwtConstants {
     public static final String CLAIM_KEY_USERNAME = "sub";
     public static final String CLAIM_KEY_AUTHORITIES = "authorities";
     public static final String CLAIM_KEY_CREATED = "created";
+    public static final String CLAIM_KEY_USER_ID = "user_id";
 
     /**
      * Token 类型

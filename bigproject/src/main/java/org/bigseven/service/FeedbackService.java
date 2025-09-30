@@ -3,9 +3,8 @@ package org.bigseven.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
-import org.bigseven.dto.admin.AdminFeedbackRequest;
-import org.bigseven.dto.admin.AdminFeedbackResponse;
-import org.bigseven.entity.Feedback;
+import org.bigseven.dto.feedback.GetAllFeedbackRequest;
+import org.bigseven.dto.feedback.GetAllFeedbackResponse;
 
 import java.util.List;
 
@@ -20,13 +19,13 @@ public interface FeedbackService {
      * 发布新的用户反馈
      * 创建带有指定类型、标题和内容的反馈，支持图片附件和匿名/加急选项
      *
-     * @param userId 提交反馈的用户ID
-     * @param isNicked 是否匿名发布
-     * @param isUrgent 是否为加急反馈
+     * @param userId       发布者的用户ID
+     * @param isNicked     是否匿名发布
+     * @param isUrgent     是否为加急反馈
      * @param feedbackType 反馈类型枚举
-     * @param title 反馈标题
-     * @param content 反馈详细内容
-     * @param imageUrls 反馈相关的图片URL列表
+     * @param title        反馈标题
+     * @param content      反馈详细内容
+     * @param imageUrls    反馈相关的图片URL列表
      */
     void publishFeedback(Integer userId, Boolean isNicked, Boolean isUrgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
 
@@ -34,12 +33,11 @@ public interface FeedbackService {
      * 标记反馈状态（如受理/解决等）
      * 更新反馈的处理状态并由指定用户标记为已受理
      *
-     * @param feedbackId 需要更新的反馈ID
-     * @param acceptedByUserId 受理该反馈的用户ID
+     * @param feedbackId     需要更新的反馈ID
      * @param feedbackStatus 要更新的状态枚举
      * @return 受影响的行数或操作状态码
      */
-    Integer markFeedback(Integer feedbackId, Integer acceptedByUserId, FeedbackStatusEnum feedbackStatus);
+    Integer processFeedback(Integer feedbackId, FeedbackStatusEnum feedbackStatus);
 
     /**
      * 删除指定用户的反馈
@@ -64,12 +62,18 @@ public interface FeedbackService {
 
     /**
      * 管理员查看所有反馈（分页+条件查询）
+     *
+     * @param request 管理员反馈查询请求，包含分页参数和筛选条件
+     * @return 分页的反馈响应列表，包含反馈详情和分页信息
      */
-    Page<AdminFeedbackResponse> getAllFeedbacks(AdminFeedbackRequest request);
+    Page<GetAllFeedbackResponse> getAllFeedbacks(GetAllFeedbackRequest request);
 
     /**
      * 根据ID获取反馈详情
+     *
+     * @param id 反馈的唯一标识ID
+     * @return 反馈的详细信息响应对象
      */
-    AdminFeedbackResponse getFeedbackDetail(Integer id);
+    GetAllFeedbackResponse getFeedbackDetail(Integer id);
 
 }

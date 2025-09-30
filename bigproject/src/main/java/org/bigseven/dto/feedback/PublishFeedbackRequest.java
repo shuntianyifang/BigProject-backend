@@ -1,4 +1,4 @@
-package org.bigseven.dto.user;
+package org.bigseven.dto.feedback;
 
 
 import jakarta.validation.constraints.Size;
@@ -8,7 +8,6 @@ import lombok.Data;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -45,25 +44,7 @@ public class PublishFeedbackRequest {
      */
     private Boolean isUrgent;
     /**
-     * 发布帖子的用户的id
-     */
-    private Integer userId;
-    /**
-     * 接单的管理员id
-     */
-    private Integer acceptedByUserId;
-    /**
      * 帖子状态
      */
     private FeedbackStatusEnum feedbackStatus;
-
-    private Integer viewCount;
-
-    private Boolean deleted;
-
-
-    private LocalDateTime createdAt;
-
-
-    private LocalDateTime updatedAt;
 }

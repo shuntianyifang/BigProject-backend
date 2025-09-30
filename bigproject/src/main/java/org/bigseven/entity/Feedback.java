@@ -28,8 +28,10 @@ public class Feedback {
     @TableId(type = IdType.AUTO)
     @JsonProperty("feedback_id")
     private Integer feedbackId;
+
     @JsonProperty("title")
     private String title;
+
     @JsonProperty("content")
     private String content;
 
@@ -80,4 +82,7 @@ public class Feedback {
 
     @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
+
+    @TableField(value = "processed_at",  fill = FieldFill.INSERT)
+    private LocalDateTime processedAt;
 }
