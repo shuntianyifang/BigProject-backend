@@ -19,10 +19,8 @@ import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.FeedbackImageMapper;
 import org.bigseven.mapper.FeedbackMapper;
 import org.bigseven.mapper.UserMapper;
-import org.bigseven.security.CustomUserDetails;
 import org.bigseven.service.FeedbackService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -88,38 +86,6 @@ public class FeedbackServiceImpl implements FeedbackService {
                 feedbackImageMapper.insert(image);
             }
         }
-    }
-
-    /**
-     * 管理员标记反馈状态
-     *
-     * @param feedbackId     反馈ID
-     * @param feedbackStatus 反馈状态枚举值
-     */
-    @Override
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER_ADMIN')")
-    public Integer processFeedback(Integer feedbackId, FeedbackStatusEnum feedbackStatus) {
-        // 从Spring Security上下文中获取当前登录用户信息
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Integer currentUserId = userDetails.getUserId();
-
-        // 查询反馈信息
-        Feedback feedback = feedbackMapper.selectById(feedbackId);
-        if (feedback == null) {
-            throw new ApiException(ExceptionEnum.FEEDBACK_NOT_FOUND);
-        }
-
-        // 更新反馈状态
-        feedback.setFeedbackStatus(feedbackStatus);
-        feedback.setAcceptedByUserId(currentUserId);
-
-        int updateCount = feedbackMapper.updateById(feedback);
-        if (updateCount == 0) {
-            throw new ApiException(ExceptionEnum.OPERATION_FAILED);
-        }
-
-        return currentUserId;
     }
 
     /**
