@@ -25,8 +25,8 @@ public class AdminReply {
     /**
      * 反馈的目标帖子id
      */
-    @TableField("target_feedback_id")
-    private Integer targetFeedbackId;
+    @TableField("feedback_id")
+    private Integer feedbackId;
 
     private String title;
 

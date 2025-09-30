@@ -27,16 +27,5 @@ public class FeedbackSuperAdminController {
     }
 
 
-    /**
-     * 将反馈标记为垃圾信息
-     * @param request 包含反馈ID和处理人员ID的请求对象
-     * @return 包含处理结果的AjaxResult对象
-     */
-    @PostMapping("/{id}/mark-spam")
-    public AjaxResult<GetAllFeedbackResponse> markAsSpam(@RequestBody @Valid GetAllFeedbackRequest request) {
-        Integer feedbackId = feedbackService.processFeedback(request.getFeedbackId(), FeedbackStatusEnum.SPAM_APPROVED);
-        GetAllFeedbackResponse response = new GetAllFeedbackResponse();
-        response.setFeedbackId(feedbackId);
-        return AjaxResult.success(response);
-    }
+
 }

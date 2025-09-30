@@ -1,10 +1,12 @@
 package org.bigseven.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import jakarta.validation.constraints.NotNull;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.dto.feedback.GetAllFeedbackRequest;
 import org.bigseven.dto.feedback.GetAllFeedbackResponse;
+import org.bigseven.entity.AdminReply;
 
 import java.util.List;
 
@@ -28,16 +30,6 @@ public interface FeedbackService {
      * @param imageUrls    反馈相关的图片URL列表
      */
     void publishFeedback(Integer userId, Boolean isNicked, Boolean isUrgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
-
-    /**
-     * 标记反馈状态（如受理/解决等）
-     * 更新反馈的处理状态并由指定用户标记为已受理
-     *
-     * @param feedbackId     需要更新的反馈ID
-     * @param feedbackStatus 要更新的状态枚举
-     * @return 受影响的行数或操作状态码
-     */
-    Integer processFeedback(Integer feedbackId, FeedbackStatusEnum feedbackStatus);
 
     /**
      * 删除指定用户的反馈
