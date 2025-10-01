@@ -3,7 +3,6 @@ package org.bigseven.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.text.StringEscapeUtils;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.JwtConstants;
 import org.bigseven.constant.UserTypeEnum;
@@ -12,6 +11,7 @@ import org.bigseven.dto.user.UserRegisterRequest;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.service.UserService;
+import org.bigseven.util.XssProtectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,21 +29,7 @@ public class UserController {
 
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
-
-    private String sanitize(String input) {
-        if (input == null) {
-            return null;
-        }
-        // 只允许字母、数字、下划线、中文，其他字符去除
-        return input.replaceAll("[<>\"'%;()&+]", "");
-    }
-
-    private String escapeHtml(String input) {
-        if (input == null) {
-            return null;
-        }
-        return StringEscapeUtils.escapeHtml4(input);
-    }
+    private final XssProtectionUtils xssProtectionUtils;
 
     /**
      * 用户登录
@@ -66,8 +52,8 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<AjaxResult<Map<String, Object>>> register(@Valid @RequestBody UserRegisterRequest request) {
             // 先过滤和转义
-            String username = escapeHtml(sanitize(request.getUsername()));
-            String email = escapeHtml(sanitize(request.getEmail()));
+            String username = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getUsername()));
+            String email = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getEmail()));
 
             Map<String, Object> result = userService.register(
                     username,

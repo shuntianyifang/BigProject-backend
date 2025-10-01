@@ -2,7 +2,6 @@ package org.bigseven.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.text.StringEscapeUtils;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.entity.User;
@@ -11,6 +10,7 @@ import org.bigseven.mapper.UserMapper;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
+import org.bigseven.util.XssProtectionUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsServiceImpl userDetailsService;
+    private final XssProtectionUtils xssProtectionUtils;
 
     /**
      * 用户登录（JWT认证）
@@ -85,21 +86,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private String sanitize(String input) {
-        if (input == null) {
-            return null;
-        }
-        // 只允许字母、数字、下划线、中文，其他字符去除
-        return input.replaceAll("[<>\"'%;()&+]", "");
-    }
-
-    private String escapeHtml(String input) {
-        if (input == null) {
-            return null;
-        }
-        return StringEscapeUtils.escapeHtml4(input);
-    }
-
     /**
      * 用户注册功能
      * @param username 用户名
@@ -111,11 +97,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> register(String username, String password, String email, UserTypeEnum userType) {
         // 对输入做过滤
-        username = sanitize(username);
-        email = sanitize(email);
+        username = xssProtectionUtils.sanitize(username);
+        email = xssProtectionUtils.sanitize(email);
         // 再做HTML转义
-        username = escapeHtml(username);
-        email = escapeHtml(email);
+        username = xssProtectionUtils.escapeHtml(username);
+        email = xssProtectionUtils.escapeHtml(email);
 
         LambdaQueryWrapper<User> userQueryWrapper = new LambdaQueryWrapper<>();
         userQueryWrapper.eq(User::getUsername, username);
