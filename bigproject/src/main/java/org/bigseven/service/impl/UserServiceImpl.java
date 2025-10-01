@@ -12,6 +12,7 @@ import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
 import org.bigseven.util.XssProtectionUtils;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
             return result;
 
-        } catch (Exception e) {
+        } catch (BadCredentialsException e) {
             throw new ApiException(ExceptionEnum.USERNAME_OR_PASSWORD_WRONG);
         }
     }

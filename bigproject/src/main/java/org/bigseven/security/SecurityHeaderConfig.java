@@ -1,4 +1,4 @@
-package org.bigseven.config;
+package org.bigseven.security;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
