@@ -1,6 +1,7 @@
 package org.bigseven.dto.feedback;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,14 +35,17 @@ public class PublishFeedbackRequest {
     /**
      * 帖子类型
      */
+    @JsonProperty("feedback_type")
     private FeedbackTypeEnum feedbackType;
     /**
      * 是否匿名
      */
+    @JsonProperty("is_nicked")
     private Boolean isNicked;
     /**
      * 是否紧急
      */
+    @JsonProperty("is_urgent")
     private Boolean isUrgent;
     /**
      * 帖子状态

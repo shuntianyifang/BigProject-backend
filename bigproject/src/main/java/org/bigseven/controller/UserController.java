@@ -12,6 +12,7 @@ import org.bigseven.dto.user.UserRegisterRequest;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.service.UserService;
+import org.bigseven.util.XssProtectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ public class UserController {
 
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
+    private final XssProtectionUtils xssProtectionUtils;
 
     private String sanitize(String input) {
         if (input == null) {
@@ -66,8 +68,9 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<AjaxResult<Map<String, Object>>> register(@Valid @RequestBody UserRegisterRequest request) {
             // 先过滤和转义
-            String username = escapeHtml(sanitize(request.getUsername()));
-            String email = escapeHtml(sanitize(request.getEmail()));
+            String username = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getUsername()));
+            String email = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getEmail()));
+
 
             Map<String, Object> result = userService.register(
                     username,
