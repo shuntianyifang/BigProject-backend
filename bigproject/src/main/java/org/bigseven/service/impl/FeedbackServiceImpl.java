@@ -19,15 +19,15 @@ import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.FeedbackImageMapper;
 import org.bigseven.mapper.FeedbackMapper;
 import org.bigseven.mapper.UserMapper;
-import org.bigseven.security.CustomUserDetails;
 import org.bigseven.service.FeedbackService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,38 +86,6 @@ public class FeedbackServiceImpl implements FeedbackService {
                 feedbackImageMapper.insert(image);
             }
         }
-    }
-
-    /**
-     * 管理员标记反馈状态
-     *
-     * @param feedbackId     反馈ID
-     * @param feedbackStatus 反馈状态枚举值
-     */
-    @Override
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPER_ADMIN')")
-    public Integer processFeedback(Integer feedbackId, FeedbackStatusEnum feedbackStatus) {
-        // 从Spring Security上下文中获取当前登录用户信息
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Integer currentUserId = userDetails.getUserId();
-
-        // 查询反馈信息
-        Feedback feedback = feedbackMapper.selectById(feedbackId);
-        if (feedback == null) {
-            throw new ApiException(ExceptionEnum.FEEDBACK_NOT_FOUND);
-        }
-
-        // 更新反馈状态
-        feedback.setFeedbackStatus(feedbackStatus);
-        feedback.setAcceptedByUserId(currentUserId);
-
-        int updateCount = feedbackMapper.updateById(feedback);
-        if (updateCount == 0) {
-            throw new ApiException(ExceptionEnum.OPERATION_FAILED);
-        }
-
-        return currentUserId;
     }
 
     /**
@@ -283,13 +251,19 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority())
                         || "ROLE_SUPER_ADMIN".equals(auth.getAuthority()));
 
+        // 获取当前登录用户的ID
+        Integer currentUserId = getCurrentUserId(authentication);
+
         // 获取发布者的匿名设置（isNicked）
         boolean isPublisherAnonymous = feedback.getIsNicked() != null && feedback.getIsNicked();
+
+        // 判断当前用户是否是发布者自己
+        boolean isPublisher = currentUserId != null && currentUserId.equals(feedback.getUserId());
 
         // 处理response中的userId：根据角色和匿名设置决定是否隐藏
         if (!isAdmin) {
             // 仅当发布者不匿名（isNicked=false）时，才保留userId；否则隐藏
-            if (isPublisherAnonymous) {
+            if (isPublisherAnonymous && !isPublisher) {
                 response.setUserId(null);
             }
             // 发布者不匿名时，保留原始userId
@@ -303,7 +277,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             BeanUtils.copyProperties(student, studentVO);
             // 如果不是管理员就把数据再null一遍
             if (!isAdmin) {
-                if (isPublisherAnonymous) {
+                if (isPublisherAnonymous && !isPublisher) {
                     studentVO.setUserId(null);
                     studentVO.setUsername(null);
                     studentVO.setEmail(null);
@@ -323,6 +297,29 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .collect(Collectors.toList()));
 
         return response;
+    }
+
+    private Integer getCurrentUserId(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) {
+            // 根据UserDetails实现来获取用户ID
+            try {
+                Method getUserIdMethod = principal.getClass().getMethod("getUserId");
+                return (Integer) getUserIdMethod.invoke(principal);
+            } catch (Exception e) {
+                // 如果无法获取用户ID，记录日志或返回null
+                log.warn("无法从UserDetails获取用户ID", e);
+                return null;
+            }
+        } else if (principal instanceof String) {
+            return null;
+        }
+
+        return null;
     }
 
     /**

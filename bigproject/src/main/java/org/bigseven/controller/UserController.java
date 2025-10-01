@@ -3,6 +3,7 @@ package org.bigseven.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.text.StringEscapeUtils;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.JwtConstants;
 import org.bigseven.constant.UserTypeEnum;
@@ -28,6 +29,21 @@ public class UserController {
 
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
+
+    private String sanitize(String input) {
+        if (input == null) {
+            return null;
+        }
+        // 只允许字母、数字、下划线、中文，其他字符去除
+        return input.replaceAll("[<>\"'%;()&+]", "");
+    }
+
+    private String escapeHtml(String input) {
+        if (input == null) {
+            return null;
+        }
+        return StringEscapeUtils.escapeHtml4(input);
+    }
 
     /**
      * 用户登录
@@ -55,17 +71,21 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<AjaxResult<Map<String, Object>>> register(@Valid @RequestBody UserRegisterRequest request) {
         try {
+            // 先过滤和转义
+            String username = escapeHtml(sanitize(request.getUsername()));
+            String email = escapeHtml(sanitize(request.getEmail()));
+
             Map<String, Object> result = userService.register(
-                    request.getUsername(),
+                    username,
                     request.getPassword(),
-                    request.getEmail(),
+                    email,
                     UserTypeEnum.STUDENT
             );
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(AjaxResult.success(result));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(AjaxResult.fail(ExceptionEnum.BAD_REQUEST.getErrorCode(), e.getMessage()));
+                    .body(AjaxResult.fail(ExceptionEnum.BAD_REQUEST.getErrorCode(), "注册失败，请检查输入信息"));
         }
     }
 
