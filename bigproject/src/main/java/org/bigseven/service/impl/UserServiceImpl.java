@@ -2,6 +2,7 @@ package org.bigseven.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.text.StringEscapeUtils;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.entity.User;
@@ -84,6 +85,21 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    private String sanitize(String input) {
+        if (input == null) {
+            return null;
+        }
+        // 只允许字母、数字、下划线、中文，其他字符去除
+        return input.replaceAll("[<>\"'%;()&+]", "");
+    }
+
+    private String escapeHtml(String input) {
+        if (input == null) {
+            return null;
+        }
+        return StringEscapeUtils.escapeHtml4(input);
+    }
+
     /**
      * 用户注册功能
      * @param username 用户名
@@ -94,6 +110,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Map<String, Object> register(String username, String password, String email, UserTypeEnum userType) {
+        // 对输入做过滤
+        username = sanitize(username);
+        email = sanitize(email);
+        // 再做HTML转义
+        username = escapeHtml(username);
+        email = escapeHtml(email);
+
         LambdaQueryWrapper<User> userQueryWrapper = new LambdaQueryWrapper<>();
         userQueryWrapper.eq(User::getUsername, username);
         User existingUser = userMapper.selectOne(userQueryWrapper);
