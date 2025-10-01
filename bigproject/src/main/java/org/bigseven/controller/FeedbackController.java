@@ -58,13 +58,6 @@ public class FeedbackController {
 
     @GetMapping
     public AjaxResult<BaseListResponse<GetAllFeedbackResponse>> getFeedback(GetAllFeedbackRequest request) {
-        // 设置默认分页值（双重保障）
-        if (request.getPage() == null) {
-            request.setPage(1);
-        }
-        if (request.getSize() == null) {
-            request.setSize(10);
-        }
 
         Page<GetAllFeedbackResponse> pageResult = feedbackService.getAllFeedbacks(request);
 

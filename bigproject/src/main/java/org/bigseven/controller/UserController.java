@@ -53,13 +53,8 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<AjaxResult<Map<String, Object>>> login(@Valid @RequestBody UserLoginRequest request) {
-        try {
             Map<String, Object> result = userService.login(request.getUsername(), request.getPassword());
             return ResponseEntity.ok(AjaxResult.success(result));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(AjaxResult.fail(ExceptionEnum.UNAUTHORIZED.getErrorCode(), e.getMessage()));
-        }
     }
 
     /**
@@ -70,7 +65,6 @@ public class UserController {
      */
     @PostMapping("/register")
     public ResponseEntity<AjaxResult<Map<String, Object>>> register(@Valid @RequestBody UserRegisterRequest request) {
-        try {
             // 先过滤和转义
             String username = escapeHtml(sanitize(request.getUsername()));
             String email = escapeHtml(sanitize(request.getEmail()));
@@ -83,10 +77,6 @@ public class UserController {
             );
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(AjaxResult.success(result));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(AjaxResult.fail(ExceptionEnum.BAD_REQUEST.getErrorCode(), "注册失败，请检查输入信息"));
-        }
     }
 
     /**
@@ -103,15 +93,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(AjaxResult.fail(ExceptionEnum.BAD_REQUEST.getErrorCode(), "缺少有效的token"));
         }
-
-        try {
             String token = jwtTokenUtil.extractTokenFromHeader(authorizationHeader);
             Map<String, Object> result = userService.refreshToken(token);
             return ResponseEntity.ok(AjaxResult.success(result));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(AjaxResult.fail(ExceptionEnum.UNAUTHORIZED.getErrorCode(), e.getMessage()));
-        }
     }
 
 }
