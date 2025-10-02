@@ -330,18 +330,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         // 处理student对象中的userId（与response的userId逻辑一致）
         User student = userMapper.selectById(feedback.getUserId());
-        if (student != null) {
+        if (student != null && response.getUserId() != null) {
             UserSimpleVO studentVO = new UserSimpleVO();
             BeanUtils.copyProperties(student, studentVO);
-            // 如果不是管理员就把数据再null一遍
-            if (!isAdmin) {
-                if (isPublisherAnonymous && !isPublisher) {
-                    studentVO.setUserId(null);
-                    studentVO.setUsername(null);
-                    studentVO.setEmail(null);
-                }
-            }
-            // 照理来说匿名了userId为空无需处理，根本不会把发布者的信息发上去，但他妈的居然发了
             response.setStudent(studentVO);
         }
         // 设置管理员信息
