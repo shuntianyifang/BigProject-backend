@@ -11,6 +11,7 @@ import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.dto.feedback.GetAllFeedbackRequest;
 import org.bigseven.dto.feedback.GetAllFeedbackResponse;
+import org.bigseven.dto.feedback.GetFeedbackDetailResponse;
 import org.bigseven.dto.user.UserSimpleVO;
 import org.bigseven.entity.Feedback;
 import org.bigseven.entity.FeedbackImage;
@@ -20,6 +21,7 @@ import org.bigseven.mapper.FeedbackImageMapper;
 import org.bigseven.mapper.FeedbackMapper;
 import org.bigseven.mapper.UserMapper;
 import org.bigseven.service.FeedbackService;
+import org.bigseven.util.UserConverterUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,6 +47,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final UserMapper userMapper;
     private final FeedbackImageMapper feedbackImageMapper;
     private final FeedbackConfig feedbackConfig;
+    private final UserConverterUtils userConverterUtils;
     private static final String ASC_ORDER = "asc";
 
     /**
@@ -206,12 +209,67 @@ public class FeedbackServiceImpl implements FeedbackService {
      * @throws ApiException 当反馈不存在时抛出异常
      */
     @Override
-    public GetAllFeedbackResponse getFeedbackDetail(Integer id) {
+    public GetFeedbackDetailResponse getFeedbackDetail(Integer id) {
         Feedback feedback = feedbackMapper.selectById(id);
-        if (feedback == null) {
-            throw new ApiException(ExceptionEnum.NOT_FOUND_ERROR);
+        // 获取当前登录用户的角色权限（是否为管理员/超级管理员）
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority())
+                        || "ROLE_SUPER_ADMIN".equals(auth.getAuthority()));
+
+        // 获取当前登录用户的ID
+        Integer currentUserId = getCurrentUserId(authentication);
+
+        // 获取发布者的匿名设置（isNicked）
+        boolean isPublisherAnonymous = feedback.getIsNicked() != null && feedback.getIsNicked();
+
+        // 判断当前用户是否是发布者自己
+        boolean isPublisher = currentUserId != null && currentUserId.equals(feedback.getUserId());
+        GetFeedbackDetailResponse response = GetFeedbackDetailResponse.builder()
+                .feedbackId(feedback.getFeedbackId())
+                .title(feedback.getTitle())
+                .content(feedback.getContent())
+                .isUrgent(feedback.getIsUrgent())
+                .isNicked(feedback.getIsNicked())
+                .viewCount(feedback.getViewCount())
+                .userId(feedback.getUserId())
+                .acceptedByUserId(feedback.getAcceptedByUserId())
+                .feedbackType(feedback.getFeedbackType())
+                .feedbackStatus(feedback.getFeedbackStatus())
+                .createdAt(feedback.getCreatedAt())
+                .updatedAt(feedback.getUpdatedAt())
+                .processedAt(feedback.getProcessedAt())
+                .build();
+        // 处理response中的userId：根据角色和匿名设置决定是否隐藏
+        if (!isAdmin) {
+            // 仅当发布者不匿名（isNicked=false）时，才保留userId；否则隐藏
+            if (isPublisherAnonymous && !isPublisher) {
+                response.setUserId(null);
+            }
+            // 发布者不匿名时，保留原始userId
         }
-        return convertToResponse(feedback);
+        // 管理员/超级管理员：始终保留userId
+
+        // 查询并设置学生信息
+        if (response.getUserId() != null) {
+            User studentUser = userMapper.selectById(feedback.getUserId());
+            UserSimpleVO studentVO = userConverterUtils.toUserSimpleVO(studentUser);
+            response.setStudent(studentVO);
+        }
+
+        // 查询并设置管理员信息
+        if (feedback.getAcceptedByUserId() != null) {
+            User adminUser = userMapper.selectById(feedback.getAcceptedByUserId());
+            UserSimpleVO adminVO = userConverterUtils.toUserSimpleVO(adminUser);
+            response.setAdmin(adminVO);
+        }
+
+        // 查询反馈图片
+        List<String> imageUrls = feedbackImageMapper.selectImageUrlsByFeedbackId(id);
+        response.setImageUrls(imageUrls);
+        feedbackMapper.incrementViewCount(id);
+
+        return response;
     }
 
 
@@ -237,9 +295,9 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     /**
-     * 将Feedback对象转换为AdminFeedbackResponse对象
+     * 将Feedback对象转换为GetAllFeedbackResponse对象
      * @param feedback Feedback实体对象
-     * @return 转换后的AdminFeedbackResponse对象
+     * @return 转换后的GetAllFeedbackResponse对象
      */
     private GetAllFeedbackResponse convertToResponse(Feedback feedback) {
         GetAllFeedbackResponse response = new GetAllFeedbackResponse();
@@ -284,8 +342,16 @@ public class FeedbackServiceImpl implements FeedbackService {
                 }
             }
             // 照理来说匿名了userId为空无需处理，根本不会把发布者的信息发上去，但他妈的居然发了
-
             response.setStudent(studentVO);
+        }
+        // 设置管理员信息
+        if (feedback.getAcceptedByUserId() != null) {
+            User adminUser = userMapper.selectById(feedback.getAcceptedByUserId());
+            if (adminUser != null) {
+                UserSimpleVO adminVO = new UserSimpleVO();
+                BeanUtils.copyProperties(adminUser, adminVO);
+                response.setAdmin(adminVO);
+            }
         }
 
         // 处理图片URL
