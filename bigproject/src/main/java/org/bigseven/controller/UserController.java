@@ -3,6 +3,7 @@ package org.bigseven.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.text.StringEscapeUtils;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.JwtConstants;
 import org.bigseven.constant.UserTypeEnum;
