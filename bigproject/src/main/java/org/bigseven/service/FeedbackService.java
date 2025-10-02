@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.dto.feedback.GetAllFeedbackRequest;
 import org.bigseven.dto.feedback.GetAllFeedbackResponse;
+import org.bigseven.dto.feedback.GetFeedbackDetailResponse;
 
 import java.util.List;
 
@@ -63,6 +64,6 @@ public interface FeedbackService {
      * @param id 反馈的唯一标识ID
      * @return 反馈的详细信息响应对象
      */
-    GetAllFeedbackResponse getFeedbackDetail(Integer id);
+    GetFeedbackDetailResponse getFeedbackDetail(Integer id);
 
 }

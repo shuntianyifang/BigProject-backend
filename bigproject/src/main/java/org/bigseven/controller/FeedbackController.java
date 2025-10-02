@@ -6,12 +6,15 @@ import jakarta.validation.Valid;
 import org.bigseven.dto.base.BaseListResponse;
 import org.bigseven.dto.feedback.GetAllFeedbackRequest;
 import org.bigseven.dto.feedback.GetAllFeedbackResponse;
+import org.bigseven.dto.feedback.GetFeedbackDetailResponse;
 import org.bigseven.dto.feedback.PublishFeedbackRequest;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.CustomUserDetails;
 import org.bigseven.service.FeedbackService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author v185v
@@ -69,6 +72,12 @@ public class FeedbackController {
                 .totalPages((int) pageResult.getPages())
                 .build();
 
+        return AjaxResult.success(response);
+    }
+
+    @GetMapping("/{id}")
+    public AjaxResult<GetFeedbackDetailResponse> getFeedbackDetail(@PathVariable String id) {
+        GetFeedbackDetailResponse response = feedbackService.getFeedbackDetail(Integer.valueOf(id));
         return AjaxResult.success(response);
     }
 
