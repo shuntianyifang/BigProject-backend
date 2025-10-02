@@ -1,5 +1,6 @@
 package org.bigseven.security;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bigseven.constant.JwtConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,14 +71,21 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                         }
                     } else {
                         logger.warn("JWT Filter: Token验证失败: {}", username);
+                        throw new BadCredentialsException("Token验证失败");
                     }
                 } else {
                     logger.warn("JWT Filter: 无法从token解析用户名");
+                    throw new BadCredentialsException("无法从token解析用户名");
                 }
+            } catch (JwtException e) {
+                logger.error("JWT Filter: JWT异常: {}", e.getMessage(), e);
+                SecurityContextHolder.clearContext();
+                throw new BadCredentialsException("Token无效或已过期", e);
             } catch (Exception e) {
                 logger.error("JWT Filter: Token处理异常: {}", e.getMessage(), e);
                 // 清除可能存在的认证信息
                 SecurityContextHolder.clearContext();
+                throw new BadCredentialsException("Token处理异常", e);
             }
         } else {
             logger.info("JWT Filter: 无有效的认证头");

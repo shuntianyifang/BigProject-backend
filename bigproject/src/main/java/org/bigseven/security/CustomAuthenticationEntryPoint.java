@@ -1,5 +1,6 @@
 package org.bigseven.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.bigseven.util.HttpLogColorUtils;
@@ -31,20 +32,30 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                          AuthenticationException authException) throws IOException {
 
         /// 收集请求信息
-        String requestUrl = request.getRequestURI();
         String method = HttpLogColorUtils.colorizeMethod(request.getMethod());
         String remoteAddr = HttpLogColorUtils.colorizeIp(getClientIp(request));
         String userAgent = request.getHeader("User-Agent");
         String authHeader = request.getHeader("Authorization");
+        String originalUri = (String) request.getAttribute("jakarta.servlet.error.request_uri");
+        if (originalUri == null) {
+            originalUri = request.getRequestURI();
+        }
 
         /// 记录未认证访问尝试
         logger.warn("未认证访问尝试 - IP: {}, 方法: {}, 路径: {}, User-Agent: {}, Authorization头: {}, 原因: {}",
-                remoteAddr, method, requestUrl, userAgent, authHeader, authException.getMessage());
+                remoteAddr, method, originalUri, userAgent, authHeader, authException.getMessage());
 
-        /// 设置响应
+        /// 根据异常原因设置错误信息
+        Throwable cause = authException.getCause();
+        String errorMsg = "Authentication failed";
+        if (cause instanceof ExpiredJwtException) {
+            errorMsg = "Token已过期";
+        }
+        // 设置响应
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Authentication failed\"}");
+        response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + errorMsg + "\"}");
+
     }
 
     /**

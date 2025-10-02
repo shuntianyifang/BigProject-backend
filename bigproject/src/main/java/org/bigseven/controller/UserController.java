@@ -32,21 +32,6 @@ public class UserController {
     private final JwtTokenUtil jwtTokenUtil;
     private final XssProtectionUtils xssProtectionUtils;
 
-    private String sanitize(String input) {
-        if (input == null) {
-            return null;
-        }
-        // 只允许字母、数字、下划线、中文，其他字符去除
-        return input.replaceAll("[<>\"'%;()&+]", "");
-    }
-
-    private String escapeHtml(String input) {
-        if (input == null) {
-            return null;
-        }
-        return StringEscapeUtils.escapeHtml4(input);
-    }
-
     /**
      * 用户登录
      *
@@ -70,7 +55,6 @@ public class UserController {
             // 先过滤和转义
             String username = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getUsername()));
             String email = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getEmail()));
-
 
             Map<String, Object> result = userService.register(
                     username,

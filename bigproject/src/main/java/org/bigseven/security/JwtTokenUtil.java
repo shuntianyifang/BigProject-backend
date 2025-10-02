@@ -1,6 +1,7 @@
 package org.bigseven.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
@@ -67,18 +68,17 @@ public class JwtTokenUtil implements Serializable {
      * @return 解析成功的Claims对象，如果解析失败则返回null
      */
     private Claims getClaimsFromToken(String token) {
-        Claims claims;
         try {
-            claims = Jwts.parser()
+            return Jwts.parser()
                     .verifyWith(key)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-
+        } catch (ExpiredJwtException e) {
+            throw e;
         } catch (Exception e) {
-            claims = null;
+            return null;
         }
-        return claims;
     }
 
     /**
@@ -106,17 +106,14 @@ public class JwtTokenUtil implements Serializable {
      * @return 返回从token中解析出的用户名，如果解析失败则返回null
      */
     public String getUsernameFromToken(String token) {
-        String username;
         try {
             Claims claims = getClaimsFromToken(token);
-            username = claims.getSubject();
-
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            throw e;
         } catch (Exception e) {
-            username = null;
-
+            return null;
         }
-        return username;
-
     }
 
     /**
