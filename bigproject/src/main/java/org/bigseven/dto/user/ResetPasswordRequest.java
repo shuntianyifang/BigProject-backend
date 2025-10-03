@@ -1,20 +1,23 @@
 package org.bigseven.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 /**
- * @author v185v
- * &#064;date 2025/9/16
+ * @author shuntianyifang
+ * &#064;date 2025/10/3
  */
 @Data
 @AllArgsConstructor
 @Builder
-public class UserLoginRequest {
+public class ResetPasswordRequest {
 
     private String username;
 
     private String password;
 
+    @JsonProperty("new_password")
+    private String newPassword;
 }
