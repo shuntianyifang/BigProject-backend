@@ -29,6 +29,8 @@ public interface UserService {
      */
     Map<String, Object> register(String username, String nickname, String password, String email, UserTypeEnum userType);
 
+    Map<String, Object> resetPassword(String username, String password, String newPassword);
+
     /**
      * 刷新token
      * @param oldToken 旧Token

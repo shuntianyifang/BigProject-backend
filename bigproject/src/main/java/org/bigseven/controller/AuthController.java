@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.JwtConstants;
 import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.user.ResetPasswordRequest;
 import org.bigseven.dto.user.UserLoginRequest;
 import org.bigseven.dto.user.UserRegisterRequest;
 import org.bigseven.result.AjaxResult;
@@ -66,6 +67,19 @@ public class AuthController {
             );
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(AjaxResult.success(result));
+    }
+
+    /**
+     * 重置密码
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<AjaxResult<Map<String, Object>>> resetPassword(@RequestBody ResetPasswordRequest request) {
+
+        String newPassword = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getNewPassword()));
+
+        Map<String, Object> result = userService.resetPassword(request.getUsername(), request.getPassword(), newPassword);
+
+        return ResponseEntity.ok(AjaxResult.success(result));
     }
 
     /**
