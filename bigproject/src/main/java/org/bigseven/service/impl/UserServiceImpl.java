@@ -12,7 +12,7 @@ import org.bigseven.mapper.UserMapper;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
-import org.bigseven.util.FeedbackQueryUtils;
+import org.bigseven.util.UserAuthenticationQueryUtils;
 import org.bigseven.util.UserConverterUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsServiceImpl userDetailsService;
     private final UserConverterUtils userConverterUtils;
-    private final FeedbackQueryUtils feedbackQueryUtils;
+    private final UserAuthenticationQueryUtils userAuthenticationQueryUtils;
 
     /**
      * 用户登录（JWT认证）
@@ -197,7 +197,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public GetUserDetailResponse getUserDetail(Integer id) {
         User user = userMapper.selectById(id);
-        FeedbackQueryUtils.UserPermissionInfo permissionInfo = feedbackQueryUtils.getCurrentUserPermissionInfo();
+        UserAuthenticationQueryUtils.UserPermissionInfo permissionInfo = userAuthenticationQueryUtils.getCurrentUserPermissionInfo();
         if (user == null) {
             throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
         }
