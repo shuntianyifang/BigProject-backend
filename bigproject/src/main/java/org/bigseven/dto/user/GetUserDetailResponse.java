@@ -22,8 +22,6 @@ public class GetUserDetailResponse {
 
     private String username;
 
-    private String password;
-
     private String email;
 
     @JsonProperty("user_phone")
