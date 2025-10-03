@@ -1,6 +1,7 @@
 package org.bigseven.service;
 
 import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.user.GetUserDetailResponse;
 import org.bigseven.entity.User;
 
 import java.util.Map;
@@ -40,4 +41,12 @@ public interface UserService {
      * @return 用户信息
      */
     User getCurrentUser();
+
+    /**
+     * 根据ID获取用户详情
+     *
+     * @param id 用户的唯一标识ID
+     * @return 用户的详细信息响应对象
+     */
+    GetUserDetailResponse getUserDetail(Integer id);
 }

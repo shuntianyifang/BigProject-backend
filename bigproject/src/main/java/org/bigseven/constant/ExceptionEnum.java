@@ -32,6 +32,8 @@ public enum ExceptionEnum {
     USER_NOT_EXIST(30000,"用户不存在"),
     USERNAME_OR_PASSWORD_WRONG(30001,"用户名或密码错误"),
     USER_DISABLED(30002,"用户已被禁用"),
+    USER_EXIST(30003,"用户已存在"),
+    EMAIL_EXIST(30004,"邮箱已被注册"),
     /// 反馈
     FEEDBACK_NOT_FOUND(40000,"反馈不存在"),
     ILLEGAL_FEEDBACK_TYPE(40001,"未知的反馈类型");

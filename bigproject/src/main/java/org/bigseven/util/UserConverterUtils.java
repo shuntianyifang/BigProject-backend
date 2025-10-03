@@ -22,6 +22,7 @@ public class UserConverterUtils {
         vo.setNickname(user.getNickname());
         vo.setUserType(user.getUserType());
         vo.setEmail(user.getEmail());
+        vo.setUserPhone(user.getUserPhone());
         return vo;
     }
 }

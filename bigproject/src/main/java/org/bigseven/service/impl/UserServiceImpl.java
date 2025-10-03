@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.user.GetUserDetailResponse;
 import org.bigseven.dto.user.UserSimpleVO;
 import org.bigseven.entity.User;
 import org.bigseven.exception.ApiException;
@@ -11,6 +12,7 @@ import org.bigseven.mapper.UserMapper;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
+import org.bigseven.util.FeedbackQueryUtils;
 import org.bigseven.util.UserConverterUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsServiceImpl userDetailsService;
     private final UserConverterUtils userConverterUtils;
+    private final FeedbackQueryUtils feedbackQueryUtils;
 
     /**
      * 用户登录（JWT认证）
@@ -72,7 +75,7 @@ public class UserServiceImpl implements UserService {
             String token = jwtTokenUtil.generateToken(userDetails);
 
             // 更新最后登录时间
-            user.setUpdatedAt(LocalDateTime.now());
+            user.setLastLoginAt(LocalDateTime.now());
             userMapper.updateById(user);
 
             UserSimpleVO userVO = userConverterUtils.toUserSimpleVO(user);
@@ -106,7 +109,7 @@ public class UserServiceImpl implements UserService {
         User existingUser = userMapper.selectOne(userQueryWrapper);
 
         if (existingUser != null) {
-            throw new RuntimeException("用户名已存在");
+            throw new ApiException(ExceptionEnum.USER_EXIST);
         }
 
         // 检查邮箱是否已存在
@@ -115,7 +118,7 @@ public class UserServiceImpl implements UserService {
             emailQueryWrapper.eq(User::getEmail, email);
             User emailUser = userMapper.selectOne(emailQueryWrapper);
             if (emailUser != null) {
-                throw new RuntimeException("邮箱已被注册");
+                throw new ApiException(ExceptionEnum.EMAIL_EXIST);
             }
         }
 
@@ -134,6 +137,8 @@ public class UserServiceImpl implements UserService {
 
         userMapper.insert(user);
 
+        UserSimpleVO userVO = userConverterUtils.toUserSimpleVO(user);
+
         // 生成JWT token
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         String token = jwtTokenUtil.generateToken(userDetails);
@@ -141,7 +146,7 @@ public class UserServiceImpl implements UserService {
         // 返回结果
         Map<String, Object> result = new HashMap<>(8);
         result.put("token", token);
-        result.put("user", user);
+        result.put("user", userVO);
         result.put("message", "注册成功");
 
         return result;
@@ -181,5 +186,40 @@ public class UserServiceImpl implements UserService {
             return userMapper.selectByUsername(username);
         }
         return null;
+    }
+
+    /**
+     * 根据ID获取反馈详情
+     * @param id 反馈ID
+     * @return 反馈详情响应对象
+     * @throws ApiException 当反馈不存在时抛出异常
+     */
+    @Override
+    public GetUserDetailResponse getUserDetail(Integer id) {
+        User user = userMapper.selectById(id);
+        FeedbackQueryUtils.UserPermissionInfo permissionInfo = feedbackQueryUtils.getCurrentUserPermissionInfo();
+        if (user == null) {
+            throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
+        }
+        GetUserDetailResponse response = GetUserDetailResponse.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .email(user.getEmail())
+                .userPhone(user.getUserPhone())
+                .nickname(user.getNickname())
+                .realName(user.getRealName())
+                .userType(user.getUserType())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .lastLoginAt(user.getLastLoginAt())
+                .build();
+        if (!permissionInfo.isAdmin() && !permissionInfo.getCurrentUserId().equals(id)) {
+            // 非管理员且非用户本人，隐藏敏感信息
+            response.setUsername(null);
+            response.setPassword(null);
+            response.setRealName(null);
+        }
+        return response;
     }
 }
