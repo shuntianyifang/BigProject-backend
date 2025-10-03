@@ -204,7 +204,6 @@ public class UserServiceImpl implements UserService {
         GetUserDetailResponse response = GetUserDetailResponse.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
-                .password(user.getPassword())
                 .email(user.getEmail())
                 .userPhone(user.getUserPhone())
                 .nickname(user.getNickname())
@@ -217,7 +216,6 @@ public class UserServiceImpl implements UserService {
         if (!permissionInfo.isAdmin() && !permissionInfo.getCurrentUserId().equals(id)) {
             // 非管理员且非用户本人，隐藏敏感信息
             response.setUsername(null);
-            response.setPassword(null);
             response.setRealName(null);
         }
         return response;
