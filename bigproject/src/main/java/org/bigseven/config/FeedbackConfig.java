@@ -14,6 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "feedback")
 public class FeedbackConfig {
-    private int maxImages = 9;
-
+    private int maxImages;
+    private String imageBaseUrl;
 }

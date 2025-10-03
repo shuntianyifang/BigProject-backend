@@ -12,6 +12,7 @@ import org.bigseven.dto.user.UserRegisterRequest;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.service.UserService;
+import org.bigseven.util.XssProtectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,21 +30,7 @@ public class UserController {
 
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
-
-    private String sanitize(String input) {
-        if (input == null) {
-            return null;
-        }
-        // 只允许字母、数字、下划线、中文，其他字符去除
-        return input.replaceAll("[<>\"'%;()&+]", "");
-    }
-
-    private String escapeHtml(String input) {
-        if (input == null) {
-            return null;
-        }
-        return StringEscapeUtils.escapeHtml4(input);
-    }
+    private final XssProtectionUtils xssProtectionUtils;
 
     /**
      * 用户登录
@@ -53,13 +40,8 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<AjaxResult<Map<String, Object>>> login(@Valid @RequestBody UserLoginRequest request) {
-        try {
             Map<String, Object> result = userService.login(request.getUsername(), request.getPassword());
             return ResponseEntity.ok(AjaxResult.success(result));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(AjaxResult.fail(ExceptionEnum.UNAUTHORIZED.getErrorCode(), e.getMessage()));
-        }
     }
 
     /**
@@ -70,10 +52,9 @@ public class UserController {
      */
     @PostMapping("/register")
     public ResponseEntity<AjaxResult<Map<String, Object>>> register(@Valid @RequestBody UserRegisterRequest request) {
-        try {
             // 先过滤和转义
-            String username = escapeHtml(sanitize(request.getUsername()));
-            String email = escapeHtml(sanitize(request.getEmail()));
+            String username = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getUsername()));
+            String email = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getEmail()));
 
             Map<String, Object> result = userService.register(
                     username,
@@ -83,10 +64,6 @@ public class UserController {
             );
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(AjaxResult.success(result));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(AjaxResult.fail(ExceptionEnum.BAD_REQUEST.getErrorCode(), "注册失败，请检查输入信息"));
-        }
     }
 
     /**
@@ -103,15 +80,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(AjaxResult.fail(ExceptionEnum.BAD_REQUEST.getErrorCode(), "缺少有效的token"));
         }
-
-        try {
             String token = jwtTokenUtil.extractTokenFromHeader(authorizationHeader);
             Map<String, Object> result = userService.refreshToken(token);
             return ResponseEntity.ok(AjaxResult.success(result));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(AjaxResult.fail(ExceptionEnum.UNAUTHORIZED.getErrorCode(), e.getMessage()));
-        }
     }
 
 }

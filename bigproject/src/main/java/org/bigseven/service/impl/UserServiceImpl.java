@@ -11,7 +11,9 @@ import org.bigseven.mapper.UserMapper;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
+import org.bigseven.util.XssProtectionUtils;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsServiceImpl userDetailsService;
+    private final XssProtectionUtils xssProtectionUtils;
 
     /**
      * 用户登录（JWT认证）
@@ -80,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
             return result;
 
-        } catch (Exception e) {
+        } catch (BadCredentialsException e) {
             throw new ApiException(ExceptionEnum.USERNAME_OR_PASSWORD_WRONG);
         }
     }
@@ -111,11 +114,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> register(String username, String password, String email, UserTypeEnum userType) {
         // 对输入做过滤
-        username = sanitize(username);
-        email = sanitize(email);
+        username = xssProtectionUtils.sanitize(username);
+        email = xssProtectionUtils.sanitize(email);
         // 再做HTML转义
-        username = escapeHtml(username);
-        email = escapeHtml(email);
+        username = xssProtectionUtils.escapeHtml(username);
+        email = xssProtectionUtils.escapeHtml(email);
 
         LambdaQueryWrapper<User> userQueryWrapper = new LambdaQueryWrapper<>();
         userQueryWrapper.eq(User::getUsername, username);

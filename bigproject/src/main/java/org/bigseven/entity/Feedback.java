@@ -39,33 +39,38 @@ public class Feedback {
     @JsonProperty("user_id")
     private Integer userId;
 
-    @TableField("view_count")
-    @JsonProperty("view_count")
-    private Integer viewCount;
-    /**
-     * 接单的管理员id
-     */
-    @TableField("accepted_by_user_id")
-    @JsonProperty("accepted_by_user_id")
-    private Integer acceptedByUserId;
-    /**
-     * 帖子类型
-     */
-    @TableField("feedback_type")
-    @JsonProperty("feedback_type")
-    private FeedbackTypeEnum feedbackType;
     /**
      * 是否匿名
      */
     @TableField("is_nicked")
     @JsonProperty("is_nicked")
     private Boolean isNicked;
+
     /**
      * 是否紧急
      */
     @TableField("is_urgent")
     @JsonProperty("is_urgent")
     private Boolean isUrgent;
+
+    /**
+     * 接单的管理员id
+     */
+    @TableField("accepted_by_user_id")
+    @JsonProperty("accepted_by_user_id")
+    private Integer acceptedByUserId;
+
+    @TableField("view_count")
+    @JsonProperty("view_count")
+    private Integer viewCount;
+
+    /**
+     * 帖子类型
+     */
+    @TableField("feedback_type")
+    @JsonProperty("feedback_type")
+    private FeedbackTypeEnum feedbackType;
+
     /**
      * 帖子状态
      */
