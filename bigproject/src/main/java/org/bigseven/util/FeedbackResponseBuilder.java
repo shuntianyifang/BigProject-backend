@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 public class FeedbackResponseBuilder {
 
-    private final FeedbackQueryUtils feedbackQueryUtils;
+    private final UserAuthenticationQueryUtils userAuthenticationQueryUtils;
     private final FeedbackImageUtils feedbackImageUtils;
 
     /**
@@ -26,8 +26,8 @@ public class FeedbackResponseBuilder {
      */
     public static final String NULL_CONTENT_MARKER = "nulla";
 
-    public FeedbackResponseBuilder(FeedbackQueryUtils feedbackQueryUtils, FeedbackImageUtils feedbackImageUtils) {
-        this.feedbackQueryUtils = feedbackQueryUtils;
+    public FeedbackResponseBuilder(UserAuthenticationQueryUtils userAuthenticationQueryUtils, FeedbackImageUtils feedbackImageUtils) {
+        this.userAuthenticationQueryUtils = userAuthenticationQueryUtils;
         this.feedbackImageUtils = feedbackImageUtils;
     }
 
@@ -39,14 +39,14 @@ public class FeedbackResponseBuilder {
             return;
         }
 
-        FeedbackQueryUtils.UserPermissionInfo permissionInfo = feedbackQueryUtils.getCurrentUserPermissionInfo();
-        Integer displayUserId = feedbackQueryUtils.processUserIdDisplay(feedback, permissionInfo);
+        UserAuthenticationQueryUtils.UserPermissionInfo permissionInfo = userAuthenticationQueryUtils.getCurrentUserPermissionInfo();
+        Integer displayUserId = userAuthenticationQueryUtils.processUserIdDisplay(feedback, permissionInfo);
 
         // 设置响应对象的userId（必须设置，即使为null）
         setUserIdToResponse(response, displayUserId);
 
         // 设置用户信息
-        feedbackQueryUtils.setUserInfoToResponse(response, feedback, displayUserId);
+        userAuthenticationQueryUtils.setUserInfoToResponse(response, feedback, displayUserId);
 
         // 设置图片URL
         List<String> imageUrls = feedbackImageUtils.getFeedbackImageUrls(feedback.getFeedbackId());

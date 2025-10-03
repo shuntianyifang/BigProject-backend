@@ -25,13 +25,13 @@ import static com.baomidou.mybatisplus.extension.ddl.DdlScriptErrorHandler.Print
  * &#064;date 2025/10/3
  */
 @Component
-public class FeedbackQueryUtils {
+public class UserAuthenticationQueryUtils {
 
     private final UserMapper userMapper;
     private final UserConverterUtils userConverterUtils;
     private final FeedbackImageUtils feedbackImageUtils;
 
-    public FeedbackQueryUtils(UserMapper userMapper, UserConverterUtils userConverterUtils, FeedbackImageUtils feedbackImageUtils) {
+    public UserAuthenticationQueryUtils(UserMapper userMapper, UserConverterUtils userConverterUtils, FeedbackImageUtils feedbackImageUtils) {
         this.userMapper = userMapper;
         this.userConverterUtils = userConverterUtils;
         this.feedbackImageUtils = feedbackImageUtils;
