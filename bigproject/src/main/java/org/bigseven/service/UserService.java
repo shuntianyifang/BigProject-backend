@@ -26,7 +26,7 @@ public interface UserService {
      * @param userType 用户类型
      * @return 注册结果
      */
-    Map<String, Object> register(String username, String password, String email, UserTypeEnum userType);
+    Map<String, Object> register(String username, String nickname, String password, String email, UserTypeEnum userType);
 
     /**
      * 刷新token

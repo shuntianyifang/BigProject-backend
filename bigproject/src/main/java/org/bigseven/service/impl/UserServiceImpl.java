@@ -12,7 +12,6 @@ import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
 import org.bigseven.util.UserConverterUtils;
-import org.bigseven.util.XssProtectionUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +37,6 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsServiceImpl userDetailsService;
-    private final XssProtectionUtils xssProtectionUtils;
     private final UserConverterUtils userConverterUtils;
 
     /**
@@ -101,13 +99,7 @@ public class UserServiceImpl implements UserService {
      * @return 注册成功返回用户信息，用户名已存在返回null
      */
     @Override
-    public Map<String, Object> register(String username, String password, String email, UserTypeEnum userType) {
-        // 对输入做过滤
-        username = xssProtectionUtils.sanitize(username);
-        email = xssProtectionUtils.sanitize(email);
-        // 再做HTML转义
-        username = xssProtectionUtils.escapeHtml(username);
-        email = xssProtectionUtils.escapeHtml(email);
+    public Map<String, Object> register(String username, String nickname, String password, String email, UserTypeEnum userType) {
 
         LambdaQueryWrapper<User> userQueryWrapper = new LambdaQueryWrapper<>();
         userQueryWrapper.eq(User::getUsername, username);
@@ -130,6 +122,7 @@ public class UserServiceImpl implements UserService {
         // 创建新用户
         User user = User.builder()
                 .username(username)
+                .nickname(nickname)
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .userType(userType != null ? userType : UserTypeEnum.STUDENT)

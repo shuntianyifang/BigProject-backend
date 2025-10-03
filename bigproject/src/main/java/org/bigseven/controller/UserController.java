@@ -55,10 +55,13 @@ public class UserController {
             // 先过滤和转义
             String username = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getUsername()));
             String email = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getEmail()));
+            String nickname = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getNickname()));
+            String password = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getPassword()));
 
             Map<String, Object> result = userService.register(
                     username,
-                    request.getPassword(),
+                    nickname,
+                    password,
                     email,
                     UserTypeEnum.STUDENT
             );
