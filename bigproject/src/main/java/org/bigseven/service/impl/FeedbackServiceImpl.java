@@ -328,21 +328,17 @@ public class FeedbackServiceImpl implements FeedbackService {
         }
         // 管理员/超级管理员：始终保留userId
 
-        // 处理student对象中的userId（与response的userId逻辑一致）
-        User student = userMapper.selectById(feedback.getUserId());
-        if (student != null && response.getUserId() != null) {
-            UserSimpleVO studentVO = new UserSimpleVO();
-            BeanUtils.copyProperties(student, studentVO);
+        // 设置学生信息
+        if (response.getUserId() != null) {
+            User studentUser = userMapper.selectById(feedback.getUserId());
+            UserSimpleVO studentVO = userConverterUtils.toUserSimpleVO(studentUser);
             response.setStudent(studentVO);
         }
         // 设置管理员信息
         if (feedback.getAcceptedByUserId() != null) {
             User adminUser = userMapper.selectById(feedback.getAcceptedByUserId());
-            if (adminUser != null) {
-                UserSimpleVO adminVO = new UserSimpleVO();
-                BeanUtils.copyProperties(adminUser, adminVO);
-                response.setAdmin(adminVO);
-            }
+            UserSimpleVO adminVO = userConverterUtils.toUserSimpleVO(adminUser);
+            response.setAdmin(adminVO);
         }
 
         // 处理图片URL
