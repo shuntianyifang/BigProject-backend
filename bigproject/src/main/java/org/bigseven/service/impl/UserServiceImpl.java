@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.StringEscapeUtils;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.user.UserSimpleVO;
 import org.bigseven.entity.User;
 import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.UserMapper;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
+import org.bigseven.util.UserConverterUtils;
 import org.bigseven.util.XssProtectionUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,6 +40,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsServiceImpl userDetailsService;
     private final XssProtectionUtils xssProtectionUtils;
+    private final UserConverterUtils userConverterUtils;
 
     /**
      * 用户登录（JWT认证）
@@ -75,10 +78,12 @@ public class UserServiceImpl implements UserService {
             user.setUpdatedAt(LocalDateTime.now());
             userMapper.updateById(user);
 
+            UserSimpleVO userVO = userConverterUtils.toUserSimpleVO(user);
+
             // 返回结果
             Map<String, Object> result = new HashMap<>(8);
             result.put("token", token);
-            result.put("user", user);
+            result.put("user", userVO);
             result.put("expiration", jwtTokenUtil.getExpiration());
 
             return result;
