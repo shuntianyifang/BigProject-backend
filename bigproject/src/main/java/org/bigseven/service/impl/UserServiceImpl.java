@@ -2,7 +2,6 @@ package org.bigseven.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.text.StringEscapeUtils;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.dto.user.UserSimpleVO;
@@ -91,21 +90,6 @@ public class UserServiceImpl implements UserService {
         } catch (BadCredentialsException e) {
             throw new ApiException(ExceptionEnum.USERNAME_OR_PASSWORD_WRONG);
         }
-    }
-
-    private String sanitize(String input) {
-        if (input == null) {
-            return null;
-        }
-        // 只允许字母、数字、下划线、中文，其他字符去除
-        return input.replaceAll("[<>\"'%;()&+]", "");
-    }
-
-    private String escapeHtml(String input) {
-        if (input == null) {
-            return null;
-        }
-        return StringEscapeUtils.escapeHtml4(input);
     }
 
     /**
