@@ -13,6 +13,7 @@ public class UserSimpleVO {
     private Integer userId;
     private String nickname;
     private String email;
+    private String userPhone;
     @JsonProperty("user_type")
     private UserTypeEnum userType;
 
