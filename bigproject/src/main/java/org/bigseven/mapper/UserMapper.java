@@ -18,7 +18,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @param userId 用户唯一标识ID
      * @return 对应的用户实体对象，如果不存在则返回null
      */
-    @Select("SELECT * FROM user WHERE user_id = #{user_id}")
+
     User selectByUserId(@Param("user_id") Integer userId);
 
     /**
@@ -28,6 +28,5 @@ public interface UserMapper extends BaseMapper<User> {
      * @param username 用户登录名
      * @return 对应的用户实体对象，如果不存在则返回null
      */
-    @Select("SELECT * FROM user WHERE username = #{username}")
     User selectByUsername(@Param("username") String username);
 }
