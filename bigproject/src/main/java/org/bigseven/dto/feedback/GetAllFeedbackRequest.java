@@ -1,5 +1,6 @@
 package org.bigseven.dto.feedback;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,40 +28,41 @@ public class GetAllFeedbackRequest {
     /**
      * 分页页码，默认为1
      */
-    private Integer page = 1;
+    private Integer page;
     
     /**
      * 分页大小，默认为10
      */
-    private Integer size = 10;
+    private Integer size;
     
     /**
-     * 反馈标题，用于模糊查询
+     * 反馈标题，用于按标题模糊查询
      */
-    private String title;
+    private String titleKeyword;
+
+    /**
+     * 反馈内容关键字，用于按内容模糊查询
+     */
+    private String contentKeyword;
     
     /**
      * 是否紧急反馈
      */
     private Boolean isUrgent;
-    
-    /**
-     * 处理该反馈的管理员ID
-     */
-    private Integer acceptedByUserId;
-    
+
     /**
      * 学生ID，用于查询特定学生提交的反馈
      * 不直接使用userId是为了在后续FeedbackServiceImpl处理时方便区分
      * 实际上后续储存的仍然是userId，只是命名不同
      */
     private Integer studentId;
-    
+
     /**
-     * 管理员ID
+     * 处理该反馈的管理员ID
+     * 实际上后续储存的仍然是accepted_by_user_id，只是命名不同
      */
     private Integer adminId;
-    
+
     /**
      * 是否匿名提交
      */
@@ -89,10 +91,10 @@ public class GetAllFeedbackRequest {
     /**
      * 排序字段，默认为"createdAt"
      */
-    private String sortField = "created_at";
+    private String sortField;
     
     /**
      * 排序顺序，默认为"desc"(降序)
      */
-    private String sortOrder = "desc";
+    private String sortOrder;
 }

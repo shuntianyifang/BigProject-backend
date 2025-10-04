@@ -18,6 +18,7 @@ import org.bigseven.mapper.FeedbackMapper;
 import org.bigseven.service.FeedbackService;
 import org.bigseven.util.FeedbackImageUtils;
 import org.bigseven.util.FeedbackResponseBuilder;
+import org.bigseven.util.UserAuthenticationQueryUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -39,6 +40,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final FeedbackConfig feedbackConfig;
     private final FeedbackResponseBuilder feedbackResponseBuilder;
     private final FeedbackImageUtils feedbackImageUtils;
+    private final UserAuthenticationQueryUtils userAuthenticationQueryUtils;
 
     private static final String ASC_ORDER = "asc";
 
@@ -183,13 +185,39 @@ public class FeedbackServiceImpl implements FeedbackService {
         QueryWrapper<Feedback> queryWrapper = new QueryWrapper<>();
 
         // 条件筛选
-        applyLikeCondition(queryWrapper, "title", request.getTitle());
+        applyLikeCondition(queryWrapper, "title", request.getTitleKeyword());
         applyEqualCondition(queryWrapper, "feedback_type", request.getFeedbackType());
         applyEqualCondition(queryWrapper, "feedback_status", request.getFeedbackStatus());
         applyEqualCondition(queryWrapper, "is_urgent", request.getIsUrgent());
-        applyEqualCondition(queryWrapper, "student_id", request.getStudentId());
-        applyEqualCondition(queryWrapper, "admin_id", request.getAdminId());
+        applyEqualCondition(queryWrapper, "is_nicked", request.getIsNicked());
+        applyEqualCondition(queryWrapper, "accepted_by_user_id", request.getAdminId());
         applyDateCondition(queryWrapper, "created_at", request.getFromTime(), request.getToTime());
+
+        // 关键修改：处理学生ID查询时的匿名权限
+        if (request.getStudentId() != null) {
+            UserAuthenticationQueryUtils.UserPermissionInfo permissionInfo =
+                    userAuthenticationQueryUtils.getCurrentUserPermissionInfo();
+
+            // 如果是管理员，可以直接查看所有反馈
+            if (permissionInfo.isAdmin()) {
+                queryWrapper.eq("user_id", request.getStudentId());
+            }
+            // 如果是普通用户查询自己的反馈
+            else if (permissionInfo.isAuthenticated() &&
+                    permissionInfo.getCurrentUserId() != null &&
+                    permissionInfo.getCurrentUserId().equals(request.getStudentId())) {
+                queryWrapper.eq("user_id", request.getStudentId());
+            }
+            // 如果是普通用户查询他人的反馈，需要过滤匿名反馈
+            else {
+                queryWrapper.and(wrapper -> wrapper
+                        .eq("user_id", request.getStudentId())
+                        .eq("is_nicked", false)
+                        // 只能看到非匿名的反馈
+                );
+            }
+        }
+
 
         // 设置排序
         String sortField = request.getSortField() != null ? request.getSortField() : "created_at";
