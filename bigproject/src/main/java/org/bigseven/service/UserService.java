@@ -1,8 +1,12 @@
 package org.bigseven.service;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.dto.user.GetUserDetailResponse;
 import org.bigseven.entity.User;
+import org.bigseven.security.CustomUserDetails;
 
 import java.util.Map;
 
@@ -51,4 +55,6 @@ public interface UserService {
      * @return 用户的详细信息响应对象
      */
     GetUserDetailResponse getUserDetail(Integer id);
+
+    void updateUserDetail(Integer id, CustomUserDetails userDetails, String email, String userPhone, String nickname, String realName);
 }
