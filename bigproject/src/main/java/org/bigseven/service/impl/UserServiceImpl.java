@@ -1,11 +1,19 @@
 package org.bigseven.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.adminreply.AdminReplyVO;
+import org.bigseven.dto.feedback.GetAllFeedbackResponse;
+import org.bigseven.dto.user.GetAllUserRequest;
+import org.bigseven.dto.user.GetAllUserResponse;
 import org.bigseven.dto.user.GetUserDetailResponse;
 import org.bigseven.dto.user.UserSimpleVO;
+import org.bigseven.entity.Feedback;
 import org.bigseven.entity.User;
 import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.UserMapper;
@@ -15,6 +23,8 @@ import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
 import org.bigseven.util.UserAuthenticationQueryUtils;
 import org.bigseven.util.UserConverterUtils;
+import org.bigseven.util.UserResponseBuilder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,11 +33,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author v185v
@@ -44,6 +57,19 @@ public class UserServiceImpl implements UserService {
     private final JwtUserDetailsServiceImpl userDetailsService;
     private final UserConverterUtils userConverterUtils;
     private final UserAuthenticationQueryUtils userAuthenticationQueryUtils;
+    private final UserResponseBuilder userResponseBuilder;
+
+    private static final String ASC_ORDER = "asc";
+
+    /**
+     * 将User对象转换为GetAllUserResponse对象
+     */
+    private GetAllUserResponse convertToResponse(User user) {
+        // 转换基础信息
+        GetAllUserResponse response = userResponseBuilder.convertToGetAllResponse(user);
+
+        return response;
+    }
 
     /**
      * 用户登录（JWT认证）
@@ -259,6 +285,29 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    /**
+     * 根据条件查询所有反馈信息并分页返回
+     * @param request 包含查询条件和分页参数的请求对象
+     * @return 分页的反馈响应对象列表
+     */
+    @Override
+    public Page<GetAllUserResponse> getAllUsers(GetAllUserRequest request) {
+        // 创建分页对象
+        Page<User> page = new Page<>(
+                request.getPage() != null ? request.getPage() : 1,
+                request.getSize() != null ? request.getSize() : 10
+        );
+
+        // 构建查询条件
+        QueryWrapper<User> queryWrapper = buildQueryWrapper(request);
+
+        // 执行查询
+        IPage<User> userPage = userMapper.selectPage(page, queryWrapper);
+
+        // 转换为响应对象
+        return convertToResponsePage(userPage);
+    }
+
     @Override
     public void updateUserDetail(Integer id, CustomUserDetails userDetails, String email, String userPhone, String nickname, String realName) {
         Integer userId = userDetails.getUserId();
@@ -274,5 +323,65 @@ public class UserServiceImpl implements UserService {
         user.setNickname(nickname);
         user.setRealName(realName);
         userMapper.updateById(user);
+    }
+
+    /**
+     * 构建查询条件
+     */
+    private QueryWrapper<User> buildQueryWrapper(GetAllUserRequest request) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+
+        // 条件筛选
+        applyLikeCondition(queryWrapper, "user", request.getUsernameKeyword());
+        applyEqualCondition(queryWrapper, "user_type", request.getUserType());
+        applyDateCondition(queryWrapper, "created_at", request.getFromTime(), request.getToTime());
+
+        // 设置排序
+        String sortField = request.getSortField() != null ? request.getSortField() : "created_at";
+        String sortOrder = request.getSortOrder() != null ? request.getSortOrder() : "desc";
+
+        if (ASC_ORDER.equalsIgnoreCase(sortOrder)) {
+            queryWrapper.orderByAsc(sortField);
+        } else {
+            queryWrapper.orderByDesc(sortField);
+        }
+
+        return queryWrapper;
+    }
+
+    /**
+     * 转换为响应分页
+     */
+    private Page<GetAllUserResponse> convertToResponsePage(IPage<User> userPage) {
+        Page<GetAllUserResponse> responsePage = new Page<>();
+        BeanUtils.copyProperties(userPage, responsePage);
+
+        List<GetAllUserResponse> userResponses = userPage.getRecords().stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+
+        responsePage.setRecords(userResponses);
+        return responsePage;
+    }
+
+    private void applyLikeCondition(QueryWrapper<User> wrapper, String field, String value) {
+        if (StringUtils.hasText(value)) {
+            wrapper.like(field, value);
+        }
+    }
+
+    private void applyEqualCondition(QueryWrapper<User> wrapper, String field, Object value) {
+        if (value != null) {
+            wrapper.eq(field, value);
+        }
+    }
+
+    private void applyDateCondition(QueryWrapper<User> wrapper, String field, String start, String end) {
+        if (StringUtils.hasText(start)) {
+            wrapper.ge(field, start);
+        }
+        if (StringUtils.hasText(end)) {
+            wrapper.le(field, end);
+        }
     }
 }

@@ -9,6 +9,7 @@ import org.bigseven.config.FeedbackConfig;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
+import org.bigseven.dto.adminreply.AdminReplyVO;
 import org.bigseven.dto.feedback.GetAllFeedbackRequest;
 import org.bigseven.dto.feedback.GetAllFeedbackResponse;
 import org.bigseven.dto.feedback.GetFeedbackDetailResponse;
@@ -16,9 +17,7 @@ import org.bigseven.entity.Feedback;
 import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.FeedbackMapper;
 import org.bigseven.service.FeedbackService;
-import org.bigseven.util.FeedbackImageUtils;
-import org.bigseven.util.FeedbackResponseBuilder;
-import org.bigseven.util.UserAuthenticationQueryUtils;
+import org.bigseven.util.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -41,6 +40,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final FeedbackResponseBuilder feedbackResponseBuilder;
     private final FeedbackImageUtils feedbackImageUtils;
     private final UserAuthenticationQueryUtils userAuthenticationQueryUtils;
+    private final AdminReplyUtils adminReplyUtils;
 
     private static final String ASC_ORDER = "asc";
 
@@ -48,7 +48,14 @@ public class FeedbackServiceImpl implements FeedbackService {
      * 将Feedback对象转换为GetAllFeedbackResponse对象
      */
     private GetAllFeedbackResponse convertToResponse(Feedback feedback) {
-        return feedbackResponseBuilder.convertToGetAllResponse(feedback);
+        // 转换基础信息
+        GetAllFeedbackResponse response = feedbackResponseBuilder.convertToGetAllResponse(feedback);
+
+        // 查询并设置管理员回复
+        List<AdminReplyVO> adminReplies = adminReplyUtils.getRepliesByFeedbackId(feedback.getFeedbackId());
+        response.setAdminReply(adminReplies);
+
+        return response;
     }
 
     /**
@@ -158,7 +165,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         return convertToResponsePage(feedbackPage);
     }
 
-
     /**
      * 根据ID获取反馈详情
      * @param id 反馈ID
@@ -175,7 +181,13 @@ public class FeedbackServiceImpl implements FeedbackService {
         // 增加浏览次数
         feedbackMapper.incrementViewCount(id);
 
-        return feedbackResponseBuilder.buildDetailResponse(feedback);
+        GetFeedbackDetailResponse response = feedbackResponseBuilder.buildDetailResponse(feedback);
+
+        // 设置管理员回复信息
+        List<AdminReplyVO> adminReplies = adminReplyUtils.getRepliesByFeedbackId(id);
+        response.setAdminReply(adminReplies);
+
+        return response;
     }
 
     /**

@@ -1,18 +1,18 @@
 package org.bigseven.dto.feedback;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
+import org.bigseven.dto.adminreply.AdminReplyVO;
 import org.bigseven.dto.user.UserSimpleVO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 管理员反馈响应数据传输对象
- * 用于封装返回给管理员的反馈信息
+ * 反馈响应数据传输对象
+ * 用于封装返回给用户的反馈信息
  * @author v185v
  * &#064;date 2025/9/20
  */
@@ -86,6 +86,12 @@ public class GetAllFeedbackResponse {
      */
     @JsonProperty("admin")
     private UserSimpleVO admin;
+
+    /**
+     * 管理员回复信息
+     */
+    @JsonProperty("admin_reply")
+    private List<AdminReplyVO> adminReply;
 
     /**
      * 反馈创建时间

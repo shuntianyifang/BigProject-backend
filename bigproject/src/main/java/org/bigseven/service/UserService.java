@@ -1,9 +1,9 @@
 package org.bigseven.service;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.user.GetAllUserRequest;
+import org.bigseven.dto.user.GetAllUserResponse;
 import org.bigseven.dto.user.GetUserDetailResponse;
 import org.bigseven.entity.User;
 import org.bigseven.security.CustomUserDetails;
@@ -57,4 +57,12 @@ public interface UserService {
     GetUserDetailResponse getUserDetail(Integer id);
 
     void updateUserDetail(Integer id, CustomUserDetails userDetails, String email, String userPhone, String nickname, String realName);
+
+    /**
+     * 查看所有用户（分页+条件查询）
+     *
+     * @param request 用户查询请求，包含分页参数和筛选条件
+     * @return 分页的用户响应列表，包含用户详情和分页信息
+     */
+    Page<GetAllUserResponse> getAllUsers(GetAllUserRequest request);
 }

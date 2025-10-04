@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
+import org.bigseven.dto.adminreply.AdminReplyVO;
 import org.bigseven.dto.user.UserSimpleVO;
 
 import java.time.LocalDateTime;
@@ -84,6 +85,12 @@ public class GetFeedbackDetailResponse {
      */
     @JsonProperty("admin")
     private UserSimpleVO admin;
+
+    /**
+     * 管理员回复信息
+     */
+    @JsonProperty("admin_reply")
+    private List<AdminReplyVO> adminReply;
 
     /**
      * 反馈创建时间
