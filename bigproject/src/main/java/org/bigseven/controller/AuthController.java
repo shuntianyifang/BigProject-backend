@@ -77,7 +77,7 @@ public class AuthController {
 
         String newPassword = xssProtectionUtils.escapeHtml(xssProtectionUtils.sanitize(request.getNewPassword()));
 
-        Map<String, Object> result = userService.resetPassword(request.getUsername(), request.getPassword(), newPassword);
+        Map<String, Object> result = userService.resetPassword(request.getUserId(), request.getPassword(), newPassword);
 
         return ResponseEntity.ok(AjaxResult.success(result));
     }

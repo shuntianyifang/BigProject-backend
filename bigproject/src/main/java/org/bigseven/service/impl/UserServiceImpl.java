@@ -157,14 +157,14 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 用户重置密码
-     * @param username 用户名
+     * @param userId 用户名
      * @param password 密码
      * @param newPassword 新密码
      * @return 成功提示
      */
     @Override
-    public Map<String, Object> resetPassword(String username, String password, String newPassword) {
-        User user = userMapper.selectByUsername(username);
+    public Map<String, Object> resetPassword(Integer userId, String password, String newPassword) {
+        User user = userMapper.selectById(userId);
         // 检查用户是否存在
         if (user == null) {
             throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
