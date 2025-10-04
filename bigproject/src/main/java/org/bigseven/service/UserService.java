@@ -33,7 +33,7 @@ public interface UserService {
      */
     Map<String, Object> register(String username, String nickname, String password, String email, UserTypeEnum userType);
 
-    Map<String, Object> resetPassword(String username, String password, String newPassword);
+    Map<String, Object> resetPassword(Integer userId, String password, String newPassword);
 
     /**
      * 刷新token

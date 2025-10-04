@@ -14,7 +14,8 @@ import lombok.Data;
 @Builder
 public class ResetPasswordRequest {
 
-    private String username;
+    @JsonProperty("user_id")
+    private Integer userId;
 
     private String password;
 
