@@ -9,6 +9,7 @@ import org.bigseven.dto.user.UserSimpleVO;
 import org.bigseven.entity.User;
 import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.UserMapper;
+import org.bigseven.security.CustomUserDetails;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author v185v
@@ -34,6 +36,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -254,5 +257,22 @@ public class UserServiceImpl implements UserService {
             response.setRealName(null);
         }
         return response;
+    }
+
+    @Override
+    public void updateUserDetail(Integer id, CustomUserDetails userDetails, String email, String userPhone, String nickname, String realName) {
+        Integer userId = userDetails.getUserId();
+        if (!Objects.equals(userId, id)){
+            throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
+        }
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
+        }
+        user.setEmail(email);
+        user.setUserPhone(userPhone);
+        user.setNickname(nickname);
+        user.setRealName(realName);
+        userMapper.updateById(user);
     }
 }
