@@ -17,6 +17,4 @@ public class UserLoginRequest {
 
     private String password;
 
-    private String email;
-
 }

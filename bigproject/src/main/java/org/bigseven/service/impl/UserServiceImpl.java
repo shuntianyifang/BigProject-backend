@@ -2,16 +2,19 @@ package org.bigseven.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.text.StringEscapeUtils;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.user.GetUserDetailResponse;
+import org.bigseven.dto.user.UserSimpleVO;
 import org.bigseven.entity.User;
 import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.UserMapper;
+import org.bigseven.security.CustomUserDetails;
 import org.bigseven.security.JwtTokenUtil;
 import org.bigseven.security.JwtUserDetailsServiceImpl;
 import org.bigseven.service.UserService;
-import org.bigseven.util.XssProtectionUtils;
+import org.bigseven.util.UserAuthenticationQueryUtils;
+import org.bigseven.util.UserConverterUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author v185v
@@ -32,12 +36,14 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final JwtUserDetailsServiceImpl userDetailsService;
-    private final XssProtectionUtils xssProtectionUtils;
+    private final UserConverterUtils userConverterUtils;
+    private final UserAuthenticationQueryUtils userAuthenticationQueryUtils;
 
     /**
      * 用户登录（JWT认证）
@@ -72,13 +78,15 @@ public class UserServiceImpl implements UserService {
             String token = jwtTokenUtil.generateToken(userDetails);
 
             // 更新最后登录时间
-            user.setUpdatedAt(LocalDateTime.now());
+            user.setLastLoginAt(LocalDateTime.now());
             userMapper.updateById(user);
+
+            UserSimpleVO userVO = userConverterUtils.toUserSimpleVO(user);
 
             // 返回结果
             Map<String, Object> result = new HashMap<>(8);
             result.put("token", token);
-            result.put("user", user);
+            result.put("user", userVO);
             result.put("expiration", jwtTokenUtil.getExpiration());
 
             return result;
@@ -86,21 +94,6 @@ public class UserServiceImpl implements UserService {
         } catch (BadCredentialsException e) {
             throw new ApiException(ExceptionEnum.USERNAME_OR_PASSWORD_WRONG);
         }
-    }
-
-    private String sanitize(String input) {
-        if (input == null) {
-            return null;
-        }
-        // 只允许字母、数字、下划线、中文，其他字符去除
-        return input.replaceAll("[<>\"'%;()&+]", "");
-    }
-
-    private String escapeHtml(String input) {
-        if (input == null) {
-            return null;
-        }
-        return StringEscapeUtils.escapeHtml4(input);
     }
 
     /**
@@ -112,20 +105,14 @@ public class UserServiceImpl implements UserService {
      * @return 注册成功返回用户信息，用户名已存在返回null
      */
     @Override
-    public Map<String, Object> register(String username, String password, String email, UserTypeEnum userType) {
-        // 对输入做过滤
-        username = xssProtectionUtils.sanitize(username);
-        email = xssProtectionUtils.sanitize(email);
-        // 再做HTML转义
-        username = xssProtectionUtils.escapeHtml(username);
-        email = xssProtectionUtils.escapeHtml(email);
+    public Map<String, Object> register(String username, String nickname, String password, String email, UserTypeEnum userType) {
 
         LambdaQueryWrapper<User> userQueryWrapper = new LambdaQueryWrapper<>();
         userQueryWrapper.eq(User::getUsername, username);
         User existingUser = userMapper.selectOne(userQueryWrapper);
 
         if (existingUser != null) {
-            throw new RuntimeException("用户名已存在");
+            throw new ApiException(ExceptionEnum.USER_EXIST);
         }
 
         // 检查邮箱是否已存在
@@ -134,13 +121,14 @@ public class UserServiceImpl implements UserService {
             emailQueryWrapper.eq(User::getEmail, email);
             User emailUser = userMapper.selectOne(emailQueryWrapper);
             if (emailUser != null) {
-                throw new RuntimeException("邮箱已被注册");
+                throw new ApiException(ExceptionEnum.EMAIL_EXIST);
             }
         }
 
         // 创建新用户
         User user = User.builder()
                 .username(username)
+                .nickname(nickname)
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .userType(userType != null ? userType : UserTypeEnum.STUDENT)
@@ -152,6 +140,8 @@ public class UserServiceImpl implements UserService {
 
         userMapper.insert(user);
 
+        UserSimpleVO userVO = userConverterUtils.toUserSimpleVO(user);
+
         // 生成JWT token
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         String token = jwtTokenUtil.generateToken(userDetails);
@@ -159,9 +149,44 @@ public class UserServiceImpl implements UserService {
         // 返回结果
         Map<String, Object> result = new HashMap<>(8);
         result.put("token", token);
-        result.put("user", user);
+        result.put("user", userVO);
         result.put("message", "注册成功");
 
+        return result;
+    }
+
+    /**
+     * 用户重置密码
+     * @param userId 用户名
+     * @param password 密码
+     * @param newPassword 新密码
+     * @return 成功提示
+     */
+    @Override
+    public Map<String, Object> resetPassword(Integer userId, String password, String newPassword) {
+        User user = userMapper.selectById(userId);
+        // 检查用户是否存在
+        if (user == null) {
+            throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
+        }
+
+        // 检查用户是否被删除
+        if (Boolean.TRUE.equals(user.getDeleted())) {
+            throw new ApiException(ExceptionEnum.USER_DISABLED);
+        }
+
+        // 验证旧密码
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new ApiException(ExceptionEnum.USERNAME_OR_PASSWORD_WRONG);
+        }
+
+        // 更新密码
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setUpdatedAt(LocalDateTime.now());
+        userMapper.updateById(user);
+
+        Map<String, Object> result = new HashMap<>(4);
+        result.put("message", "密码重置成功");
         return result;
     }
 
@@ -199,5 +224,55 @@ public class UserServiceImpl implements UserService {
             return userMapper.selectByUsername(username);
         }
         return null;
+    }
+
+    /**
+     * 根据ID获取反馈详情
+     * @param id 反馈ID
+     * @return 反馈详情响应对象
+     * @throws ApiException 当反馈不存在时抛出异常
+     */
+    @Override
+    public GetUserDetailResponse getUserDetail(Integer id) {
+        User user = userMapper.selectById(id);
+        UserAuthenticationQueryUtils.UserPermissionInfo permissionInfo = userAuthenticationQueryUtils.getCurrentUserPermissionInfo();
+        if (user == null) {
+            throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
+        }
+        GetUserDetailResponse response = GetUserDetailResponse.builder()
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .userPhone(user.getUserPhone())
+                .nickname(user.getNickname())
+                .realName(user.getRealName())
+                .userType(user.getUserType())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .lastLoginAt(user.getLastLoginAt())
+                .build();
+        if (!permissionInfo.isAdmin() && !permissionInfo.getCurrentUserId().equals(id)) {
+            // 非管理员且非用户本人，隐藏敏感信息
+            response.setUsername(null);
+            response.setRealName(null);
+        }
+        return response;
+    }
+
+    @Override
+    public void updateUserDetail(Integer id, CustomUserDetails userDetails, String email, String userPhone, String nickname, String realName) {
+        Integer userId = userDetails.getUserId();
+        if (!Objects.equals(userId, id)){
+            throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
+        }
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
+        }
+        user.setEmail(email);
+        user.setUserPhone(userPhone);
+        user.setNickname(nickname);
+        user.setRealName(realName);
+        userMapper.updateById(user);
     }
 }

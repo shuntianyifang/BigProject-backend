@@ -1,7 +1,12 @@
 package org.bigseven.service;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.bigseven.constant.UserTypeEnum;
+import org.bigseven.dto.user.GetUserDetailResponse;
 import org.bigseven.entity.User;
+import org.bigseven.security.CustomUserDetails;
 
 import java.util.Map;
 
@@ -26,7 +31,9 @@ public interface UserService {
      * @param userType 用户类型
      * @return 注册结果
      */
-    Map<String, Object> register(String username, String password, String email, UserTypeEnum userType);
+    Map<String, Object> register(String username, String nickname, String password, String email, UserTypeEnum userType);
+
+    Map<String, Object> resetPassword(Integer userId, String password, String newPassword);
 
     /**
      * 刷新token
@@ -40,4 +47,14 @@ public interface UserService {
      * @return 用户信息
      */
     User getCurrentUser();
+
+    /**
+     * 根据ID获取用户详情
+     *
+     * @param id 用户的唯一标识ID
+     * @return 用户的详细信息响应对象
+     */
+    GetUserDetailResponse getUserDetail(Integer id);
+
+    void updateUserDetail(Integer id, CustomUserDetails userDetails, String email, String userPhone, String nickname, String realName);
 }

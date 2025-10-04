@@ -11,10 +11,9 @@ import org.bigseven.dto.feedback.PublishFeedbackRequest;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.CustomUserDetails;
 import org.bigseven.service.FeedbackService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @author v185v
@@ -44,6 +43,7 @@ public class FeedbackController {
      * @return AjaxResult<Void> 操作结果
      */
     @PostMapping("/publish")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public AjaxResult<Void> publishFeedback(@Valid @RequestBody PublishFeedbackRequest request,
                                             @AuthenticationPrincipal CustomUserDetails userDetails) {
         // 从当前登录用户中获取user_id
@@ -60,7 +60,7 @@ public class FeedbackController {
     }
 
     @GetMapping
-    public AjaxResult<BaseListResponse<GetAllFeedbackResponse>> getFeedback(GetAllFeedbackRequest request) {
+    public AjaxResult<BaseListResponse<GetAllFeedbackResponse>> getAllFeedback(GetAllFeedbackRequest request) {
 
         Page<GetAllFeedbackResponse> pageResult = feedbackService.getAllFeedbacks(request);
 
