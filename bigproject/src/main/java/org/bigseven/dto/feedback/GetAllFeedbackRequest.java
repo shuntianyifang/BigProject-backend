@@ -1,6 +1,5 @@
 package org.bigseven.dto.feedback;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,8 @@ import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 
 /**
- * 管理员反馈请求数据传输对象
- * 用于封装管理员对反馈进行查询、处理等操作时的请求参数
+ * 反馈请求数据传输对象
+ * 用于封装用户对反馈进行查询、处理等操作时的请求参数
  * @author v185v
  * &#064;date 2025/9/20
  */
