@@ -118,30 +118,44 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     /**
      * 普通User更新反馈信息
-     * @param feedbackId 反馈ID
+     * @param id 反馈ID
      * @param feedbackType 反馈类型
      * @param title 反馈标题
      * @param content 反馈内容
      */
     @Override
-    public void updateFeedback(Integer userId,Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content) {
-        Feedback feedback = feedbackMapper.selectById(feedbackId);
-        if (feedback != null) {
-            if(feedback.getUserId().equals(userId)){
-                feedback.setFeedbackType(feedbackType);
-                feedback.setTitle(title);
-                feedback.setContent(content);
-                feedbackMapper.updateById(feedback);
-            }
-            else {
-                throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
-            }
+    public void updateFeedback(Integer id, CustomUserDetails userDetails, Boolean isNicked, Boolean isUrgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls) {
+
+        Feedback feedback = feedbackMapper.selectById(id);
+        Integer userId = userDetails.getUserId();
+
+        if (feedback == null) {
+            throw new ApiException(ExceptionEnum.FEEDBACK_NOT_FOUND);
         }
-        else {
-            //需要做错误处理
-            return;
+        if (!feedback.getUserId().equals(userId)) {
+            throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
+        }
+        if (feedback.getFeedbackStatus() != FeedbackStatusEnum.PENDING) {
+            throw new ApiException(ExceptionEnum.FEEDBACK_CANNOT_UPDATE);
         }
 
+        feedback.setIsNicked(isNicked);
+        feedback.setIsUrgent(isUrgent);
+        feedback.setFeedbackType(feedbackType);
+        feedback.setTitle(title);
+        feedback.setContent(content);
+        feedback.setUpdatedAt(LocalDateTime.now());
+        feedbackMapper.updateById(feedback);
+
+        // 更新图片信息
+        if (imageUrls != null) {
+            // 先删除旧图片
+            feedbackImageUtils.deleteImagesByFeedbackId(id);
+            // 再保存新图片
+            for (int i = 0; i < Math.min(imageUrls.size(), feedbackConfig.getMaxImages()); i++) {
+                feedbackImageUtils.saveFeedbackImages(id, imageUrls, feedbackConfig.getMaxImages());
+            }
+        }
     }
 
     /**

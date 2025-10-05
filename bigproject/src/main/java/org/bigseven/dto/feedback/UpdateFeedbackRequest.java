@@ -1,6 +1,5 @@
 package org.bigseven.dto.feedback;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,15 +10,10 @@ import org.bigseven.constant.FeedbackTypeEnum;
 
 import java.util.List;
 
-
-/**
- * @author v185v
- * &#064;date 2025/9/17
- */
 @Data
 @AllArgsConstructor
 @Builder
-public class PublishFeedbackRequest {
+public class UpdateFeedbackRequest {
     @Size(min=1, max=40,message = "标题长度必须在1-40之间")
     private String title;
 

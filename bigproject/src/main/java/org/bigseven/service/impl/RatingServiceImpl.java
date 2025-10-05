@@ -52,4 +52,18 @@ public class RatingServiceImpl implements RatingService {
         existingRating.setUpdatedAt(LocalDateTime.now());
         ratingMapper.updateById(existingRating);
     }
+
+    @Override
+    public void  deleteRating(Integer id, CustomUserDetails userDetails) {
+        Rating existingRating = ratingMapper.selectById(id);
+        if (existingRating == null || existingRating.getDeleted()) {
+            throw new ApiException(ExceptionEnum.RATING_NOT_FOUND);
+        }
+        if (!existingRating.getUserId().equals(userDetails.getUserId())) {
+            throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
+        }
+        existingRating.setDeleted(true);
+        existingRating.setUpdatedAt(LocalDateTime.now());
+        ratingMapper.updateById(existingRating);
+    }
 }

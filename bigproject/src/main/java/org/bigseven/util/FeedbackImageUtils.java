@@ -63,4 +63,8 @@ public class FeedbackImageUtils {
             }
         }
     }
+
+    public void deleteImagesByFeedbackId(Integer id) {
+        feedbackImageMapper.delete(new QueryWrapper<FeedbackImage>().eq("feedback_id", id));
+    }
 }

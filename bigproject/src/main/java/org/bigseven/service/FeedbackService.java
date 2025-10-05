@@ -1,6 +1,7 @@
 package org.bigseven.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import jakarta.validation.constraints.Size;
 import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.dto.feedback.GetAllFeedbackRequest;
 import org.bigseven.dto.feedback.GetAllFeedbackResponse;
@@ -39,18 +40,6 @@ public interface FeedbackService {
     void deleteFeedback(Integer id, CustomUserDetails userDetails);
 
     /**
-     * 更新反馈内容信息
-     * 修改已发布反馈的类型、标题和文本内容
-     *
-     * @param userId 执行更新的用户ID
-     * @param feedbackId 要更新的反馈ID
-     * @param feedbackType 新的反馈类型枚举
-     * @param title 新的反馈标题
-     * @param content 新的反馈详细内容
-     */
-    void updateFeedback(Integer userId, Integer feedbackId, FeedbackTypeEnum feedbackType, String title, String content);
-
-    /**
      * 管理员查看所有反馈（分页+条件查询）
      *
      * @param request 管理员反馈查询请求，包含分页参数和筛选条件
@@ -66,4 +55,5 @@ public interface FeedbackService {
      */
     GetFeedbackDetailResponse getFeedbackDetail(Integer id);
 
+    void updateFeedback(Integer id, CustomUserDetails userDetails, Boolean isNicked, Boolean isUrgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
 }

@@ -44,4 +44,11 @@ public class RatingController {
         ratingService.updateRating(id, userDetails, content, score);
         return AjaxResult.success();
     }
+
+    @DeleteMapping("/{id}")
+    public AjaxResult<Void> deleteRating(@PathVariable Integer id,
+                                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+        ratingService.deleteRating(id, userDetails);
+        return AjaxResult.success();
+    }
 }
