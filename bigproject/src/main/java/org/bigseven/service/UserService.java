@@ -65,4 +65,8 @@ public interface UserService {
      * @return 分页的用户响应列表，包含用户详情和分页信息
      */
     Page<GetAllUserResponse> getAllUsers(GetAllUserRequest request);
+
+    void changeUserType(Integer id, UserTypeEnum userType);
+
+    void deleteUser(Integer id);
 }

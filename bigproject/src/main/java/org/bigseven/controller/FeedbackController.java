@@ -59,6 +59,13 @@ public class FeedbackController {
         return AjaxResult.success();
     }
 
+    @DeleteMapping("/{id}/delete")
+    public AjaxResult<Void> deleteFeedback(@PathVariable Integer id,
+                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
+        feedbackService.deleteFeedback(id, userDetails);
+        return  AjaxResult.success();
+    }
+
     @GetMapping
     public AjaxResult<BaseListResponse<GetAllFeedbackResponse>> getAllFeedback(GetAllFeedbackRequest request) {
 
@@ -76,8 +83,8 @@ public class FeedbackController {
     }
 
     @GetMapping("/{id}")
-    public AjaxResult<GetFeedbackDetailResponse> getFeedbackDetail(@PathVariable String id) {
-        GetFeedbackDetailResponse response = feedbackService.getFeedbackDetail(Integer.valueOf(id));
+    public AjaxResult<GetFeedbackDetailResponse> getFeedbackDetail(@PathVariable Integer id) {
+        GetFeedbackDetailResponse response = feedbackService.getFeedbackDetail(id);
         return AjaxResult.success(response);
     }
 

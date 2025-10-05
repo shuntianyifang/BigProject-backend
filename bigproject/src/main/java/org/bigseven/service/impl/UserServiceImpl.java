@@ -325,6 +325,35 @@ public class UserServiceImpl implements UserService {
         userMapper.updateById(user);
     }
 
+    @Override
+    public void changeUserType(Integer id, UserTypeEnum userType) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
+        }
+        if (!userType.equals(UserTypeEnum.ADMIN) && !userType.equals(UserTypeEnum.STUDENT)) {
+            throw new ApiException(ExceptionEnum.ILLEGAL_USER_TYPE);
+        }
+        if (user.getUserType() == UserTypeEnum.SUPER_ADMIN) {
+            throw new ApiException(ExceptionEnum.OPERATION_FAILED);
+        }
+        user.setUserType(userType);
+        userMapper.updateById(user);
+    }
+
+    @Override
+    public  void deleteUser(Integer id) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            throw new ApiException(ExceptionEnum.USER_NOT_EXIST);
+        }
+        if (user.getUserType() == UserTypeEnum.SUPER_ADMIN) {
+            throw new ApiException(ExceptionEnum.OPERATION_FAILED);
+        }
+        user.setDeleted(true);
+        userMapper.updateById(user);
+    }
+
     /**
      * 构建查询条件
      */

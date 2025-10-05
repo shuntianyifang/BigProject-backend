@@ -2,15 +2,15 @@ package org.bigseven.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.dto.base.BaseListResponse;
+import org.bigseven.dto.superadmin.ChangeUserTypeRequest;
 import org.bigseven.dto.user.GetAllUserRequest;
 import org.bigseven.dto.user.GetAllUserResponse;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author shuntianyifang
@@ -38,5 +38,18 @@ public class SuperAdminUserController {
                 .build();
 
         return AjaxResult.success(response);
+    }
+
+    @PostMapping("/{id}")
+    public AjaxResult<Void> changeUserType(@RequestBody ChangeUserTypeRequest request,
+                                           @PathVariable Integer id) {
+        userService.changeUserType(id, request.getUserType());
+        return AjaxResult.success();
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public AjaxResult<Void> deleteUser(@PathVariable Integer id) {
+        userService.deleteUser(id);
+        return AjaxResult.success();
     }
 }
