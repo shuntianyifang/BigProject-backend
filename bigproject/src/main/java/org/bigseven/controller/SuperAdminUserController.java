@@ -2,6 +2,7 @@ package org.bigseven.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
+import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.dto.base.BaseListResponse;
 import org.bigseven.dto.superadmin.ChangeUserTypeRequest;
 import org.bigseven.dto.user.GetAllUserRequest;
