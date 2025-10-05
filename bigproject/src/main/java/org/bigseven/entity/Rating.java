@@ -26,9 +26,9 @@ public class Rating {
     @JsonProperty("user_id")
     private Integer userId;
 
-    @TableField("target_reply_id")
-    @JsonProperty("target_reply_id")
-    private Integer targetReplyId;
+    @TableField("admin_reply_id")
+    @JsonProperty("admin_reply_id")
+    private Integer adminReplyId;
 
     private String content;
 
