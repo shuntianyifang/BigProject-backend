@@ -200,6 +200,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         // 条件筛选
         applyLikeCondition(queryWrapper, "title", request.getTitleKeyword());
+        applyLikeCondition(queryWrapper, "content", request.getContentKeyword());
         applyEqualCondition(queryWrapper, "feedback_type", request.getFeedbackType());
         applyEqualCondition(queryWrapper, "feedback_status", request.getFeedbackStatus());
         applyEqualCondition(queryWrapper, "is_urgent", request.getIsUrgent());
