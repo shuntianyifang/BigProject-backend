@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
  * 20XXX:公共业务异常
  * 30XXX:用户相关
  * 40XXX:反馈相关
+ * 50XXX:评价相关
  *
  * @author shuntianyifang
  * &#064;date 2025/9/15
@@ -37,7 +38,10 @@ public enum ExceptionEnum {
     ILLEGAL_USER_TYPE(30005,"非法的用户类型"),
     /// 反馈
     FEEDBACK_NOT_FOUND(40000,"反馈不存在"),
-    ILLEGAL_FEEDBACK_TYPE(40001,"未知的反馈类型");
+    ILLEGAL_FEEDBACK_TYPE(40001,"未知的反馈类型"),
+    /// 评价
+    RATING_EXIST(50000,"您已评价过该回复"),
+    RATING_NOT_FOUND(50001,"评价不存在");
     private final Integer errorCode;
     private final String errorMsg;
 }
