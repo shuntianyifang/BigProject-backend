@@ -42,4 +42,11 @@ public class UserController {
         userService.updateUserDetail(id, userDetails, email, userPhone, nickname, realName);
         return AjaxResult.success();
     }
+
+    @DeleteMapping("{id}/delete")
+    public AjaxResult<Void> unregisterUser(@PathVariable Integer id,
+                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        userService.unregisterUser(id, userDetails);
+        return AjaxResult.success();
+    }
 }
