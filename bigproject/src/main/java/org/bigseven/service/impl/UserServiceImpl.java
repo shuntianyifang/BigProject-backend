@@ -354,6 +354,17 @@ public class UserServiceImpl implements UserService {
         userMapper.updateById(user);
     }
 
+    @Override
+    public void unregisterUser(Integer id, CustomUserDetails userDetails) {
+        Integer userId = userDetails.getUserId();
+        if (!Objects.equals(userId, id)){
+            throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
+        }
+        User user = userMapper.selectById(id);
+        user.setDeleted(true);
+        userMapper.updateById(user);
+    }
+
     /**
      * 构建查询条件
      */

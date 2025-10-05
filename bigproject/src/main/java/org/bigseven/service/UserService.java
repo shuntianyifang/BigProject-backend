@@ -69,4 +69,6 @@ public interface UserService {
     void changeUserType(Integer id, UserTypeEnum userType);
 
     void deleteUser(Integer id);
+
+    void unregisterUser(Integer id, CustomUserDetails userDetails);
 }
