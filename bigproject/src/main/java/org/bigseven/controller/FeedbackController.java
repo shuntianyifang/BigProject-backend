@@ -4,10 +4,7 @@ package org.bigseven.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.validation.Valid;
 import org.bigseven.dto.base.BaseListResponse;
-import org.bigseven.dto.feedback.GetAllFeedbackRequest;
-import org.bigseven.dto.feedback.GetAllFeedbackResponse;
-import org.bigseven.dto.feedback.GetFeedbackDetailResponse;
-import org.bigseven.dto.feedback.PublishFeedbackRequest;
+import org.bigseven.dto.feedback.*;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.CustomUserDetails;
 import org.bigseven.service.FeedbackService;
@@ -49,6 +46,21 @@ public class FeedbackController {
         // 从当前登录用户中获取user_id
         Integer userId = userDetails.getUserId();
         feedbackService.publishFeedback(userId,
+                request.getIsNicked(),
+                request.getIsUrgent(),
+                request.getFeedbackType(),
+                request.getTitle(),
+                request.getContent(),
+                request.getImageUrls()
+        );
+        return AjaxResult.success();
+    }
+
+    @PostMapping("/{id}")
+    public AjaxResult<Void> updateFeedback(@Valid @RequestBody UpdateFeedbackRequest request,
+                                           @AuthenticationPrincipal CustomUserDetails userDetails,
+                                           @PathVariable Integer id) {
+        feedbackService.updateFeedback(id, userDetails,
                 request.getIsNicked(),
                 request.getIsUrgent(),
                 request.getFeedbackType(),

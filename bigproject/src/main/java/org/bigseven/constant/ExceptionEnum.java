@@ -39,6 +39,7 @@ public enum ExceptionEnum {
     /// 反馈
     FEEDBACK_NOT_FOUND(40000,"反馈不存在"),
     ILLEGAL_FEEDBACK_TYPE(40001,"未知的反馈类型"),
+    FEEDBACK_CANNOT_UPDATE(40002,"该反馈无法修改"),
     /// 评价
     RATING_EXIST(50000,"您已评价过该回复"),
     RATING_NOT_FOUND(50001,"评价不存在");
