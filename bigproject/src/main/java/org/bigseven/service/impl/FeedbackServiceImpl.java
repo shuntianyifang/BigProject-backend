@@ -16,6 +16,7 @@ import org.bigseven.dto.feedback.GetFeedbackDetailResponse;
 import org.bigseven.entity.Feedback;
 import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.FeedbackMapper;
+import org.bigseven.security.CustomUserDetails;
 import org.bigseven.service.FeedbackService;
 import org.bigseven.util.*;
 import org.springframework.beans.BeanUtils;
@@ -96,21 +97,22 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     /**
      * 删除反馈信息
-     * @param userId 用户ID
-     * @param feedbackId 反馈ID
+     * @param id 反馈ID
+     * @param userDetails 用户信息
      */
     @Override
-    public void deleteFeedback(Integer userId,Integer feedbackId) {
-        Feedback feedback = feedbackMapper.selectById(feedbackId);
+    public void deleteFeedback(Integer id, CustomUserDetails userDetails) {
+        Feedback feedback = feedbackMapper.selectById(id);
+        Integer userId = userDetails.getUserId();
         if (feedback != null) {
-            /// 验证用户权限，不能删除其他用户的反馈
-            if (feedback.getUserId().equals(userId)) {
+            if (feedback.getUserId().equals(userId) || userDetails.getAuthorities().stream()
+                    .anyMatch(auth -> "ROLE_SUPER_ADMIN".equals(auth.getAuthority()))) {
+                feedbackMapper.deleteById(id);
+            } else {
                 throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
             }
-            /// 执行删除操作
-            feedbackMapper.deleteById(feedbackId);
         } else {
-            throw new ApiException(ExceptionEnum.RESOURCE_NOT_FOUND);
+            throw new ApiException(ExceptionEnum.FEEDBACK_NOT_FOUND);
         }
     }
 

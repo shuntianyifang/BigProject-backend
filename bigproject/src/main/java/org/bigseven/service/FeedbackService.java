@@ -5,6 +5,7 @@ import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.dto.feedback.GetAllFeedbackRequest;
 import org.bigseven.dto.feedback.GetAllFeedbackResponse;
 import org.bigseven.dto.feedback.GetFeedbackDetailResponse;
+import org.bigseven.security.CustomUserDetails;
 
 import java.util.List;
 
@@ -32,11 +33,10 @@ public interface FeedbackService {
     /**
      * 删除指定用户的反馈
      * 根据用户ID和反馈ID验证权限后执行物理/逻辑删除
-     *
-     * @param userId 执行删除操作的用户ID
-     * @param feedbackId 要删除的反馈ID
+     * @param id 反馈的唯一标识ID
+     * @param userDetails 执行删除操作的用户
      */
-    void deleteFeedback(Integer userId, Integer feedbackId);
+    void deleteFeedback(Integer id, CustomUserDetails userDetails);
 
     /**
      * 更新反馈内容信息
