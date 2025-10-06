@@ -49,7 +49,7 @@ public class FeedbackImageUtils {
     }
 
     /**
-     * 保存反馈图片
+     * 保存反馈图片（存储相对路径）
      */
     public void saveFeedbackImages(Integer feedbackId, List<String> imageUrls, int maxImages) {
         if (imageUrls != null && !imageUrls.isEmpty()) {
