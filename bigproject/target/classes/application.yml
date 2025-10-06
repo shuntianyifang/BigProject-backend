@@ -5,7 +5,6 @@ server:
 #上传文件目录
 file:
   upload-dir: uploads/
-  access-base-url: http://localhost:8080/api/file/images/
 
 feedback:
   max-images: 9
