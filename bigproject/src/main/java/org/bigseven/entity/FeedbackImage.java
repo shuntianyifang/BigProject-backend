@@ -28,10 +28,14 @@ public class FeedbackImage {
     /**
      * 存储图片的URL或文件路径
      */
+    @TableField("image_url")
+    @JsonProperty("image_url")
     private String imageUrl;
     /**
      * 图片顺序
      */
+    @TableField("image_order")
+    @JsonProperty("image_order")
     private Integer imageOrder;
 
     @TableField(value = "created_at", fill = FieldFill.INSERT)
