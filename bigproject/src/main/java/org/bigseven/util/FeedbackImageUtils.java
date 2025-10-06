@@ -28,7 +28,10 @@ public class FeedbackImageUtils {
     }
 
     /**
-     * 获取反馈图片URL列表
+     * 根据反馈ID获取相关的图片URL列表
+     *
+     * @param feedbackId 反馈的唯一标识ID
+     * @return 包含完整URL的图片地址列表
      */
     public List<String> getFeedbackImageUrls(Integer feedbackId) {
         List<FeedbackImage> images = feedbackImageMapper.selectList(

@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
      * @throws ApiException 当用户不存在时抛出异常
      */
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) {
 
         User user = userMapper.selectByUsername(username);
