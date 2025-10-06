@@ -32,7 +32,7 @@ public class FileController {
      * @param filename 图片文件名
      * @return 包含图片资源的ResponseEntity对象，如果文件不存在或不可读则返回404
      */
-    @GetMapping("/images/{filename:.+}")
+    @GetMapping("/{filename:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
             Path filePath = Paths.get(uploadDir).resolve(filename);
