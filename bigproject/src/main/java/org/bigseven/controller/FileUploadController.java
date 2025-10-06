@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public class FileUploadController {
 
-    @Value("${file.upload.path:uploads/}")
+    @Value("${file.upload-dir:uploads/}")
     private String uploadPath;
 
     /**
