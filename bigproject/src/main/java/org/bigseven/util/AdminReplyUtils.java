@@ -2,9 +2,12 @@ package org.bigseven.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.bigseven.dto.adminreply.AdminReplyVO;
+import org.bigseven.dto.rating.RatingVO;
 import org.bigseven.entity.AdminReply;
+import org.bigseven.entity.Rating;
 import org.bigseven.entity.User;
 import org.bigseven.mapper.AdminReplyMapper;
+import org.bigseven.mapper.RatingMapper;
 import org.bigseven.mapper.UserMapper;
 import org.springframework.stereotype.Component;
 
@@ -21,11 +24,13 @@ import java.util.stream.Collectors;
 public class AdminReplyUtils {
 
     private final AdminReplyMapper adminReplyMapper;
+    private final RatingMapper ratingMapper;
     private final UserMapper userMapper;
     private final UserConverterUtils userConverterUtils;
 
-    public AdminReplyUtils(AdminReplyMapper adminReplyMapper, UserMapper userMapper, UserConverterUtils userConverterUtils) {
+    public AdminReplyUtils(AdminReplyMapper adminReplyMapper, RatingMapper ratingMapper, UserMapper userMapper, UserConverterUtils userConverterUtils) {
         this.adminReplyMapper = adminReplyMapper;
+        this.ratingMapper = ratingMapper;
         this.userMapper = userMapper;
         this.userConverterUtils = userConverterUtils;
     }
@@ -55,6 +60,26 @@ public class AdminReplyUtils {
                 .createdAt(reply.getCreatedAt())
                 .updatedAt(reply.getUpdatedAt())
                 .build();
+
+        // 查询当前回复对应的评分
+        Rating rating = ratingMapper.selectOne(
+                new QueryWrapper<Rating>()
+                        .eq("admin_reply_id", reply.getAdminReplyId())
+                        .eq("deleted", false)
+        );
+
+        // 转换为RatingVO并设置到AdminReplyVO
+        if (rating != null) {
+            RatingVO ratingVO = RatingVO.builder()
+                    .ratingId(rating.getRatingId())
+                    .content(rating.getContent())
+                    .score(rating.getScore())
+                    .createdAt(rating.getCreatedAt())
+                    .updatedAt(rating.getUpdatedAt())
+                    .build();
+            response.setRating(ratingVO);
+        }
+
 
         // 设置管理员信息
         if (reply.getUserId() != null) {
