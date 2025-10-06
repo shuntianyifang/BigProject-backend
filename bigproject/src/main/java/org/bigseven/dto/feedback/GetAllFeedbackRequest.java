@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 
+import java.util.List;
+
 /**
  * 反馈请求数据传输对象
  * 用于封装用户对反馈进行查询、处理等操作时的请求参数
@@ -66,16 +68,16 @@ public class GetAllFeedbackRequest {
      * 是否匿名提交
      */
     private Boolean isNicked;
-    
+
     /**
-     * 反馈类型枚举
+     * 类型标签列表（多选，整数型，对应FeedbackTypeEnum的code）
      */
-    private FeedbackTypeEnum feedbackType;
-    
+    private List<Integer> typeTags;
+
     /**
-     * 反馈状态枚举
+     * 状态标签列表（多选，整数型，对应FeedbackStatusEnum的code）
      */
-    private FeedbackStatusEnum feedbackStatus;
+    private List<Integer> statusTags;
     
     /**
      * 查询时间范围的起始时间
