@@ -54,6 +54,13 @@ public class Feedback {
     private Boolean isUrgent;
 
     /**
+     * 学生是否确认收到管理员回复
+     */
+    @TableField("is_confirmed")
+    @JsonProperty("is_confirmed")
+    private Boolean isConfirmed;
+
+    /**
      * 接单的管理员id
      */
     @TableField("accepted_by_user_id")

@@ -87,6 +87,7 @@ public class FeedbackResponseBuilder {
                 .content(feedback.getContent())
                 .isUrgent(feedback.getIsUrgent())
                 .isNicked(feedback.getIsNicked())
+                .isConfirmed(feedback.getIsConfirmed())
                 .viewCount(feedback.getViewCount())
                 .userId(feedback.getUserId())
                 .acceptedByUserId(feedback.getAcceptedByUserId())

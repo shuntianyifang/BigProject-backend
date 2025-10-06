@@ -56,4 +56,6 @@ public interface FeedbackService {
     GetFeedbackDetailResponse getFeedbackDetail(Integer id);
 
     void updateFeedback(Integer id, CustomUserDetails userDetails, Boolean isNicked, Boolean isUrgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
+
+    void confirmFeedback(Integer id, CustomUserDetails userDetails);
 }

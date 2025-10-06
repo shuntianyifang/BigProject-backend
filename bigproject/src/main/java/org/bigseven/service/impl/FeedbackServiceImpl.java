@@ -76,6 +76,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .userId(userId)
                 .isNicked(isNicked)
                 .isUrgent(isUrgent)
+                .isConfirmed(false)
                 .viewCount(0)
                 .feedbackType(feedbackType)
                 .feedbackStatus(FeedbackStatusEnum.PENDING)
@@ -204,6 +205,23 @@ public class FeedbackServiceImpl implements FeedbackService {
         response.setAdminReply(adminReplies);
 
         return response;
+    }
+
+    @Override
+    public void confirmFeedback(Integer id, CustomUserDetails userDetails) {
+        Feedback feedback = feedbackMapper.selectById(id);
+        if (feedback == null) {
+            throw new ApiException(ExceptionEnum.FEEDBACK_NOT_FOUND);
+        }
+        if (feedback.getIsConfirmed()) {
+            throw new ApiException(ExceptionEnum.FEEDBACK_ALREADY_CONFIRMED);
+        }
+        if (!userDetails.getUserId().equals(feedback.getUserId())) {
+            throw new ApiException(ExceptionEnum.PERMISSION_DENIED);
+        }
+        feedback.setIsConfirmed(true);
+        feedback.setUpdatedAt(LocalDateTime.now());
+        feedbackMapper.updateById(feedback);
     }
 
     /**

@@ -100,4 +100,11 @@ public class FeedbackController {
         return AjaxResult.success(response);
     }
 
+    @PostMapping("/{id}/confirm")
+    public AjaxResult<Void> confirmFeedback(@PathVariable Integer id,
+                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        feedbackService.confirmFeedback(id, userDetails);
+        return AjaxResult.success();
+    }
+
 }
