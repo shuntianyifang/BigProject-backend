@@ -9,7 +9,7 @@ file:
 
 feedback:
   max-images: 9
-  image-base-url: /api/file/images/
+  image-base-url: /api/file/uploads/
 
 spring:
   output:
