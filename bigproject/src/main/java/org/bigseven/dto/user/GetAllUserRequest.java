@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bigseven.constant.UserTypeEnum;
 
+import java.util.List;
+
 /**
  * 管理员反馈请求数据传输对象
  * 用于封装管理员对反馈进行查询、处理等操作时的请求参数
@@ -50,7 +52,7 @@ public class GetAllUserRequest {
     /**
      * 用户类型
      */
-    private UserTypeEnum userType;
+    private List<String> typeTags;
 
     /**
      * 用户状态
