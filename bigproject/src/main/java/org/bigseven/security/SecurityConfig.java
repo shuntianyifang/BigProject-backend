@@ -74,6 +74,7 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/api/uploads/**",
+                                "/file/uploads/**",
                                 "/api/file/uploads/**",
                                 "/uploads/**",
                                 "/webjars/**").permitAll() /// 允许未经认证访问"/url"

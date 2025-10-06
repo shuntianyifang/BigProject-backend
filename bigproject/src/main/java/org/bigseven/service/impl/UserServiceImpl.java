@@ -335,8 +335,8 @@ public class UserServiceImpl implements UserService {
         if (user.getUserType() == UserTypeEnum.SUPER_ADMIN) {
             throw new ApiException(ExceptionEnum.OPERATION_FAILED);
         }
-        user.setDeleted(true);
-        userMapper.updateById(user);
+
+        userMapper.deleteById(id);
     }
 
     @Override
