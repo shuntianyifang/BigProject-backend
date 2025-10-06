@@ -226,9 +226,31 @@ public class FeedbackServiceImpl implements FeedbackService {
     private QueryWrapper<Feedback> buildQueryWrapper(GetAllFeedbackRequest request) {
         QueryWrapper<Feedback> queryWrapper = new QueryWrapper<>();
 
+        // 标题和内容的"或"逻辑搜索
+        String titleKeyword = request.getTitleKeyword();
+        String contentKeyword = request.getContentKeyword();
+
+        // 如果任一关键字不为空，则执行"或"逻辑查询
+        if (StringUtils.hasText(titleKeyword) || StringUtils.hasText(contentKeyword)) {
+            queryWrapper.and(wrapper -> {
+                boolean hasCondition = false;
+
+                if (StringUtils.hasText(titleKeyword)) {
+                    wrapper.like("title", titleKeyword);
+                    hasCondition = true;
+                }
+
+                if (StringUtils.hasText(contentKeyword)) {
+                    if (hasCondition) {
+                        wrapper.or().like("content", contentKeyword);
+                    } else {
+                        wrapper.like("content", contentKeyword);
+                    }
+                }
+            });
+        }
+
         // 条件筛选
-        applyLikeCondition(queryWrapper, "title", request.getTitleKeyword());
-        applyLikeCondition(queryWrapper, "content", request.getContentKeyword());
         applyEqualCondition(queryWrapper, "is_urgent", request.getIsUrgent());
         applyEqualCondition(queryWrapper, "is_nicked", request.getIsNicked());
         applyEqualCondition(queryWrapper, "accepted_by_user_id", request.getAdminId());
