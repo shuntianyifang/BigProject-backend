@@ -67,8 +67,7 @@ public class FileUploadController {
                 Files.write(filePath, file.getBytes());
 
                 /// 使用统一的URL格式
-                String fullUrl = imageBaseUrl + uniqueFilename;
-                fileUrls.add(fullUrl);
+                fileUrls.add(uniqueFilename);
 
             } catch (IOException e) {
                 log.error("文件上传失败: ", e);

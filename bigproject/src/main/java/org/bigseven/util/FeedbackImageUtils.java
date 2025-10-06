@@ -54,9 +54,15 @@ public class FeedbackImageUtils {
     public void saveFeedbackImages(Integer feedbackId, List<String> imageUrls, int maxImages) {
         if (imageUrls != null && !imageUrls.isEmpty()) {
             for (int i = 0; i < Math.min(imageUrls.size(), maxImages); i++) {
+                String imageUrl = imageUrls.get(i);
+                // 移除可能已存在的基础URL前缀
+                if (imageUrl.startsWith(imageBaseUrl)) {
+                    imageUrl = imageUrl.substring(imageBaseUrl.length());
+                }
+
                 FeedbackImage image = FeedbackImage.builder()
                         .feedbackId(feedbackId)
-                        .imageUrl(imageUrls.get(i))
+                        .imageUrl(imageUrl)
                         .imageOrder(i)
                         .build();
                 feedbackImageMapper.insert(image);
