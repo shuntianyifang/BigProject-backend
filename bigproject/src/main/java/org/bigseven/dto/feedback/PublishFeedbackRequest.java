@@ -28,6 +28,7 @@ public class PublishFeedbackRequest {
     /**
      * 新增图片URL列表
      */
+    @JsonProperty("image_url")
     private List<String> imageUrls;
     /**
      * 帖子类型

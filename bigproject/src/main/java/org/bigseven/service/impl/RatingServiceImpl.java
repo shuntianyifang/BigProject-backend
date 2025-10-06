@@ -1,6 +1,7 @@
 package org.bigseven.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.entity.Rating;
 import org.bigseven.exception.ApiException;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RatingServiceImpl implements RatingService {
 
     private final RatingMapper ratingMapper;
