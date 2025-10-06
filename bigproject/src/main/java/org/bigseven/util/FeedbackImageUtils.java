@@ -20,7 +20,7 @@ public class FeedbackImageUtils {
 
     private final FeedbackImageMapper feedbackImageMapper;
 
-    @Value("${feedback.image-base-url:/api/file/images/}")
+    @Value("${feedback.image-base-url:/api/file/uploads/}")
     private String imageBaseUrl;
 
     public FeedbackImageUtils(FeedbackImageMapper feedbackImageMapper) {
