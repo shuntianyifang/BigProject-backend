@@ -17,6 +17,6 @@ public interface FeedbackImageMapper extends BaseMapper<FeedbackImage> {
      * @param feedbackId 反馈唯一标识ID
      * @return 对应的反馈实体对象，如果不存在则返回null
      */
-    @Select("SELECT * FROM user WHERE user_id = #{feedback_id}")
+    @Select("SELECT image_url FROM feedback_image WHERE feedback_id = #{feedback_id}")
     List<String> selectImageUrlsByFeedbackId(@Param("feedback_id") Integer feedbackId);
 }
