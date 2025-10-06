@@ -29,7 +29,7 @@ public class FileUploadController {
     @Value("${file.upload-dir:uploads/}")
     private String uploadPath;
 
-    @Value("${feedback.image-base-url:/api/file/uploads/}")
+    @Value("${feedback.image-base-url:/uploads/}")
     private String imageBaseUrl;
 
     /**
