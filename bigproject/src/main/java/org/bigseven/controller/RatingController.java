@@ -28,6 +28,7 @@ public class RatingController {
         // 从当前登录用户中获取user_id
         Integer userId = userDetails.getUserId();
         ratingService.publishRating(userId,
+                request.getFeedbackId(),
                 request.getAdminReplyId(),
                 request.getContent(),
                 request.getScore()

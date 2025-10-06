@@ -32,6 +32,10 @@ public class Rating {
     @JsonProperty("admin_reply_id")
     private Integer adminReplyId;
 
+    @TableField("feedback_id")
+    @JsonProperty("feedback_id")
+    private Integer feedbackId;
+
     private String content;
 
     private Integer score;

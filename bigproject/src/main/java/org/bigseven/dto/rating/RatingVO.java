@@ -15,6 +15,9 @@ public class RatingVO {
     @JsonProperty("rating_id")
     private Integer ratingId;
 
+    @JsonProperty("feedback_id")
+    private Integer feedbackId;
+
     @JsonProperty("content")
     private String content;
 
