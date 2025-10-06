@@ -36,6 +36,13 @@ public class RatingController {
         return AjaxResult.success();
     }
 
+    /**
+     * （没用到）
+     * @param request
+     * @param userDetails
+     * @param id
+     * @return
+     */
     @PostMapping("/{id}")
     public AjaxResult<Void> updateRating(@Valid @RequestBody UpdateRatingRequest request,
                                              @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -46,6 +53,12 @@ public class RatingController {
         return AjaxResult.success();
     }
 
+    /**
+     * （没用到）
+     * @param id
+     * @param userDetails
+     * @return
+     */
     @DeleteMapping("/{id}")
     public AjaxResult<Void> deleteRating(@PathVariable Integer id,
                                          @AuthenticationPrincipal CustomUserDetails userDetails) {

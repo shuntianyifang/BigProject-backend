@@ -4,6 +4,8 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.stereotype.Component;
 
 /**
+ * XSS过滤工具类
+ *
  * @author shuntianyifang
  * &#064;date 2025/10/1
  */

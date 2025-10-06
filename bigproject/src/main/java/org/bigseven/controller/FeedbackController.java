@@ -94,6 +94,11 @@ public class FeedbackController {
         return AjaxResult.success(response);
     }
 
+    /**
+     * （没用到）
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public AjaxResult<GetFeedbackDetailResponse> getFeedbackDetail(@PathVariable Integer id) {
         GetFeedbackDetailResponse response = feedbackService.getFeedbackDetail(id);

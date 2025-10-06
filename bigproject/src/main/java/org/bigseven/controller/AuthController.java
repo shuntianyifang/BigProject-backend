@@ -83,7 +83,7 @@ public class AuthController {
     }
 
     /**
-     * 刷新token
+     * 刷新token（没用到）
      *
      * @param authorizationHeader 包含Bearer token的Authorization头
      * @return 新的token信息

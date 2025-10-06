@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
+ * JWT相关异常处理
+ *
  * @author shuntianyifang
  * &#064;date 2025/10/1
  */

@@ -57,7 +57,7 @@ public class FeedbackAdminController {
     }
 
     /**
-     * 获取反馈类型枚举
+     * 获取反馈类型枚举（没用到）
      * @return 包含所有反馈类型的AjaxResult对象
      */
     @GetMapping("/types")
@@ -70,7 +70,7 @@ public class FeedbackAdminController {
     }
 
     /**
-     * 获取反馈状态枚举
+     * 获取反馈状态枚举（没用到）
      * @return 包含所有反馈状态的AjaxResult对象
      */
     @GetMapping("/statuses")
