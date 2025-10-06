@@ -374,9 +374,11 @@ public class UserServiceImpl implements UserService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
 
         // 条件筛选
-        applyLikeCondition(queryWrapper, "user", request.getUsernameKeyword());
-        applyEqualCondition(queryWrapper, "user_type", request.getUserType());
+        applyLikeCondition(queryWrapper, "username", request.getUsernameKeyword());
         applyDateCondition(queryWrapper, "created_at", request.getFromTime(), request.getToTime());
+        if (request.getTypeTags() != null && !request.getTypeTags().isEmpty()) {
+            queryWrapper.in("user_type", request.getTypeTags());
+        }
 
         // 设置排序
         String sortField = request.getSortField() != null ? request.getSortField() : "created_at";
