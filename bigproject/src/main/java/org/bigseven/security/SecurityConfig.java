@@ -73,7 +73,7 @@ public class SecurityConfig {
                                 "/api/feedback/{id}",
                                 "/css/**",
                                 "/js/**",
-                                "/images/**",
+                                "/api/file/images/**",
                                 "/webjars/**").permitAll() /// 允许未经认证访问"/url"
                         .anyRequest().authenticated() /// 其他请求需要认证
                 )
