@@ -374,9 +374,47 @@ public class UserServiceImpl implements UserService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
 
         // 条件筛选
-        applyLikeCondition(queryWrapper, "user", request.getUsernameKeyword());
-        applyEqualCondition(queryWrapper, "user_type", request.getUserType());
         applyDateCondition(queryWrapper, "created_at", request.getFromTime(), request.getToTime());
+
+        // 类型筛选
+        if (request.getTypeTags() != null && !request.getTypeTags().isEmpty()) {
+            queryWrapper.in("user_type", request.getTypeTags());
+        }
+
+        // 获取关键字
+        String usernameKeyword = request.getUsernameKeyword();
+        String nicknameKeyword = request.getNicknameKeyword();
+        String realNameKeyword = request.getRealNameKeyword();
+
+        // 只有当至少有一个搜索关键字不为空时才添加条件
+        if (StringUtils.hasText(usernameKeyword) ||
+                StringUtils.hasText(nicknameKeyword) ||
+                StringUtils.hasText(realNameKeyword)) {
+
+            queryWrapper.and(wrapper -> {
+                boolean firstCondition = true;
+
+                if (StringUtils.hasText(usernameKeyword)) {
+                    wrapper.like("username", usernameKeyword);
+                    firstCondition = false;
+                }
+
+                if (StringUtils.hasText(nicknameKeyword)) {
+                    if (!firstCondition) {
+                        wrapper.or();
+                    }
+                    wrapper.like("nickname", nicknameKeyword);
+                    firstCondition = false;
+                }
+
+                if (StringUtils.hasText(realNameKeyword)) {
+                    if (!firstCondition) {
+                        wrapper.or();
+                    }
+                    wrapper.like("real_name", realNameKeyword);
+                }
+            });
+        }
 
         // 设置排序
         String sortField = request.getSortField() != null ? request.getSortField() : "created_at";
