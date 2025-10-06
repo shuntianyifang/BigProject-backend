@@ -85,6 +85,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .deleted(false)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
+                .imageUrls(imageUrls)
                 .build();
         feedbackMapper.insert(feedback);
 

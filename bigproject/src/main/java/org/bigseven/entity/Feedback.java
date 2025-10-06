@@ -11,6 +11,7 @@ import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Description:这是学生问题帖子实体类,与管理员反馈不是同一个实体类
@@ -97,4 +98,11 @@ public class Feedback {
 
     @TableField(value = "processed_at",  fill = FieldFill.INSERT)
     private LocalDateTime processedAt;
+
+    /**
+     * 图片URL列表
+     */
+    @TableField("image_urls")
+    @JsonProperty("image_urls")
+    private List<String> imageUrls;
 }
