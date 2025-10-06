@@ -24,11 +24,13 @@ import java.util.UUID;
 @RequestMapping("/api/file")
 @RequiredArgsConstructor
 @Slf4j
-
 public class FileUploadController {
 
     @Value("${file.upload-dir:uploads/}")
     private String uploadPath;
+
+    @Value("${feedback.image-base-url:/api/file/uploads/}")
+    private String imageBaseUrl;
 
     /**
      * 文件上传接口,还没做统一错误处理
@@ -64,8 +66,8 @@ public class FileUploadController {
                 Path filePath = Paths.get(uploadPath, uniqueFilename);
                 Files.write(filePath, file.getBytes());
 
-                /// 保存相对路径URL
-                String fileUrl = "/uploads/" + uniqueFilename;
+                /// 使用统一的URL格式
+                String fileUrl = imageBaseUrl + uniqueFilename;
                 fileUrls.add(fileUrl);
 
             } catch (IOException e) {
