@@ -1,5 +1,6 @@
 package org.bigseven.dto.feedback;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

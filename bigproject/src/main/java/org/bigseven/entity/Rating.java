@@ -22,10 +22,12 @@ public class Rating {
     @TableId(type = IdType.AUTO)
     private Integer ratingId;
 
+    //管理员回复的feedback的创建者的id，即打分者的id
     @TableField("user_id")
     @JsonProperty("user_id")
     private Integer userId;
 
+    //管理员对feedback的回复的id
     @TableField("admin_reply_id")
     @JsonProperty("admin_reply_id")
     private Integer adminReplyId;

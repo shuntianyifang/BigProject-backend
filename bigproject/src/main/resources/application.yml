@@ -4,11 +4,11 @@ server:
 
 #上传文件目录
 file:
-  upload-dir: file/uploads/
+  upload-dir: uploads/
 
 feedback:
   max-images: 9
-  image-base-url: /api/file/uploads/
+  image-base-url: /uploads/
 
 spring:
   output:
