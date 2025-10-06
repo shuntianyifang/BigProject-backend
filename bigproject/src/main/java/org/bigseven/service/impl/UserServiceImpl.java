@@ -8,13 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.constant.UserTypeEnum;
-import org.bigseven.dto.adminreply.AdminReplyVO;
-import org.bigseven.dto.feedback.GetAllFeedbackResponse;
 import org.bigseven.dto.user.GetAllUserRequest;
 import org.bigseven.dto.user.GetAllUserResponse;
 import org.bigseven.dto.user.GetUserDetailResponse;
 import org.bigseven.dto.user.UserSimpleVO;
-import org.bigseven.entity.Feedback;
 import org.bigseven.entity.User;
 import org.bigseven.exception.ApiException;
 import org.bigseven.mapper.UserMapper;
@@ -238,20 +235,6 @@ public class UserServiceImpl implements UserService {
         }
 
         throw new RuntimeException("Token刷新失败");
-    }
-
-    /**
-     * 获取当前登录用户信息
-     * @return 用户信息
-     */
-    @Override
-    public User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String username = authentication.getName();
-            return userMapper.selectByUsername(username);
-        }
-        return null;
     }
 
     /**

@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
+ * 做头像用，没做完
+ *
  * @author shuntianyifang
- * &#064;date 202510/5
+ * &#064;date 2025/10/5
  */
 @TableName(value = "user_photo")
 @Data

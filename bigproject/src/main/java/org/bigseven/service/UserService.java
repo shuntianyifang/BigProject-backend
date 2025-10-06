@@ -5,7 +5,6 @@ import org.bigseven.constant.UserTypeEnum;
 import org.bigseven.dto.user.GetAllUserRequest;
 import org.bigseven.dto.user.GetAllUserResponse;
 import org.bigseven.dto.user.GetUserDetailResponse;
-import org.bigseven.entity.User;
 import org.bigseven.security.CustomUserDetails;
 
 import java.util.Map;
@@ -41,12 +40,6 @@ public interface UserService {
      * @return 刷新后的Token
      */
     Map<String, Object> refreshToken(String oldToken);
-
-    /**
-     * 获取当前登录用户
-     * @return 用户信息
-     */
-    User getCurrentUser();
 
     /**
      * 根据ID获取用户详情

@@ -1,15 +1,9 @@
 package org.bigseven.util;
 
-import org.bigseven.dto.feedback.GetAllFeedbackResponse;
-import org.bigseven.dto.feedback.GetFeedbackDetailResponse;
 import org.bigseven.dto.user.GetAllUserResponse;
-import org.bigseven.entity.Feedback;
 import org.bigseven.entity.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 反馈响应构建器

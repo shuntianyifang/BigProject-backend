@@ -55,7 +55,25 @@ public interface FeedbackService {
      */
     GetFeedbackDetailResponse getFeedbackDetail(Integer id);
 
+    /**
+     * 更新反馈信息
+     *
+     * @param id 反馈的唯一标识ID
+     * @param userDetails 执行更新操作的用户
+     * @param isNicked 是否匿名发布
+     * @param isUrgent 是否为加急反馈
+     * @param feedbackType 反馈类型枚举
+     * @param title 反馈标题
+     * @param content 反馈详细内容
+     * @param imageUrls 反馈相关的图片URL列表
+     */
     void updateFeedback(Integer id, CustomUserDetails userDetails, Boolean isNicked, Boolean isUrgent, FeedbackTypeEnum feedbackType, String title, String content, List<String> imageUrls);
 
+    /**
+     * 确认反馈
+     *
+     * @param id 反馈的唯一标识ID
+     * @param userDetails 执行确认操作的用户
+     */
     void confirmFeedback(Integer id, CustomUserDetails userDetails);
 }
