@@ -4,7 +4,7 @@ server:
 
 #上传文件目录
 file:
-  upload-dir: uploads/
+  upload-dir: file/uploads/
 
 feedback:
   max-images: 9
@@ -15,7 +15,7 @@ spring:
     ansi:
       enabled: ALWAYS
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/feedback_platform?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/bpbackend?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:password}
     driver-class-name: com.mysql.cj.jdbc.Driver
