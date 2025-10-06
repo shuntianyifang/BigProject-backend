@@ -215,14 +215,22 @@ public class FeedbackServiceImpl implements FeedbackService {
         // 条件筛选
         applyLikeCondition(queryWrapper, "title", request.getTitleKeyword());
         applyLikeCondition(queryWrapper, "content", request.getContentKeyword());
-        applyEqualCondition(queryWrapper, "feedback_type", request.getFeedbackType());
-        applyEqualCondition(queryWrapper, "feedback_status", request.getFeedbackStatus());
         applyEqualCondition(queryWrapper, "is_urgent", request.getIsUrgent());
         applyEqualCondition(queryWrapper, "is_nicked", request.getIsNicked());
         applyEqualCondition(queryWrapper, "accepted_by_user_id", request.getAdminId());
         applyDateCondition(queryWrapper, "created_at", request.getFromTime(), request.getToTime());
 
-        // 关键修改：处理学生ID查询时的匿名权限
+        // 处理状态标签（整数列表，直接用in条件）
+        if (request.getStatusTags() != null && !request.getStatusTags().isEmpty()) {
+            queryWrapper.in("feedback_status", request.getStatusTags());
+        }
+
+        // 处理类型标签（整数列表，直接用in条件）
+        if (request.getTypeTags() != null && !request.getTypeTags().isEmpty()) {
+            queryWrapper.in("feedback_type", request.getTypeTags());
+        }
+
+        // 处理学生ID查询时的匿名权限
         if (request.getStudentId() != null) {
             UserAuthenticationQueryUtils.UserPermissionInfo permissionInfo =
                     userAuthenticationQueryUtils.getCurrentUserPermissionInfo();
