@@ -1,5 +1,6 @@
 package org.bigseven.dto.feedback;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.bigseven.constant.FeedbackStatusEnum;
@@ -47,6 +48,13 @@ public class GetAllFeedbackResponse {
      */
     @JsonProperty("is_nicked")
     private Boolean isNicked;
+
+    /**
+     * 学生是否确认收到管理员回复
+     */
+    @JsonProperty("is_confirmed")
+    private Boolean isConfirmed;
+
 
     /**
      * 用户ID
