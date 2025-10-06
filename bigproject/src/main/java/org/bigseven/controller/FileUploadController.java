@@ -59,6 +59,8 @@ public class FileUploadController {
                 String fileExtension = "";
                 if (originalFilename != null && originalFilename.contains(".")) {
                     fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                    // 将扩展名转换为大写,因为linux存储的后缀名是大写
+                    fileExtension = fileExtension.toUpperCase();
                 }
                 String uniqueFilename = UUID.randomUUID() + fileExtension;
 
