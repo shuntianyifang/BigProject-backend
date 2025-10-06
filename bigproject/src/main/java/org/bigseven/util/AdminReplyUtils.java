@@ -72,6 +72,7 @@ public class AdminReplyUtils {
         if (rating != null) {
             RatingVO ratingVO = RatingVO.builder()
                     .ratingId(rating.getRatingId())
+                    .feedbackId(rating.getFeedbackId())
                     .content(rating.getContent())
                     .score(rating.getScore())
                     .createdAt(rating.getCreatedAt())

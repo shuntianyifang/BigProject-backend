@@ -20,7 +20,7 @@ public class RatingServiceImpl implements RatingService {
     private final RatingMapper ratingMapper;
 
     @Override
-    public void publishRating(Integer userId, Integer adminReplyId, String content, Integer score) {
+    public void publishRating(Integer userId, Integer adminReplyId, Integer feedbackId, String content, Integer score) {
 
         Rating existingRating = ratingMapper.selectById(adminReplyId);
 
@@ -30,6 +30,7 @@ public class RatingServiceImpl implements RatingService {
 
         Rating rating = Rating.builder()
                 .userId(userId)
+                .feedbackId(feedbackId)
                 .adminReplyId(adminReplyId)
                 .content(content)
                 .score(score)

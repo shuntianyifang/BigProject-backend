@@ -14,6 +14,9 @@ public class PublishRatingRequest {
     @JsonProperty("admin_reply_id")
     private Integer adminReplyId;
 
+    @JsonProperty("feedback_id")
+    private Integer feedbackId;
+
     private String content;
 
     private Integer score;
