@@ -90,9 +90,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
         /// 保存图片信息
         if (imageUrls != null && !imageUrls.isEmpty()) {
-            for (int i = 0; i < Math.min(imageUrls.size(), feedbackConfig.getMaxImages()); i++) {
-                feedbackImageUtils.saveFeedbackImages(feedback.getFeedbackId(), imageUrls, feedbackConfig.getMaxImages());
-            }
+            feedbackImageUtils.saveFeedbackImages(feedback.getFeedbackId(), imageUrls, feedbackConfig.getMaxImages());
         }
     }
 
@@ -153,9 +151,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             // 先删除旧图片
             feedbackImageUtils.deleteImagesByFeedbackId(id);
             // 再保存新图片
-            for (int i = 0; i < Math.min(imageUrls.size(), feedbackConfig.getMaxImages()); i++) {
-                feedbackImageUtils.saveFeedbackImages(id, imageUrls, feedbackConfig.getMaxImages());
-            }
+            feedbackImageUtils.saveFeedbackImages(id, imageUrls, feedbackConfig.getMaxImages());
         }
     }
 

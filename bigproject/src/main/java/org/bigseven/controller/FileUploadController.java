@@ -35,7 +35,7 @@ public class FileUploadController {
      * @param files 要上传的文件数组
      * @return 包含上传文件访问URL列表的Ajax结果对象
      */
-    @PostMapping("/upload")
+    @PostMapping("/uploads")
     public AjaxResult<List<String>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
         List<String> fileUrls = new ArrayList<>();
 
