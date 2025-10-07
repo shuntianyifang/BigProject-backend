@@ -86,6 +86,14 @@ public class FeedbackAdminServiceImpl implements FeedbackAdminService {
             saveAdminReply(feedbackId, adminReply, acceptedByUserId);
         }
 
+        // 如果是超级管理员将反馈标记为垃圾信息且没有提供回复，则自动生成一条预设回复
+        else if (feedbackStatus == FeedbackStatusEnum.SPAM_APPROVED) {
+            AdminReply autoReply = new AdminReply();
+            autoReply.setTitle("反馈被标记为垃圾信息");
+            autoReply.setContent("请您在提交反馈时确保内容的有效性和准确性，感谢您的理解和配合。如有异议，请重新反馈。");
+            saveAdminReply(feedbackId, autoReply, acceptedByUserId);
+        }
+
         // 更新反馈
         feedbackMapper.update(null, updateWrapper);
     }
