@@ -78,6 +78,12 @@ public class FeedbackController {
         return  AjaxResult.success();
     }
 
+    /**
+     * 获取所有反馈信息列表
+     *
+     * @param request 包含分页参数的请求对象，包含页码和每页大小
+     * @return 包含反馈信息列表和分页信息的统一返回结果
+     */
     @GetMapping
     public AjaxResult<BaseListResponse<GetAllFeedbackResponse>> getAllFeedback(GetAllFeedbackRequest request) {
 
@@ -105,6 +111,13 @@ public class FeedbackController {
         return AjaxResult.success(response);
     }
 
+    /**
+     * 确认反馈处理
+     *
+     * @param id 反馈记录的唯一标识符
+     * @param userDetails 当前认证用户的信息
+     * @return 操作结果，成功时返回空内容的成功响应
+     */
     @PostMapping("/{id}/confirm")
     public AjaxResult<Void> confirmFeedback(@PathVariable Integer id,
                                             @AuthenticationPrincipal CustomUserDetails userDetails) {

@@ -2,6 +2,7 @@ package org.bigseven.dto.feedback;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class PublishFeedbackRequest {
     @Size(min=1, max=40,message = "标题长度必须在1-40之间")
     private String title;
 
+    @NotBlank(message = "反馈内容不能为空")
     private String content;
 
     /**
