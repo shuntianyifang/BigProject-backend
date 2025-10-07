@@ -19,6 +19,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 添加静态资源映射，将 /uploads/** 映射到文件存储目录
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + uploadDir);
+                .addResourceLocations("file:/opt/BigProject/uploads/");
     }
 }
