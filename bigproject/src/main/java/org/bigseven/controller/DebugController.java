@@ -17,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +41,24 @@ public class DebugController {
     public DebugController(JwtTokenUtil jwtTokenUtil, UserMapper userMapper) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.userMapper = userMapper;
+    }
+
+    @GetMapping("/file-access")
+    public ResponseEntity<Map<String, Object>> checkFileAccess() {
+        Map<String, Object> result = new HashMap<>();
+        File uploadDir = new File("/opt/BigProject/uploads/");
+
+        result.put("directory_exists", uploadDir.exists());
+        result.put("directory_readable", uploadDir.canRead());
+        result.put("directory_writable", uploadDir.canWrite());
+
+        if (uploadDir.exists()) {
+            String[] files = uploadDir.list();
+            result.put("files_count", files != null ? files.length : 0);
+            result.put("files_list", files != null ? Arrays.asList(files) : Collections.emptyList());
+        }
+
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/token")
