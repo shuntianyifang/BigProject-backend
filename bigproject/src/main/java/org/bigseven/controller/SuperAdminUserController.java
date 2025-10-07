@@ -23,6 +23,12 @@ public class SuperAdminUserController {
 
     private final UserService userService;
 
+    /**
+     * 获取所有用户列表
+     *
+     * @param request 包含分页信息的用户请求参数
+     * @return 返回包含用户列表和分页信息的结果对象
+     */
     @GetMapping("/list")
     public AjaxResult<BaseListResponse<GetAllUserResponse>> getAllUsers(GetAllUserRequest request) {
 
@@ -39,6 +45,13 @@ public class SuperAdminUserController {
         return AjaxResult.success(response);
     }
 
+    /**
+     * 修改用户类型
+     *
+     * @param request 包含新用户类型的请求对象
+     * @param id 需要修改类型的用户ID
+     * @return 操作结果，成功时返回空内容的成功响应
+     */
     @PostMapping("/{id}")
     public AjaxResult<Void> changeUserType(@RequestBody ChangeUserTypeRequest request,
                                            @PathVariable Integer id) {
@@ -46,6 +59,12 @@ public class SuperAdminUserController {
         return AjaxResult.success();
     }
 
+    /**
+     * 删除用户
+     *
+     * @param id 需要删除的用户ID
+     * @return 操作结果，成功时返回空内容的成功响应
+     */
     @DeleteMapping("/{id}/delete")
     public AjaxResult<Void> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);

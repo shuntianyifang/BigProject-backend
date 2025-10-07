@@ -310,6 +310,12 @@ public class UserServiceImpl implements UserService {
         userMapper.updateById(user);
     }
 
+    /**
+     * 更改用户类型
+     *
+     * @param id 用户ID
+     * @param userType 新的用户类型
+     */
     @Override
     public void changeUserType(Integer id, UserTypeEnum userType) {
         User user = userMapper.selectById(id);
@@ -326,6 +332,11 @@ public class UserServiceImpl implements UserService {
         userMapper.updateById(user);
     }
 
+    /**
+     * 删除用户
+     *
+     * @param id 用户ID
+     */
     @Override
     public  void deleteUser(Integer id) {
         User user = userMapper.selectById(id);
@@ -339,6 +350,12 @@ public class UserServiceImpl implements UserService {
         userMapper.deleteById(id);
     }
 
+    /**
+     * 注销用户
+     *
+     * @param id 用户ID
+     * @param userDetails 用户详情
+     */
     @Override
     public void unregisterUser(Integer id, CustomUserDetails userDetails) {
         Integer userId = userDetails.getUserId();

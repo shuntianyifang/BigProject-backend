@@ -29,6 +29,14 @@ public class UserController {
         return AjaxResult.success(response);
     }
 
+    /**
+     * 更新用户详细信息
+     *
+     * @param request 包含用户详细信息的更新请求对象
+     * @param userDetails 当前认证用户的信息
+     * @param id 需要更新的用户ID
+     * @return 操作结果，成功时返回空内容的成功响应
+     */
     @PostMapping("{id}/profile")
     public AjaxResult<Void> updateUserDetail(@Valid @RequestBody UpdateUserDetailRequest request,
                                              @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -43,6 +51,13 @@ public class UserController {
         return AjaxResult.success();
     }
 
+    /**
+     * 注销用户账户
+     *
+     * @param id 需要注销的用户ID
+     * @param userDetails 当前认证用户的信息
+     * @return 操作结果，成功时返回空内容的成功响应
+     */
     @DeleteMapping("{id}/delete")
     public AjaxResult<Void> unregisterUser(@PathVariable Integer id,
                                        @AuthenticationPrincipal CustomUserDetails userDetails) {
