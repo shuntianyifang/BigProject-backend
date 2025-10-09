@@ -3,7 +3,6 @@ package org.bigseven.controller;
 import jakarta.validation.Valid;
 import org.bigseven.dto.rating.PublishRatingRequest;
 import org.bigseven.dto.rating.UpdateRatingRequest;
-import org.bigseven.dto.user.UpdateUserDetailRequest;
 import org.bigseven.result.AjaxResult;
 import org.bigseven.security.CustomUserDetails;
 import org.bigseven.service.RatingService;
@@ -11,6 +10,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 评价控制器
+ *
+ * @author shuntianyifang
+ * &#064;date 2025/10/5
+ */
 @RestController
 @RequestMapping("/api/rating")
 @PreAuthorize("hasAuthority('ROLE_STUDENT')")

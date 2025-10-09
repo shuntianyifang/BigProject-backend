@@ -22,7 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 /**
- * 不懂怎么配置的可以将对应的代码拿出喂AI
+ * Spring Security配置类
  *
  * @author shuntianyifang
  * &#064;date 2025/9/18

@@ -7,6 +7,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
+ * 禁用缓存以便测试
+ *
  * @author v185v
  * &#064;date 2025/9/18
  */
@@ -19,7 +21,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 确保资源处理器正确配置
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:/opt/BigProject/uploads/")
-                .setCachePeriod(0); // 禁用缓存以便测试
+                // 禁用缓存以便测试
+                .setCachePeriod(0);
 
         log.info("配置静态资源映射: /uploads/** -> file:/opt/BigProject/uploads/");
     }

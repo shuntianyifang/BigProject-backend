@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * FeedbackConfig
+ *
  * @author shuntianyifang
  * &#064;date 2025/9/20
  */

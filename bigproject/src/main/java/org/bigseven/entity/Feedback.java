@@ -25,16 +25,28 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Feedback {
+    /**
+     * 帖子id
+     */
     @TableId(type = IdType.AUTO)
     @JsonProperty("feedback_id")
     private Integer feedbackId;
 
+    /**
+     * 帖子标题
+     */
     @JsonProperty("title")
     private String title;
 
+    /**
+     * 帖子内容
+     */
     @JsonProperty("content")
     private String content;
 
+    /**
+     * 发帖人id
+     */
     @TableField("user_id")
     @JsonProperty("user_id")
     private Integer userId;
@@ -85,16 +97,28 @@ public class Feedback {
     @JsonProperty("feedback_status")
     private FeedbackStatusEnum feedbackStatus;
 
+    /**
+     * 帖子是否被删除
+     */
     @TableLogic
     private Boolean deleted;
 
+    /**
+     * 帖子创建时间
+     */
     @TableField(value = "created_at", fill = FieldFill.INSERT)
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
+    /**
+     * 帖子更新时间
+     */
     @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 
+    /**
+     * 帖子处理时间
+     */
     @TableField(value = "processed_at",  fill = FieldFill.INSERT)
     private LocalDateTime processedAt;
 }

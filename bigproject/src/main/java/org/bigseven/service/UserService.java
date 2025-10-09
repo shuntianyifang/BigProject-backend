@@ -10,6 +10,8 @@ import org.bigseven.security.CustomUserDetails;
 import java.util.Map;
 
 /**
+ * 用户服务接口
+ *
  * @author v185v
  * &#064;date  2025/9/16
  */
@@ -25,6 +27,7 @@ public interface UserService {
     /**
      * 用户注册
      * @param username 用户名
+     * @param nickname 昵称
      * @param password 密码
      * @param email 邮箱
      * @param userType 用户类型
@@ -32,6 +35,13 @@ public interface UserService {
      */
     Map<String, Object> register(String username, String nickname, String password, String email, UserTypeEnum userType);
 
+    /**
+     * 重置密码
+     * @param userId 用户ID
+     * @param password 旧密码
+     * @param newPassword 新密码
+     * @return 重置密码结果
+     */
     Map<String, Object> resetPassword(Integer userId, String password, String newPassword);
 
     /**
@@ -49,6 +59,16 @@ public interface UserService {
      */
     GetUserDetailResponse getUserDetail(Integer id);
 
+    /**
+     * 更新用户详情
+     *
+     * @param id 用户的唯一标识ID
+     * @param userDetails 执行更新操作的用户
+     * @param email 用户的邮箱地址
+     * @param userPhone 用户的手机号码
+     * @param nickname 用户的昵称
+     * @param realName 用户的姓名
+     */
     void updateUserDetail(Integer id, CustomUserDetails userDetails, String email, String userPhone, String nickname, String realName);
 
     /**
@@ -59,9 +79,26 @@ public interface UserService {
      */
     Page<GetAllUserResponse> getAllUsers(GetAllUserRequest request);
 
+    /**
+     * 修改用户类型
+     *
+     * @param id 用户的ID
+     * @param userType 新的用户类型
+     */
     void changeUserType(Integer id, UserTypeEnum userType);
 
+    /**
+     * 删除用户
+     *
+     * @param id 用户的ID
+     */
     void deleteUser(Integer id);
 
+    /**
+     * 注销用户
+     *
+     * @param id 用户的ID
+     * @param userDetails 执行注销操作的用户
+     */
     void unregisterUser(Integer id, CustomUserDetails userDetails);
 }

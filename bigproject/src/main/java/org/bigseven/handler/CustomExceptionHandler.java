@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
+ * 自定义异常处理
+ *
  * @author shuntianyifang
  * &#064;date 2025/9/16
  */

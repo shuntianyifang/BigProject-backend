@@ -6,6 +6,8 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 /**
+ * 统一返回结果类
+ *
  * @author shuntianyifang
  * &#064;date 2025/9/16
  */

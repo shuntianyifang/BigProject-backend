@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
+ * 自定义访问被拒绝处理器
+ *
  * @author shuntianyifang
  * &#064;date 2025/9/19
  */

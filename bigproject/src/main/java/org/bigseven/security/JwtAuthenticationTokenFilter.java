@@ -22,6 +22,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
+ * JWT认证过滤器
+ *
  * @author shuntianyifang
  * &#064;date  2025/9/18
  */

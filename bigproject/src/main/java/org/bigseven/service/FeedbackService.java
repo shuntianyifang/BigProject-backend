@@ -11,6 +11,8 @@ import org.bigseven.security.CustomUserDetails;
 import java.util.List;
 
 /**
+ * 用户反馈服务接口
+ *
  * @author v185v
  * &#064;date  2025/9/17
  */

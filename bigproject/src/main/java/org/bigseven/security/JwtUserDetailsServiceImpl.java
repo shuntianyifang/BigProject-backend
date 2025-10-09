@@ -19,6 +19,8 @@ import java.util.Set;
 
 
 /**
+ * 用户详情服务实现类
+ *
  * @author shuntianyifang
  * &#064;date 2025/9/17
  */

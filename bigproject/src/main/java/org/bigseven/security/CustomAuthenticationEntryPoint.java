@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
+ * 自定义认证失败处理
+ *
  * @author shuntianyifang
  * &#064;date 2025/9/19
  */

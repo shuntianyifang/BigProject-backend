@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Select;
 import org.bigseven.entity.User;
 
 /**
+ * 用户映射器
+ *
  * @author v185v
  * &#064;date 2025/9/16
  */

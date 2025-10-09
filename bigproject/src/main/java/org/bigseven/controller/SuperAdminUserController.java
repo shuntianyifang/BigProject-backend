@@ -12,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 超级管理员用户管理控制器
+ *
  * @author shuntianyifang
  * &#064;date 2025/10/4
  */

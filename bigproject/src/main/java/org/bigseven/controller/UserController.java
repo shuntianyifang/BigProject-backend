@@ -12,6 +12,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 用户控制器
+ *
  * @author shuntianyifang
  * &#064;date 2025/10/3
  */

@@ -44,6 +44,14 @@ public enum ExceptionEnum {
     /// 评价
     RATING_EXIST(50000,"您已评价过该回复"),
     RATING_NOT_FOUND(50001,"评价不存在");
+
+    /**
+     * 状态码
+     */
     private final Integer errorCode;
+
+    /**
+     * 状态描述
+     */
     private final String errorMsg;
 }

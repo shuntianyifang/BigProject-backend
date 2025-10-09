@@ -9,6 +9,8 @@ import org.bigseven.entity.FeedbackImage;
 import java.util.List;
 
 /**
+ * 反馈图片Mapper
+ *
  * @author v185v
  * &#064;date 2025/9/18
  */

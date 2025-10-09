@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
+ * 列表返回对象
+ *
  * @author shuntianyifang
  * &#064;date 2025/9/29
  */

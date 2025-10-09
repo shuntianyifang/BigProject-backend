@@ -1,6 +1,5 @@
 package org.bigseven.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.bigseven.constant.ExceptionEnum;
 import org.bigseven.result.AjaxResult;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Order(20)
 public class JwtExceptionHandler {
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<AjaxResult<?>> handleExpiredJwt(ExpiredJwtException e) {

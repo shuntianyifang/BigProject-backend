@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
+ * 认证控制器
+ *
  * @author v185v
  * &#064;date 2025/9/16
  */
@@ -71,6 +73,9 @@ public class AuthController {
 
     /**
      * 重置密码
+     *
+     * @param request 重置密码请求参数
+     * @return 重置密码结果，包含token和用户信息
      */
     @PostMapping("/reset-password")
     public ResponseEntity<AjaxResult<Map<String, Object>>> resetPassword(@RequestBody ResetPasswordRequest request) {
