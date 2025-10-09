@@ -20,6 +20,8 @@ import java.util.Map;
 import static io.jsonwebtoken.Jwts.builder;
 
 /**
+ * JWT令牌工具类
+ *
  * @author shuntianyifang
  * &#064;date 2025/9/18
  */

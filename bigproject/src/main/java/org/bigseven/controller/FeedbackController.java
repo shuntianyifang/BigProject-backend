@@ -13,6 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 用户反馈信息控制器
+ *
  * @author v185v
  * &#064;date 2025/9/17
  */
@@ -56,6 +58,20 @@ public class FeedbackController {
         return AjaxResult.success();
     }
 
+    /**
+     * 更新用户反馈信息
+     *
+     * @param request 包含更新反馈信息的请求对象，包含以下字段：
+     *                - isNicked: 是否匿名发布
+     *                - isArgent: 是否紧急反馈
+     *                - feedbackType: 反馈类型
+     *                - title: 反馈标题
+     *                - content: 反馈内容
+     *                - imageUrls: 图片URL列表
+     * @param userDetails 当前认证用户的信息
+     * @param id 反馈记录的唯一标识符
+     * @return 操作结果，成功时返回空内容的成功响应
+     */
     @PostMapping("/{id}")
     public AjaxResult<Void> updateFeedback(@Valid @RequestBody UpdateFeedbackRequest request,
                                            @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -71,6 +87,13 @@ public class FeedbackController {
         return AjaxResult.success();
     }
 
+    /**
+     * 删除用户反馈信息
+     *
+     * @param id 反馈记录的唯一标识符
+     * @param userDetails 当前认证用户信息
+     * @return 操作结果，成功时返回空内容的成功响应
+     */
     @DeleteMapping("/{id}/delete")
     public AjaxResult<Void> deleteFeedback(@PathVariable Integer id,
                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -101,9 +124,10 @@ public class FeedbackController {
     }
 
     /**
-     * （没用到）
-     * @param id
-     * @return
+     * 获取反馈详情（没用到）
+     *
+     * @param id 反馈记录的唯一标识符
+     * @return 包含反馈详情的返回结果
      */
     @GetMapping("/{id}")
     public AjaxResult<GetFeedbackDetailResponse> getFeedbackDetail(@PathVariable Integer id) {

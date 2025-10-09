@@ -14,6 +14,8 @@ import java.util.List;
 
 
 /**
+ * 发布反馈的请求数据传输对象
+ *
  * @author v185v
  * &#064;date 2025/9/17
  */
@@ -21,9 +23,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PublishFeedbackRequest {
+    /**
+     * 反馈标题
+     */
     @Size(min=1, max=40,message = "标题长度必须在1-40之间")
     private String title;
 
+    /**
+     * 反馈内容
+     */
     @NotBlank(message = "反馈内容不能为空")
     private String content;
 

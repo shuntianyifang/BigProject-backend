@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * XSS配置安全头
+ *
  * @author shuntianyifang
  * &#064;date 2025/10/1
  */

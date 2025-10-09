@@ -10,13 +10,25 @@ import org.bigseven.constant.FeedbackTypeEnum;
 
 import java.util.List;
 
+/**
+ * 修改反馈的请求数据传输对象
+ *
+ * @author shuntianyifang
+ * &#064;date 2025/10/5
+ */
 @Data
 @AllArgsConstructor
 @Builder
 public class UpdateFeedbackRequest {
+    /**
+     * 反馈标题
+     */
     @Size(min=1, max=40,message = "标题长度必须在1-40之间")
     private String title;
 
+    /**
+     * 反馈内容
+     */
     @NotBlank(message = "反馈内容不能为空")
     private String content;
 

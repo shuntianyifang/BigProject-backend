@@ -4,6 +4,8 @@ import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.entity.AdminReply;
 
 /**
+ * 管理员对反馈进行处理
+ *
  * @author shuntianyifang
  * &#064;date 2025/10/1
  */

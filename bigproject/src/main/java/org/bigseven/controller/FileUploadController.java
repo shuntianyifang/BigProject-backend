@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
+ * 文件上传控制器
+ *
  * @author v185v
  * &#064;date 2025/9/18
  */
@@ -28,9 +30,6 @@ public class FileUploadController {
 
     @Value("${file.upload-dir:uploads/}")
     private String uploadPath;
-
-    @Value("${feedback.image-base-url:/uploads/}")
-    private String imageBaseUrl;
 
     /**
      * 文件上传接口,还没做统一错误处理

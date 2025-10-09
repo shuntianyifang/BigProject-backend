@@ -22,13 +22,22 @@ import java.time.Instant;
 @Component
 public class AccessLogFilter implements Filter {
 
+    /**
+     * 方法名称最大长度，用于格式化输出
+     */
     private static final int METHOD_NAME_MAX_LENGTH = 6;
+    /**
+     * 未知IP地址
+     */
     private static final String UNKNOWN_IP = "unknown";
 
     static {
         AnsiOutput.setEnabled(AnsiOutput.Enabled.ALWAYS);
     }
 
+    /**
+     * 执行过滤逻辑
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {

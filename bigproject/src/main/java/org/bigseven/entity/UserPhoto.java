@@ -21,9 +21,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class UserPhoto {
+    /**
+     * 图片id
+     */
     @TableId(type = IdType.AUTO)
     private Integer photoId;
 
+    /**
+     * 用户id
+     */
     @TableField("user_id")
     @JsonProperty("user_id")
     private Integer userId;
@@ -36,6 +42,9 @@ public class UserPhoto {
      */
     private Integer imageOrder;
 
+    /**
+     * 创建时间
+     */
     @TableField(value = "created_at", fill = FieldFill.INSERT)
     @JsonProperty("created_at")
     private LocalDateTime createdAt;

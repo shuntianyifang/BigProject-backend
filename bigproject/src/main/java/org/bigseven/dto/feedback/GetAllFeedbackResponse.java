@@ -1,8 +1,10 @@
 package org.bigseven.dto.feedback;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.bigseven.constant.FeedbackStatusEnum;
 import org.bigseven.constant.FeedbackTypeEnum;
 import org.bigseven.dto.adminreply.AdminReplyVO;
@@ -14,6 +16,7 @@ import java.util.List;
 /**
  * 反馈响应数据传输对象
  * 用于封装返回给用户的反馈信息
+ *
  * @author v185v
  * &#064;date 2025/9/20
  */
@@ -23,6 +26,9 @@ import java.util.List;
 @NoArgsConstructor
 public class GetAllFeedbackResponse {
 
+    /**
+     * 反馈ID
+     */
     @JsonProperty("feedback_id")
     private Integer feedbackId;
     /**

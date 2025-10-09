@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
+ * 这是反馈图片实体类
+ *
  * @author v185v
  * &#064;date 2025/9/18
  */
@@ -19,9 +21,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class FeedbackImage {
+    /**
+     * 图片ID
+     */
     @TableId(type = IdType.AUTO)
     private Integer imageId;
 
+    /**
+     * 反馈ID
+     */
     @TableField("feedback_id")
     @JsonProperty("feedback_id")
     private Integer feedbackId;
@@ -38,6 +46,9 @@ public class FeedbackImage {
     @JsonProperty("image_order")
     private Integer imageOrder;
 
+    /**
+     * 图片创建时间
+     */
     @TableField(value = "created_at", fill = FieldFill.INSERT)
     @JsonProperty("created_at")
     private LocalDateTime createdAt;

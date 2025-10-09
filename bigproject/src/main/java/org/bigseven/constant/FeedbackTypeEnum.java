@@ -50,6 +50,12 @@ public enum FeedbackTypeEnum {
      */
     private final String displayName;
 
+    /**
+     * 根据反馈类型编码获取对应的枚举值
+     *
+     * @param code 反馈类型编码
+     * @return FeedbackTypeEnum 反馈类型枚举值
+     */
     @JsonCreator
     public static FeedbackTypeEnum fromCode(Integer code) {
         if (code == null) {

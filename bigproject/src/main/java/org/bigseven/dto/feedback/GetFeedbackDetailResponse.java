@@ -1,6 +1,5 @@
 package org.bigseven.dto.feedback;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.bigseven.constant.FeedbackStatusEnum;
@@ -12,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
+ * 反馈详情响应数据传输对象
+ *
  * @author shuntianyifang
  * &#064;date 2025/10/2
  */

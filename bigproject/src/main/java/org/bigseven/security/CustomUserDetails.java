@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 /**
+ * 自定义用户信息
+ *
  * @author shuntianyifang
  * &#064;date 2025/9/28
  */

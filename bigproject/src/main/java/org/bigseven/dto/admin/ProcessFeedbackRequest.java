@@ -17,10 +17,16 @@ import org.bigseven.entity.AdminReply;
 @Getter
 public class ProcessFeedbackRequest {
 
+    /**
+     * 反馈状态
+     */
     @NotNull(message = "反馈状态不能为空")
     @JsonProperty("feedback_status")
     private FeedbackStatusEnum feedbackStatus;
 
+    /**
+     * 管理员回复
+     */
     @JsonProperty("admin_reply")
     private AdminReply adminReply;
 
